@@ -15,7 +15,7 @@ Superseded-by: none
 - [x] Existing service error contracts inventoried.
 - [x] Sanitized evidence template validated against synthetic failures.
 - [x] Synthetic contract, client, application, dependency, infrastructure, and unknown cases recorded.- [ ] `pf-rates`, `pf-payroll`, and `pf-sheets` adoption owners confirmed.
-- [ ] Release-validation checklist published and linked from affected docs.
+- [x] Release-validation checklist published and linked from affected docs.
 
 ## 2. Contract inventory evidence
 
@@ -68,6 +68,7 @@ release validation. Do not alter public responses as part of this improvement.
 | 2026-10-13 | in progress | Completed Slice 1 initial route/Web App inventory; documented authentication boundaries and next OpenAPI/docs/Postman comparisons. | [`contract-inventory.md`](contract-inventory.md) |
 | 2026-10-13 | in progress | Added and validated the sanitized evidence template and synthetic example; no production evidence or runtime mutation. | [`evidence-template.md`](evidence-template.md); synthetic schema assertions |
 | 2026-10-13 | in progress | Added six synthetic validation cases covering all taxonomy classes; no production calls or runtime mutation. | [`synthetic-validation.md`](synthetic-validation.md) |
+| 2026-10-13 | in progress | Published and linked the adoption/release checklist from pf-rates, pf-payroll, and pf-sheets API documentation; maintainer acknowledgment and per-repository quality evidence remain pending. | [`adoption-release-checklist.md`](adoption-release-checklist.md) |
 
 ## 7. Release record
 
