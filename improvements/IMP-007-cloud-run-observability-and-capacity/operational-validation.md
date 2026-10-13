@@ -121,7 +121,28 @@ be rechecked from an allowed network before further traffic mutation.
 No additional traffic mutation is authorized by this artifact. Preserve the
 current revisions at 100% until the failure is diagnosed.
 
-## 7. Current gate status
+## 7. Rollback diagnosis result
+
+The Cloud Shell diagnosis archive compared both revision pairs and read up to 200
+sanitized log entries per service. It found:
+
+- current and previous revisions use the same port, concurrency, timeout, and
+  max-scale settings;
+- both previous revisions reached `Ready=True` and passed the startup TCP probe;
+- both applications logged Uvicorn listening on `0.0.0.0:8080` and application
+  startup complete;
+- `pf-payroll-00062-t6q` served `/reference-data/health-institutions` with HTTP
+  200 before retirement;
+- `pf-rates-00060-krl` completed startup synchronization and had no crash evidence;
+- no new startup/request logs were present for the previous revisions during the
+  later rollback attempt.
+
+The evidence does not identify an application crash. The rollback timeout is
+therefore inconclusive between retired-revision reactivation, traffic routing,
+and the observation network path. A revision-specific or Cloud Shell-originated
+request is required before calling the rollback healthy or unhealthy.
+
+## 8. Current gate status
 
 The contract is defined and approved for controlled validation. The following
 remain execution gates:

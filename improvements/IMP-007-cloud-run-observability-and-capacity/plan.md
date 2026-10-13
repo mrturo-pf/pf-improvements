@@ -53,7 +53,7 @@ scale-to-zero and document rollback for every setting change.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-13 | in progress | Production releases and Neon migration completed successfully; authorized rollback observation timed out on both previous revisions after 120s, then traffic was restored to current revisions at 100%. IMP-007 remains open pending diagnosis and a successful controlled rollback. | [operational validation](operational-validation.md); runs `38480997414`, `38481006067`, `38481010085` |
+| 2026-10-13 | in progress | Cloud Shell diagnosis found no application crash: previous revisions passed startup probes and had prior HTTP success; no new logs appeared during rollback timeout. Result is inconclusive between retired-revision reactivation, routing, and observation network path. | [operational validation](operational-validation.md); archive `IMP-007-gcp-02-20261013T234415Z.tar.gz` |
 
 ## 4. Release record
 
@@ -61,4 +61,4 @@ scale-to-zero and document rollback for every setting change.
 - Workflow runs: pending push and GitHub Actions access
 - Owner approval: recorded 2026-10-13
 - Service validation: pending
-- Rollback evidence: failed previous-revision health checks; current revisions restored at 100%; diagnosis pending
+- Rollback evidence: inconclusive; previous revisions passed startup/Ready and had prior HTTP evidence, but later rollback requests timed out without new revision logs; traffic remains restored to current
