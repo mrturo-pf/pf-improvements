@@ -151,7 +151,7 @@ th{background:#e8eef5}a{color:#075985}caption{text-align:left;font-size:1.5rem;f
 <body><main><table><caption>PF Ecosystem Improvements</caption>
 <thead><tr><th>ID / slug</th><th>Level</th><th>Owner</th><th>Next action</th><th>Canonical plan</th></tr></thead>
 <tbody>""" + "\n".join(rows) + """</tbody></table>
-<p>Generated from <code>docs/proposals/improvements.json</code>. Do not edit manually.</p>
+<p>Generated from <code>improvements.json</code>. Do not edit manually.</p>
 </main></body></html>
 """
 
