@@ -29,7 +29,7 @@ Primary governing documents:
 
 - root `AGENTS.md` and `README.md`;
 - `modules/pf-payroll/AGENTS.md` and `README.md`;
-- `docs/ecosystem-improvement-workflow.md`;
+- `../../workflow.md`;
 - `modules/pf-db/AGENTS.md`, `README.md`, `docs/tables.md`, `docs/ci.md`;
 - `modules/pf-payroll/docs/deployment.md`, `docs/database.md`, `docs/api.md`, and `docs/getting-started.md`;
 - `modules/pf-payroll/.github/workflows/deploy.yml` and `gcp-setup.yml`;

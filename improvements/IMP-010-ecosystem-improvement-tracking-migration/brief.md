@@ -4,7 +4,7 @@ Date: 2026-10-12
 Status: approved
 Level: L
 Scope: Migrate PF improvement tracking to a GitHub-centered operating model while preserving Git-based investigations, decisions, plans, and evidence.
-Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md) · [workflow](../ecosystem-improvement-workflow.md)
+Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md) · [workflow](../../workflow.md)
 Approved: 2026-10-12 by owner (conversation)
 Superseded-by: none
 
@@ -52,7 +52,7 @@ projection and query layer, not a replacement for the documentation lifecycle.
 | Metadata and link consistency | GitHub Actions validation |
 | Generated index and dashboard | GitHub Actions output |
 | Agent retrieval context | Generated sanitized Markdown and structured JSON |
-| Process rules and lifecycle gates | `docs/ecosystem-improvement-workflow.md` |
+| Process rules and lifecycle gates | `workflow.md` |
 
 The target must define one authoritative location for each field. It must not
 create a second manually maintained project register beside the GitHub Project.
@@ -128,7 +128,7 @@ create a second manually maintained project register beside the GitHub Project.
 
 ## Constraints and invariants
 
-- `docs/ecosystem-improvement-workflow.md` remains the governing lifecycle process.
+- `workflow.md` remains the governing lifecycle process.
 - Repository ownership boundaries remain unchanged.
 - Cross-repository changes follow the existing coordination protocol.
 - No autonomous commit, push, branch creation, issue creation, Project mutation,
@@ -175,7 +175,7 @@ The implementation must update, as applicable:
 
 - this brief and its approval metadata;
 - the recommendation and living plan;
-- `docs/ecosystem-improvement-workflow.md` with the validated target process;
+- `workflow.md` with the validated target process;
 - `index.md` as a generated or transition-compatible view;
 - GitHub Issue template and Project field/view conventions;
 - repository documentation describing the Project, Issue, and agent access model;

@@ -5,7 +5,7 @@ Status: closed
 Level: L
 Scope: Evaluate and prepare the migration of PF improvement tracking from manually maintained Markdown indexes and distributed proposal documents to GitHub Projects, GitHub Issues, Git repositories, GitHub Actions, and generated agent context.
 Owner: `pf-base`
-Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md) · [index](../proposals/index.md) · [workflow](../ecosystem-improvement-workflow.md)
+Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md) · [index](../../index.md) · [workflow](../../workflow.md)
 Approved: pending explicit owner approval
 Superseded-by: none
 
@@ -20,7 +20,7 @@ already defined by the ecosystem workflow?
 
 The current process uses:
 
-- `docs/ecosystem-improvement-workflow.md` for lifecycle gates, artifact
+- `workflow.md` for lifecycle gates, artifact
   responsibilities, controlled statuses, and definition of done;
 - `index.md` for navigation and canonical artifact references;
 - GitHub Issues and the `PF Ecosystem Improvements` Project for intake, coordination,
@@ -45,7 +45,7 @@ The target operating model is:
 | Metadata and consistency validation | GitHub Actions |
 | Generated navigation and dashboard | GitHub Actions output, initially static |
 | Agent-oriented summary | Generated `agent-context` files |
-| Process governance and lifecycle gates | `docs/ecosystem-improvement-workflow.md` |
+| Process governance and lifecycle gates | `workflow.md` |
 
 The migration must preserve the current workflow rather than create a parallel,
 less auditable process.

@@ -4,7 +4,7 @@ Date: 2026-10-12
 Status: released
 Level: L
 Scope: Migrate PF improvement tracking to a GitHub-centered operating model while preserving Git-based investigations, decisions, plans, and evidence.
-Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md) · [workflow](../ecosystem-improvement-workflow.md)
+Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md) · [workflow](../../workflow.md)
 Approved: 2026-10-12 by owner (conversation)
 Superseded-by: none
 
@@ -108,7 +108,7 @@ sources are documented.
 
 Root repository:
 
-- `docs/ecosystem-improvement-workflow.md` after the target process is validated;
+- `workflow.md` after the target process is validated;
 - `index.md` during transition or as generated output;
 - `index.md` during transition or as generated output;
 - metadata/template directories;
@@ -256,7 +256,7 @@ The generated context validation passed with all 25 manifest entries represented
 agent read-only context validation passed: 25 improvements
 ```
 
-`docs/ecosystem-improvement-workflow.md`. The migration is now released pending
+`workflow.md`. The migration is now released pending
 only normal future maintenance of the Project and generated outputs.
 
 

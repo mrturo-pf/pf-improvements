@@ -4,7 +4,7 @@ Date: 2026-10-12
 Status: approved
 Level: L
 Scope: Migrate PF improvement tracking to a GitHub-centered operating model while preserving Git-based investigations, decisions, plans, and evidence.
-Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md) · [workflow](../ecosystem-improvement-workflow.md)
+Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md) · [workflow](../../workflow.md)
 Approved: 2026-10-12 by owner (conversation)
 Superseded-by: none
 
@@ -66,7 +66,7 @@ coordination surface because it lacks a practical discussion and work-item model
 | Investigation findings | Git investigation artifact | Issue links and agent context |
 | Design decision | Git recommendation artifact | Issue links and agent context |
 | Implementation progress and validation | Git plan artifact | Issue comments and agent context |
-| Workflow gates | `ecosystem-improvement-workflow.md` | Documentation links |
+| Workflow gates | `workflow.md` | Documentation links |
 | Runtime/API contract | Code, generated OpenAPI, API docs, Postman | Never overridden by Project |
 | Historical decision | Git history and superseded artifact | Agent context with historical label |
 

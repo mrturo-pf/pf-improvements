@@ -5,7 +5,7 @@ Status: closed
 Level: L
 Scope: Independent security incident involving a credential exposed in the first GCP inventory for `gcp-scheduler-runner`.
 Owner: `pf-payroll` investigation record; operational remediation belongs to the owner of `gcp-scheduler-runner`.
-Related artifacts: [pf-svc-income rename investigation](../HIST-007-pf-svc-income-renaming/investigation.md) · [ecosystem workflow](../../../../docs/ecosystem-improvement-workflow.md)
+Related artifacts: [pf-svc-income rename investigation](../HIST-007-pf-svc-income-renaming/investigation.md) · [ecosystem workflow](../../workflow.md)
 Superseded-by: none
 
 ## 1. Investigation question
