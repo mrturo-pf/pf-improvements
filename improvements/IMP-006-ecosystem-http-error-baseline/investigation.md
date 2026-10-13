@@ -1,7 +1,7 @@
 # Investigation: ecosystem HTTP error baseline
 
 Date: 2026-10-12
-Status: investigating
+Status: closed
 Level: M
 Scope: Establish a reusable baseline and classification process for HTTP errors and contract failures across `pf-rates`, `pf-payroll`, and `pf-sheets`.
 Owner: `pf-base`

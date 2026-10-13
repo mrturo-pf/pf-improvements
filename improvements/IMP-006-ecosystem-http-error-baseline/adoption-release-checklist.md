@@ -3,7 +3,7 @@
 Date: 2026-10-13
 Owner: `pf-base`
 Affected repositories: `pf-rates`, `pf-payroll`, `pf-sheets`
-Status: active implementation checklist
+Status: released
 
 ## Adoption owners
 

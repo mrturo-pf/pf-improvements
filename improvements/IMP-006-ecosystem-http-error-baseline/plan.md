@@ -1,7 +1,7 @@
 # Plan: ecosystem HTTP error baseline
 
 Date: 2026-10-12
-Status: validated
+Status: released
 Level: M
 Scope: Reusable HTTP error classification and evidence baseline for `pf-rates`, `pf-payroll`, and `pf-sheets`.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md)
@@ -68,11 +68,11 @@ release validation. Do not alter public responses as part of this improvement.
 | 2026-10-13 | in progress | Completed Slice 1 initial route/Web App inventory; documented authentication boundaries and next OpenAPI/docs/Postman comparisons. | [`contract-inventory.md`](contract-inventory.md) |
 | 2026-10-13 | in progress | Added and validated the sanitized evidence template and synthetic example; no production evidence or runtime mutation. | [`evidence-template.md`](evidence-template.md); synthetic schema assertions |
 | 2026-10-13 | in progress | Added six synthetic validation cases covering all taxonomy classes; no production calls or runtime mutation. | [`synthetic-validation.md`](synthetic-validation.md) |
-| 2026-10-13 | validated | Completed adoption owner acknowledgment, linked affected service docs, recorded quality-gate evidence, and added final adoption evidence to Issue #1. No runtime deployment authorized. | [`adoption-release-checklist.md`](adoption-release-checklist.md); Issue #1; repository CI runs |
+| 2026-10-13 | released | Completed the three-service synthetic adoption dry run; all cases passed and no runtime deployment or public contract change was required. | [`adoption-validation.md`](adoption-validation.md) |
 
 ## 7. Release record
 
-- Commits: `850f5d0` central adoption checklist
+- Commits: `13de6fe` checklist, adoption validation pending publication
 - Workflow runs: `38437715887`, `38456667575`, `38456657444` — relevant quality/documentation checks passed
 - Owner approval: recorded 2026-10-13
-- Adoption evidence: complete; no runtime deployment authorized
+- Adoption evidence: complete; three-service synthetic dry run passed; no runtime deployment authorized
