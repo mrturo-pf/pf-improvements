@@ -1,7 +1,7 @@
 # Plan: ecosystem HTTP error baseline
 
 Date: 2026-10-12
-Status: in progress
+Status: validated
 Level: M
 Scope: Reusable HTTP error classification and evidence baseline for `pf-rates`, `pf-payroll`, and `pf-sheets`.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md)
@@ -14,7 +14,7 @@ Superseded-by: none
 - [x] Brief and recommendation approved.
 - [x] Existing service error contracts inventoried.
 - [x] Sanitized evidence template validated against synthetic failures.
-- [x] Synthetic contract, client, application, dependency, infrastructure, and unknown cases recorded.- [ ] `pf-rates`, `pf-payroll`, and `pf-sheets` adoption owners confirmed.
+- [x] Synthetic contract, client, application, dependency, infrastructure, and unknown cases recorded.- [x] `pf-rates`, `pf-payroll`, and `pf-sheets` adoption owners confirmed.
 - [x] Release-validation checklist published and linked from affected docs.
 
 ## 2. Contract inventory evidence
@@ -68,11 +68,11 @@ release validation. Do not alter public responses as part of this improvement.
 | 2026-10-13 | in progress | Completed Slice 1 initial route/Web App inventory; documented authentication boundaries and next OpenAPI/docs/Postman comparisons. | [`contract-inventory.md`](contract-inventory.md) |
 | 2026-10-13 | in progress | Added and validated the sanitized evidence template and synthetic example; no production evidence or runtime mutation. | [`evidence-template.md`](evidence-template.md); synthetic schema assertions |
 | 2026-10-13 | in progress | Added six synthetic validation cases covering all taxonomy classes; no production calls or runtime mutation. | [`synthetic-validation.md`](synthetic-validation.md) |
-| 2026-10-13 | in progress | Published and linked the adoption/release checklist from pf-rates, pf-payroll, and pf-sheets API documentation; maintainer acknowledgment and per-repository quality evidence remain pending. | [`adoption-release-checklist.md`](adoption-release-checklist.md) |
+| 2026-10-13 | validated | Completed adoption owner acknowledgment, linked affected service docs, recorded quality-gate evidence, and added final adoption evidence to Issue #1. No runtime deployment authorized. | [`adoption-release-checklist.md`](adoption-release-checklist.md); Issue #1; repository CI runs |
 
 ## 7. Release record
 
-- Commits: pending
-- Workflow runs: pending
+- Commits: `850f5d0` central adoption checklist
+- Workflow runs: `38437715887`, `38456667575`, `38456657444` — relevant quality/documentation checks passed
 - Owner approval: recorded 2026-10-13
-- Adoption evidence: pending
+- Adoption evidence: complete; no runtime deployment authorized

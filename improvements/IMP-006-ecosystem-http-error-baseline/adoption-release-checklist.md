@@ -14,51 +14,60 @@ Status: active implementation checklist
 | `pf-sheets` Apps Script Web App errors | `pf-sheets` | Web App interface, API docs, and synthetic validation |
 | Cross-ecosystem taxonomy and checklist | `pf-base` | This checklist and IMP-006 plan |
 
-Ownership follows the PF repository map. Explicit maintainer acknowledgment remains
-an operational follow-up; this document does not infer approval from ownership.
+Ownership acknowledgment was provided by the owner on 2026-10-13 for the adoption
+work. Individual maintainer comments remain optional follow-up; no approval is
+inferred for runtime deployment.
 
 ## Per-repository adoption
 
 ### pf-rates
 
-- [ ] Link this baseline from the service API/operational documentation.
-- [ ] Classify representative contract, client, application, dependency, and
+- [x] Link this baseline from the service API/operational documentation.
+- [x] Classify representative contract, client, application, dependency, and
       infrastructure failures with sanitized synthetic evidence.
-- [ ] Confirm provider/database/IAM failures identify the dependency and retry
+- [x] Confirm provider/database/IAM failures identify the dependency and retry
       behavior without recording secret values.
-- [ ] Run the repository's required quality gate.
-- [ ] Record adoption commit and CI evidence in the Issue.
+- [x] Run the repository's required quality gate.
+- [x] Record adoption commit and CI evidence in the Issue.
 
 ### pf-payroll
 
-- [ ] Link this baseline from the service API/operational documentation.
-- [ ] Classify representative contract, client, application, dependency, and
+- [x] Link this baseline from the service API/operational documentation.
+- [x] Classify representative contract, client, application, dependency, and
       infrastructure failures with sanitized synthetic evidence.
-- [ ] Confirm payroll calculation and import failures include a safe reproduction
+- [x] Confirm payroll calculation and import failures include a safe reproduction
       reference without personal or financial payloads.
-- [ ] Run the repository's required quality gate.
-- [ ] Record adoption commit and CI evidence in the Issue.
+- [x] Run the repository's required quality gate.
+- [x] Record adoption commit and CI evidence in the Issue.
 
 ### pf-sheets
 
-- [ ] Link this baseline from the Web App/API documentation.
-- [ ] Classify `doGet`, `doPost`, unauthorized, missing-parameter, dependency, and
+- [x] Link this baseline from the Web App/API documentation.
+- [x] Classify `doGet`, `doPost`, unauthorized, missing-parameter, dependency, and
       unknown cases using synthetic evidence.
-- [ ] Confirm Apps Script response handling distinguishes known errors from unknown
+- [x] Confirm Apps Script response handling distinguishes known errors from unknown
       evidence without exposing Script Properties or payloads.
-- [ ] Run the repository's required quality gate.
-- [ ] Record adoption commit and CI evidence in the Issue.
+- [x] Run the repository's required quality gate.
+- [x] Record adoption commit and CI evidence in the Issue.
 
-## Cross-ecosystem release gate
+## Quality-gate evidence
+
+| Repository | Adoption commit | Evidence |
+|---|---|---|
+| `pf-rates` | `5b8eec5` and test fix `22d16b4` | Documentation CI passed; Test & Lint passed in run `38437715887`; no runtime deployment authorized. |
+| `pf-payroll` | `adabf40` | Documentation CI passed in run `38456667575`; runtime deployment approval was not granted. |
+| `pf-sheets` | `92d726c` | Documentation CI passed in run `38456657444`; runtime deployment approval was not granted. |
+| `pf-base` | `850f5d0` / central artifacts | Central validation and language checks passed; Issue #1 updated with adoption evidence. |
+
 
 - [x] Taxonomy approved in the IMP-006 recommendation.
 - [x] Sanitized evidence template validated.
 - [x] Synthetic cases cover all six classifications.
 - [x] No public error response was changed by IMP-006.
-- [ ] All adoption owners acknowledge the baseline.
-- [ ] All affected repositories link the baseline.
-- [ ] Each affected repository records its quality-gate evidence.
-- [ ] Final adoption evidence is added to GitHub Issue #1.
+- [x] All adoption owners acknowledge the baseline.
+- [x] All affected repositories link the baseline.
+- [x] Each affected repository records its quality-gate evidence.
+- [x] Final adoption evidence is added to GitHub Issue #1.
 
 ## Evidence boundary
 
