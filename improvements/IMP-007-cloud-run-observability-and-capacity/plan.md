@@ -53,12 +53,12 @@ scale-to-zero and document rollback for every setting change.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-13 | in progress | Defined and approved controlled dependency-failure, timeout, scale-out, overlap, alert ownership, release, and rollback contract. | [operational validation](operational-validation.md) |
+| 2026-10-13 | in progress | Prepared authorized local commits across `pf-base` (`4314018`), `pf-improvements` (`667b065`), `pf-common` (`d2cb7b9`), `pf-rates` (`61ca4e0`), `pf-payroll` (`befd0b7`), and `pf-db` (`e67d7e1`). Push is pending GitHub TLS/API recovery. | Local commit hooks passed; no workflow run claimed |
 
 ## 4. Release record
 
-- Commits: pending
-- Workflow runs: pending
+- Commits: local commits prepared; see change log
+- Workflow runs: pending push and GitHub Actions access
 - Owner approval: recorded 2026-10-13
 - Service validation: pending
 - Rollback evidence: pending
