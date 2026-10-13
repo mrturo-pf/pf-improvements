@@ -1,17 +1,17 @@
 # Plan: ecosystem HTTP error baseline
 
 Date: 2026-10-12
-Status: investigating
+Status: in progress
 Level: M
 Scope: Reusable HTTP error classification and evidence baseline for `pf-rates`, `pf-payroll`, and `pf-sheets`.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md)
-Approved: pending explicit owner approval
+Approved: 2026-10-13 by owner (conversation)
 Superseded-by: none
 
 ## 1. Gates
 
 - [x] Initial evidence boundary and taxonomy drafted.
-- [ ] Brief and recommendation approved.
+- [x] Brief and recommendation approved.
 - [ ] Existing service error contracts inventoried.
 - [ ] Sanitized evidence template validated against synthetic failures.
 - [ ] `pf-rates`, `pf-payroll`, and `pf-sheets` adoption owners confirmed.
@@ -44,7 +44,7 @@ release validation. Do not alter public responses as part of this improvement.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-12 | investigating | Promoted IMP-006 to formal artifacts; no runtime mutation. | Register and current service boundaries |
+| 2026-10-13 | in progress | Owner approved the brief and recommendation; started Slice 1 contract inventory. | Conversation approval; current source repositories |
 
 ## 4. Release record
 

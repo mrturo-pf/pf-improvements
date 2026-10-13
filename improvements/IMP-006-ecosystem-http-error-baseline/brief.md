@@ -1,11 +1,11 @@
 # Brief: ecosystem HTTP error baseline
 
 Date: 2026-10-12
-Status: investigating
+Status: approved
 Level: M
 Scope: Reusable HTTP error classification and evidence baseline for `pf-rates`, `pf-payroll`, and `pf-sheets`.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: pending explicit owner approval
+Approved: 2026-10-13 by owner (conversation)
 Superseded-by: none
 
 ## Objective
