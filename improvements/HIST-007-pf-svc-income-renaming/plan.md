@@ -112,7 +112,7 @@ The following decisions are prepared from the Phase 1 evidence. They are proposa
 ### Out-of-scope operational and security follow-ups
 
 The following findings are not part of the rename design. They are registered in
-[`../../index.md`](../../../../docs/proposals/../../index.md)
+[`../../index.md`](../../index.md)
 and remain separate workstreams:
 
 - `IMP-001` — Scheduler credential exposure and incident response;

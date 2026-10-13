@@ -4,7 +4,7 @@ Date: 2026-10-11
 Status: superseded
 Level: L
 Scope: Least-privilege runtime roles for `pf-rates` and `pf-payroll` on the shared PostgreSQL database.
-Related artifacts: [investigation](investigation.md) · [register](../../index.md) · [index](../../../index.md)
+Related artifacts: [investigation](investigation.md) · [register](../../index.md) · [index](../../index.md)
 Approved: Pending explicit owner approval
 Superseded-by: `neon-credential-and-backup-hardening` (IMP-002)
 

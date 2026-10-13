@@ -5,7 +5,7 @@ Status: closed
 Level: L
 Scope: Neon credential exposure, runtime-role privilege, backup/restore readiness, and sensitive dump handling for the shared PF database.
 Owner: `pf-db`
-Related artifacts: [ecosystem register](../../../docs/proposals/../../index.md) · [pf-db secrets guidance](../secrets/README.md)
+Related artifacts: [ecosystem register](../../index.md) · [pf-db secrets guidance](https://github.com/mrturo-pf/pf-db/blob/main/secrets/README.md)
 Superseded-by: none
 
 ## 1. Investigation question

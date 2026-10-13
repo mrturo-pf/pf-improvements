@@ -4,7 +4,7 @@ Date: 2026-10-10
 Status: closed
 Level: L
 Scope: Security remediation for the credential exposed in GCP Scheduler inventory 01.
-Related artifacts: [investigation](../HIST-008-gcp-scheduler-credential-exposure/investigation.md) · [register](../../../../docs/proposals/../../index.md)
+Related artifacts: [investigation](../HIST-008-gcp-scheduler-credential-exposure/investigation.md) · [register](../../index.md)
 Approved: 2026-10-10 by a0a11b7 (explicit operational authorization)
 Superseded-by: none
 

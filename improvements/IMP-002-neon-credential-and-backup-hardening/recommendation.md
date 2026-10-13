@@ -4,7 +4,7 @@ Date: 2026-10-10
 Status: closed
 Level: L
 Scope: Shared Neon credential, runtime-role, backup/restore, and sensitive-artifact hardening.
-Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [register](../../../docs/proposals/../../index.md)
+Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [register](../../index.md)
 Approved: 2026-10-11 owner approval recorded in IMP-002 change log
 Superseded-by: none
 

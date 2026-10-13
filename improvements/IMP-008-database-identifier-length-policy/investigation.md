@@ -5,7 +5,7 @@ Status: closed
 Level: M
 Scope: Establish the `pf-db` policy for table and materialized-view identifier lengths and distinguish it from PostgreSQL's technical identifier limit.
 Owner: `pf-db`
-Related artifacts: [register](../../index.md) · [index](../../../index.md) · [pf-svc-income recommendation](../HIST-007-pf-svc-income-renaming/recommendation.md)
+Related artifacts: [register](../../index.md) · [index](../../index.md) · [pf-svc-income recommendation](../HIST-007-pf-svc-income-renaming/recommendation.md)
 Superseded-by: none
 
 ## 1. Investigation question

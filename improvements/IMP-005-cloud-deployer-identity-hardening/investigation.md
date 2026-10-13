@@ -5,7 +5,7 @@ Status: closed
 Level: L
 Scope: Separation of CI deployer, Cloud Run runtime, migration, and administration identities; least-privilege deployment access; and Workload Identity Federation readiness.
 Owner: `pf-common`
-Related artifacts: [register](../../../docs/proposals/../../index.md) · [index](../../../index.md) · [source plan](../HIST-007-pf-svc-income-renaming/plan.md)
+Related artifacts: [register](../../index.md) · [index](../../index.md) · [source plan](../HIST-007-pf-svc-income-renaming/plan.md)
 Superseded-by: none
 
 ## 1. Investigation question

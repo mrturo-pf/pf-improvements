@@ -4,7 +4,7 @@ Date: 2026-10-11
 Status: approved
 Level: M
 Scope: Policy for PostgreSQL identifier lengths and naming conventions owned by `pf-db`.
-Related artifacts: [investigation](investigation.md) · [register](../../index.md) · [index](../../../index.md)
+Related artifacts: [investigation](investigation.md) · [register](../../index.md) · [index](../../index.md)
 Approved: 2026-10-11 by owner (conversation)
 Superseded-by: none
 

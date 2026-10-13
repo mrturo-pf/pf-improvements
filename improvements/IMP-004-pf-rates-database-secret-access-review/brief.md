@@ -4,7 +4,7 @@ Date: 2026-10-11
 Status: released
 Level: M
 Scope: Verify `pf-rates` database secret dependency and remove unnecessary shared Secret Manager access.
-Related artifacts: [investigation](investigation.md) · [register](../../index.md) · [index](../../../index.md)
+Related artifacts: [investigation](investigation.md) · [register](../../index.md) · [index](../../index.md)
 Approved: 2026-10-12 by a0a11b7 (explicit authorization)
 Superseded-by: none
 

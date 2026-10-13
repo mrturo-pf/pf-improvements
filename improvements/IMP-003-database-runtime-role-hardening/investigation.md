@@ -5,7 +5,7 @@ Status: superseded
 Level: L
 Scope: Replace broad owner-level application database access with service-specific least-privilege runtime roles and explicit grants.
 Owner: `pf-db`
-Related artifacts: [register](../../index.md) · [index](../../../index.md) · [IMP-002 investigation](../IMP-002-neon-credential-and-backup-hardening/investigation.md)
+Related artifacts: [register](../../index.md) · [index](../../index.md) · [IMP-002 investigation](../IMP-002-neon-credential-and-backup-hardening/investigation.md)
 Superseded-by: `neon-credential-and-backup-hardening` (IMP-002)
 
 ## 1. Investigation question

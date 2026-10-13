@@ -4,7 +4,7 @@ Date: 2026-10-11
 Status: approved
 Level: L
 Scope: Reusable identity separation and least-privilege deployment model for PF GitHub Actions, Cloud Run, database migrations, and administration.
-Related artifacts: [investigation](investigation.md) · [register](../../../docs/proposals/../../index.md) · [index](../../../index.md)
+Related artifacts: [investigation](investigation.md) · [register](../../index.md) · [index](../../index.md)
 Approved: 2026-10-11 by owner (conversation)
 Superseded-by: none
 

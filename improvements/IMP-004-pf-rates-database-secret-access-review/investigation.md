@@ -5,7 +5,7 @@ Status: closed
 Level: M
 Scope: Verify the actual `pf-rates` database dependency and reduce unnecessary Secret Manager access without breaking the service.
 Owner: `pf-rates`
-Related artifacts: [register](../../index.md) · [index](../../../index.md) · [source investigation](../HIST-007-pf-svc-income-renaming/investigation.md)
+Related artifacts: [register](../../index.md) · [index](../../index.md) · [source investigation](../HIST-007-pf-svc-income-renaming/investigation.md)
 Superseded-by: none
 
 ## 1. Question
