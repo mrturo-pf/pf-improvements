@@ -53,7 +53,7 @@ scale-to-zero and document rollback for every setting change.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-13 | in progress | Prepared authorized local commits across `pf-base` (`4314018`), `pf-improvements` (`667b065`), `pf-common` (`d2cb7b9`), `pf-rates` (`61ca4e0`), `pf-payroll` (`befd0b7`), and `pf-db` (`e67d7e1`). Push is pending GitHub TLS/API recovery. | Local commit hooks passed; no workflow run claimed |
+| 2026-10-13 | in progress | Production releases and Neon migration completed successfully; authorized rollback observation timed out on both previous revisions after 120s, then traffic was restored to current revisions at 100%. IMP-007 remains open pending diagnosis and a successful controlled rollback. | [operational validation](operational-validation.md); runs `38480997414`, `38481006067`, `38481010085` |
 
 ## 4. Release record
 
@@ -61,4 +61,4 @@ scale-to-zero and document rollback for every setting change.
 - Workflow runs: pending push and GitHub Actions access
 - Owner approval: recorded 2026-10-13
 - Service validation: pending
-- Rollback evidence: pending
+- Rollback evidence: failed previous-revision health checks; current revisions restored at 100%; diagnosis pending

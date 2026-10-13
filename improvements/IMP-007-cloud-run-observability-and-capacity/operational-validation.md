@@ -89,7 +89,39 @@ Rollback is a Cloud Run traffic mutation and requires explicit operator approval
 The rollback target must be a previously Ready revision; do not rebuild or deploy
 an unverified replacement during incident response.
 
-## 6. Current gate status
+## 6. Rollback validation result
+
+An authorized rollback observation was attempted after the production releases.
+The previous Ready revisions were:
+
+```text
+pf-rates:   pf-rates-00060-krl
+pf-payroll: pf-payroll-00062-t6q
+```
+
+The current release revisions were:
+
+```text
+pf-rates:   pf-rates-00061-9qd
+pf-payroll: pf-payroll-00063-4dd
+```
+
+Traffic was temporarily routed to each previous revision with an unconditional
+restore path. Both previous revisions failed the public `/health` check within
+`120s`. Traffic was restored to the current revisions, and Cloud Run reported
+`Ready=True`, `RoutesReady=True`, and `100%` traffic on the current revision for
+both services.
+
+The rollback gate is **failed/not approved** until the previous revisions can be
+explained and a controlled rollback health check succeeds. The deployment smoke
+tests for the current revisions had passed before this observation; a subsequent
+public request from this environment also timed out, so public reachability must
+be rechecked from an allowed network before further traffic mutation.
+
+No additional traffic mutation is authorized by this artifact. Preserve the
+current revisions at 100% until the failure is diagnosed.
+
+## 7. Current gate status
 
 The contract is defined and approved for controlled validation. The following
 remain execution gates:
