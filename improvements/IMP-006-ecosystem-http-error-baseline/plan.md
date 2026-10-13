@@ -12,13 +12,20 @@ Superseded-by: none
 
 - [x] Initial evidence boundary and taxonomy drafted.
 - [x] Brief and recommendation approved.
-- [ ] Existing service error contracts inventoried.
+- [x] Existing service error contracts inventoried.
 - [ ] Sanitized evidence template validated against synthetic failures.
 - [ ] `pf-rates`, `pf-payroll`, and `pf-sheets` adoption owners confirmed.
 - [ ] Release-validation checklist published and linked from affected docs.
 
-## 2. Implementation slices
+## 2. Contract inventory evidence
 
+The initial read-only route and Web App inventory is recorded in
+[`contract-inventory.md`](contract-inventory.md). It covers the implemented
+`pf-rates` and `pf-payroll` route surfaces, the `pf-sheets` `doGet`/`doPost`
+boundary, authentication differences, and the next comparisons against OpenAPI,
+API docs, Postman, and consumer behavior.
+
+## 3. Implementation slices
 ### Slice 1 — Contract inventory
 
 Compare routes, OpenAPI, service API docs, Postman, and Apps Script Web App
@@ -44,7 +51,7 @@ release validation. Do not alter public responses as part of this improvement.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-13 | in progress | Owner approved the brief and recommendation; started Slice 1 contract inventory. | Conversation approval; current source repositories |
+| 2026-10-13 | in progress | Completed Slice 1 initial route/Web App inventory; documented authentication boundaries and next OpenAPI/docs/Postman comparisons. | [`contract-inventory.md`](contract-inventory.md) |
 
 ## 4. Release record
 
