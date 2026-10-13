@@ -162,11 +162,11 @@ restrictions, the agent must not assume results or ask the user for loose comman
 It must prepare a Cloud Shell `.sh` script and give the user one controlled entry
 point.
 ### Script location and versioning
-- Store reviewed Cloud Shell scripts under `scripts/cloudshell/` in this repository.
-- Runtime result directories and archives remain ignored; scripts themselves are
-  versioned so the centralized catalog is reviewable.
-- Use `<improvement-id>-gcp-<nn>.sh`, with a sequence unique within the improvement.
-- Never version credentials, raw payloads, archives, or result directories.
+- Runtime Cloud Shell and Neon shell scripts under the ecosystem root `scripts/`
+  are ignored by policy; do not add new `imp-*.sh` files to Git.
+- The only versioned shell template is `scripts/neon/pf-neon-script-base.sh`.
+- Safe non-shell examples may be versioned when explicitly reviewed. Runtime result
+  directories, archives, credentials, and local configuration remain ignored.
 ### Required script behavior
 Every Cloud Shell script must:
 1. Start with `#!/usr/bin/env bash`, `set -euo pipefail`, and `umask 077`; never use
@@ -200,9 +200,8 @@ The cleanup command must warn the user not to run it until the local archive has
 been verified. If `cloudshell download` is used, do not delete immediately after
 it returns: the browser transfer may still be pending.
 ### Base template
-Copy and adapt this template in the centralized `scripts/cloudshell/` directory. Keep the
-project ID explicit, replace the example read-only query, and preserve the safety
-boundaries:
+This Cloud Shell template is retained for reference; operational `.sh` files are not
+versioned under the root `scripts/` policy. Keep credentials out of arguments and source:
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -235,11 +234,9 @@ or SQL via `psql`, but network/VPC restrictions prevent direct access, the agent
 not assume results or ask for loose commands. It must prepare a local `.sh` script for
 the user to execute on their machine.
 ### Location and versioning
-- Store reviewed Neon scripts and safe examples under `scripts/neon/` in this
-  repository. Runtime result directories and credential files remain ignored.
-- Use `<improvement-id>-neon-<nn>.sh`, with a sequence unique to the improvement.
-- Safe templates/examples may be versioned; credentials, results, archives, and
-  runtime directories must not be versioned.
+- Runtime Neon shell scripts are ignored under the ecosystem root `scripts/`.
+- Only the reviewed base template `scripts/neon/pf-neon-script-base.sh` is versioned.
+- Runtime result directories and credential files remain ignored.
 ### Required script behavior
 Every Neon script must:
 1. Use `#!/usr/bin/env bash`, `set -euo pipefail`, `umask 077`, and never `set -x`.
@@ -269,8 +266,8 @@ Every Neon script must:
 10. Use a failure trap that records the failed step without sensitive data, removes the
     temporary `pgpass`, and preserves partial results.
 ### Base template
-Adapt this template in the centralized `scripts/neon/` directory; keep credentials out of
-arguments and source:
+The reviewed Neon template lives at the ecosystem root `scripts/neon/pf-neon-script-base.sh`.
+Keep credentials out of arguments and source:
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
