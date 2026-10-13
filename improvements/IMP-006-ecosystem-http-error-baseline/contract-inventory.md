@@ -91,6 +91,23 @@ were collected.
 The Web App returns plain text for `doGet` and JSON for `doPost`. The boundary is
 not a FastAPI route and must not be normalized as if it were one.
 
+## Documentation and Postman comparison
+
+The route inventory contains 19 `pf-rates` paths and 31 `pf-payroll` paths
+(including the shared health/reference surfaces). Every inspected implementation
+path has a corresponding entry in the owning `docs/api.md`.
+
+The Postman collection represents the dynamic paths with collection variables or
+concrete example identifiers, including:
+
+- `{{export_job_id}}` for export-job lookup and stop operations;
+- concrete template IDs for template lookup, update, and delete;
+- the documented `pf-sheets` Web App request shapes in its service folder.
+
+No implementation-to-API-docs mismatch was identified in this read-only pass. No
+public contract change is proposed. The next slice is sanitized evidence-template
+creation and synthetic failure validation.
+
 ## Initial observations
 
 1. The service route inventories and documented API surfaces can be compared using
@@ -104,9 +121,7 @@ not a FastAPI route and must not be normalized as if it were one.
 
 ## Next validation
 
-- Compare each documented endpoint and authentication rule with the Postman
-  collection and generated OpenAPI.
-- Compare `pf-sheets` request parameters and response handling with the Web App
-  implementation and its API docs.
-- Record intentional differences and unresolved mismatches in this file using
-  sanitized evidence.
+- Create the sanitized evidence template.
+- Validate representative synthetic contract, client, application, dependency,
+  infrastructure, and unknown cases.
+- Record any intentional differences or unresolved mismatches as sanitized evidence.
