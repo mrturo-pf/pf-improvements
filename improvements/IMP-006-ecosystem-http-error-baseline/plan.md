@@ -13,7 +13,7 @@ Superseded-by: none
 - [x] Initial evidence boundary and taxonomy drafted.
 - [x] Brief and recommendation approved.
 - [x] Existing service error contracts inventoried.
-- [ ] Sanitized evidence template validated against synthetic failures.
+- [x] Sanitized evidence template validated against synthetic failures.
 - [ ] `pf-rates`, `pf-payroll`, and `pf-sheets` adoption owners confirmed.
 - [ ] Release-validation checklist published and linked from affected docs.
 
@@ -25,7 +25,14 @@ The initial read-only route and Web App inventory is recorded in
 boundary, authentication differences, and the next comparisons against OpenAPI,
 API docs, Postman, and consumer behavior.
 
-## 3. Implementation slices
+## 3. Evidence template
+
+The sanitized record schema and synthetic example are defined in
+[`evidence-template.md`](evidence-template.md). The schema separates HTTP status,
+classification, dependency, owner, next action, and resolution without storing
+operational task status in Git.
+
+## 4. Implementation slices
 ### Slice 1 — Contract inventory
 
 Compare routes, OpenAPI, service API docs, Postman, and Apps Script Web App
@@ -47,13 +54,13 @@ unknown cases without real personal or financial data.
 Link the baseline from affected service docs and use it during `pf-svc-income`
 release validation. Do not alter public responses as part of this improvement.
 
-## 3. Change log
+## 5. Change log
 
 | Date | Status | Change | Evidence |
-|---|---|---|---|
 | 2026-10-13 | in progress | Completed Slice 1 initial route/Web App inventory; documented authentication boundaries and next OpenAPI/docs/Postman comparisons. | [`contract-inventory.md`](contract-inventory.md) |
+| 2026-10-13 | in progress | Added and validated the sanitized evidence template and synthetic example; no production evidence or runtime mutation. | [`evidence-template.md`](evidence-template.md); synthetic schema assertions |
 
-## 4. Release record
+## 6. Release record
 
 - Commits: pending
 - Workflow runs: pending
