@@ -32,7 +32,7 @@
       "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/2",
       "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-007-cloud-run-observability-and-capacity/plan.md",
-      "next_action": "Define the cheapest viable operational baseline."
+      "next_action": "Run the approved dependency-failure and timeout scenarios, then execute the authorized Cloud Run scale-out/overlap window and collect alert, release, and rollback evidence."
     },
     {
       "id": "IMP-009",

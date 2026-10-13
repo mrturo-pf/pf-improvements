@@ -1,11 +1,11 @@
 # Brief: Cloud Run observability and capacity
 
 Date: 2026-10-12
-Status: investigating
+Status: approved
 Level: M
 Scope: Cheapest viable Cloud Run observability, capacity, probe, and database connection-budget baseline for PF services.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md) · [register](../../index.md)
-Approved: pending explicit owner approval
+Approved: 2026-10-13 by owner (conversation)
 Superseded-by: none
 
 ## Objective

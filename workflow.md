@@ -239,31 +239,33 @@ the user to execute on their machine.
 - Runtime result directories and credential files remain ignored.
 ### Required script behavior
 Every Neon script must:
-1. Use `#!/usr/bin/env bash`, `set -euo pipefail`, `umask 077`, and never `set -x`.
-2. Define explicit `PROJECT_ID`, `BRANCH`, and `DATABASE` variables; validate the
+1. Source the approved unset-proxy helper before `neonctl`, DNS, or `psql` access so
+   direct Neon connectivity is attempted without stale corporate proxy variables.
+2. Use `#!/usr/bin/env bash`, `set -euo pipefail`, `umask 077`, and never `set -x`.
+3. Define explicit `PROJECT_ID`, `BRANCH`, and `DATABASE` variables; validate the
    project and branch before showing the target context.
-3. Check required binaries (`neonctl`, `psql`, `jq`, etc.) and print installation
+4. Check required binaries (`neonctl`, `psql`, `jq`, etc.) and print installation
    guidance before aborting when one is missing.
-4. Use `neonctl auth`, `NEON_API_KEY`, or a single-line credential file explicitly
+5. Use `neonctl auth`, `NEON_API_KEY`, or a single-line credential file explicitly
    documented by the module and ignored under `scripts/neon/`; credential files
    must be mode
    `600`. Never accept credentials as arguments. If a value is needed interactively,
    use `read -rs`. For SQL, capture the connection string in memory and use a `mktemp`
    `pgpass` file with mode `600`, `sslmode=require`, and an unconditional trap.
-5. Use the least-privileged role. Warn in console and `summary.md` before using an
+6. Use the least-privileged role. Warn in console and `summary.md` before using an
    owner role. Unset sensitive variables immediately after use.
-6. Be read-only by default: use `BEGIN READ ONLY`, `default_transaction_read_only=on`,
+7. Be read-only by default: use `BEGIN READ ONLY`, `default_transaction_read_only=on`,
    and a reasonable `statement_timeout`. Mutations require a listed action and `y/N`
    confirmation, must be idempotent, and schema/data changes should use a temporary
    Neon branch first.
-7. Never extract raw business/personal data. Prefer schema, index, size, count,
+8. Never extract raw business/personal data. Prefer schema, index, size, count,
    explain, and configuration metadata; mask sensitive columns and keep samples tiny.
-8. Create `<id>-neon-<nn>-<YYYYMMDDTHHMMSSZ>` in the current directory, verify it is
+9. Create `<id>-neon-<nn>-<YYYYMMDDTHHMMSSZ>` in the current directory, verify it is
    ignored with `git check-ignore -v`, and write every result there.
-9. Put each query in its own structured file (`neonctl --output json`, CSV, or
+10. Put each query in its own structured file (`neonctl --output json`, CSV, or
    unaligned `psql`) and write `summary.md` with target context, commands, findings,
    errors, resources, and cleanup commands. Never write credentials or connection strings.
-10. Use a failure trap that records the failed step without sensitive data, removes the
+11. Use a failure trap that records the failed step without sensitive data, removes the
     temporary `pgpass`, and preserves partial results.
 ### Base template
 The reviewed Neon template lives at the ecosystem root `scripts/neon/pf-neon-script-base.sh`.

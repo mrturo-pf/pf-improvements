@@ -5,7 +5,7 @@ Status: investigating
 Level: M
 Scope: Establish the cheapest viable Cloud Run observability, probe, scaling, concurrency, and database connection-budget baseline for PF services.
 Owner: `pf-common`
-Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md) · [register](../../index.md)
+Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md) · [runtime inventory](runtime-inventory.md) · [capacity model](capacity-model.md) · [probe validation](probe-validation.md) · [synthetic validation](synthetic-validation.md) · [register](../../index.md)
 Superseded-by: none
 
 ## 1. Question
@@ -40,12 +40,23 @@ credentials, raw request payloads, personal/financial data, or database contents
 
 Open questions:
 
-1. What connection budget is approved for each service and deployment size?
-2. Which health endpoint is suitable for startup/readiness versus liveness?
-3. Which latency/error thresholds are meaningful for the current traffic profile?
-4. Which alerts are actionable enough to justify operational ownership?
+1. Which health endpoint is suitable for startup/readiness versus liveness?
+2. Which latency/error thresholds are meaningful for the current traffic profile?
+3. Which alerts are actionable enough to justify operational ownership?
 
-## 4. Current conclusion
+## 4. Slice 1 result
+
+The local runtime inventory is complete. It confirms the shared deployment values
+(`min=0`, `max=2`, `1 CPU`, `512Mi`, port `8080`) and identifies the remaining
+control gaps: request concurrency, timeout, probe declarations, and explicit pool
+limits. Both `/health` routes are process-only checks. The detailed evidence is in
+[runtime-inventory.md](runtime-inventory.md).
+
+The next blocking question is the PostgreSQL connection budget and rollout overlap
+policy owned by `pf-db`; no numeric budget is assumed from undocumented defaults.
+The parametric capacity model is drafted in [capacity-model.md](capacity-model.md).
+
+## 5. Current conclusion
 
 Create a shared operational baseline and validate it per service before changing
 workflow defaults. Do not provision always-on capacity or paid dashboards merely to

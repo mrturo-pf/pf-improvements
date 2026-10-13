@@ -1,11 +1,11 @@
 # Recommendation: Cloud Run observability and capacity
 
 Date: 2026-10-12
-Status: designed
+Status: approved
 Level: M
 Scope: Cheapest viable Cloud Run observability, capacity, probe, and database connection-budget baseline for PF services.
-Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md) · [register](../../index.md)
-Approved: pending explicit owner approval
+Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md) · [runtime inventory](runtime-inventory.md) · [capacity model](capacity-model.md) · [probe validation](probe-validation.md) · [synthetic validation](synthetic-validation.md) · [register](../../index.md)
+Approved: 2026-10-13 by owner (conversation)
 Superseded-by: none
 
 ## 1. Recommendation
@@ -29,6 +29,8 @@ Adopt a four-part baseline:
 Each service release records revision, region, resource settings, probe behavior,
 observed latency/error outcomes, database pool settings, calculated connection
 upper bound, alert ownership, and rollback decision. No secrets or raw payloads.
+The runtime inventory is the first evidence record and must be updated when the
+workflow or service runtime contract changes.
 
 ## 3. Rejected alternatives
 
