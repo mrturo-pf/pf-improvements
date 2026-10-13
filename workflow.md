@@ -162,23 +162,11 @@ restrictions, the agent must not assume results or ask the user for loose comman
 It must prepare a Cloud Shell `.sh` script and give the user one controlled entry
 point.
 ### Script location and versioning
-- Store the script under `<module>/docs/cloudshell/`, or under
-  `docs/cloudshell/` at the root when no module owns the work.
-- `cloudshell/` is ignored and scripts in it are **not versioned**.
-- Before creating or updating a script, run `git check-ignore -v <script-path>`
-  from the owning repository. If the path is already tracked, tell the user and do
-  not silently bypass tracking.
-- Every `modules/*/docs/` and the root `docs/` must contain a `.gitignore` with:
-  ```gitignore
-  cloudshell/
-  ```
-  Add the line only when absent and preserve all other `.gitignore` content. A new
-  module must create this `.gitignore` when its `docs/` directory is created.
-- Use `<improvement-id>-gcp-<nn>.sh`, for example `imp-001-gcp-01.sh`, with a
-  sequence number unique within the improvement.
-- Do not mention the script name, path, downloaded archive, or archive contents in
-  versioned investigations, briefs, recommendations, plans, logs, commits, or PRs.
-  Versioned artifacts may contain only sanitized conclusions and decisions.
+- Store reviewed Cloud Shell scripts under `scripts/cloudshell/` in this repository.
+- Runtime result directories and archives remain ignored; scripts themselves are
+  versioned so the centralized catalog is reviewable.
+- Use `<improvement-id>-gcp-<nn>.sh`, with a sequence unique within the improvement.
+- Never version credentials, raw payloads, archives, or result directories.
 ### Required script behavior
 Every Cloud Shell script must:
 1. Start with `#!/usr/bin/env bash`, `set -euo pipefail`, and `umask 077`; never use
@@ -212,7 +200,7 @@ The cleanup command must warn the user not to run it until the local archive has
 been verified. If `cloudshell download` is used, do not delete immediately after
 it returns: the browser transfer may still be pending.
 ### Base template
-Copy and adapt this template in the ignored `docs/cloudshell/` directory. Keep the
+Copy and adapt this template in the centralized `scripts/cloudshell/` directory. Keep the
 project ID explicit, replace the example read-only query, and preserve the safety
 boundaries:
 ```bash
@@ -247,23 +235,11 @@ or SQL via `psql`, but network/VPC restrictions prevent direct access, the agent
 not assume results or ask for loose commands. It must prepare a local `.sh` script for
 the user to execute on their machine.
 ### Location and versioning
-- Store the script under `<repository>/scripts/neon/`, where
-  `<repository>` is the owning module or the root repository.
-- An owning `scripts/neon/` directory is ignored except for explicitly
-  versioned safe templates/examples; runtime scripts, credentials, and results are
-  not versioned. The root repository and every module use the same
-  `scripts/neon/` location.
-- Before creating/updating a script, run `git check-ignore -v <script-path>` from the
-  owning repository. If already tracked, report it and do not silently bypass tracking.
-- The owning repository's `scripts/.gitignore` must contain the `neon/*`
-  rule and explicit exceptions for any approved safe templates/examples.
-  Preserve all other rules. New modules add this rule when `scripts/` is created.
-- Name safe templates/examples by appending `.example` to the complete source
-  filename (`config.json.example`, `.env.example`); do not use `-example` or
-  `example` before the source extension.
-- Name scripts `<improvement-id>-neon-<nn>.sh`, with a sequence unique to the improvement.
-- Do not mention the script name/path, result directory, downloaded results, or their
-  contents in versioned artifacts. Record only sanitized conclusions.
+- Store reviewed Neon scripts and safe examples under `scripts/neon/` in this
+  repository. Runtime result directories and credential files remain ignored.
+- Use `<improvement-id>-neon-<nn>.sh`, with a sequence unique to the improvement.
+- Safe templates/examples may be versioned; credentials, results, archives, and
+  runtime directories must not be versioned.
 ### Required script behavior
 Every Neon script must:
 1. Use `#!/usr/bin/env bash`, `set -euo pipefail`, `umask 077`, and never `set -x`.
@@ -293,8 +269,7 @@ Every Neon script must:
 10. Use a failure trap that records the failed step without sensitive data, removes the
     temporary `pgpass`, and preserves partial results.
 ### Base template
-Adapt this template in the owning repository's ignored `scripts/neon/`
-directory; keep credentials out of
+Adapt this template in the centralized `scripts/neon/` directory; keep credentials out of
 arguments and source:
 ```bash
 #!/usr/bin/env bash
