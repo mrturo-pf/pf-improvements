@@ -89,60 +89,42 @@ Rollback is a Cloud Run traffic mutation and requires explicit operator approval
 The rollback target must be a previously Ready revision; do not rebuild or deploy
 an unverified replacement during incident response.
 
-## 6. Rollback validation result
+## 7. Rollback validation result
 
-An authorized rollback observation was attempted after the production releases.
-The previous Ready revisions were:
-
-```text
-pf-rates:   pf-rates-00060-krl
-pf-payroll: pf-payroll-00062-t6q
-```
-
-The current release revisions were:
+A controlled Cloud Shell rollback validation completed on 2026-10-13 using the
+previous revisions and an unconditional restore path:
 
 ```text
-pf-rates:   pf-rates-00061-9qd
-pf-payroll: pf-payroll-00063-4dd
+pf-rates:
+  previous: pf-rates-00060-krl
+  health: HTTP 200
+  duration: 8s
+  restored: pf-rates-00061-9qd
+
+pf-payroll:
+  previous: pf-payroll-00062-t6q
+  health: HTTP 200
+  duration: 17s
+  restored: pf-payroll-00063-4dd
 ```
 
-Traffic was temporarily routed to each previous revision with an unconditional
-restore path. Both previous revisions failed the public `/health` check within
-`120s`. Traffic was restored to the current revisions, and Cloud Run reported
-`Ready=True`, `RoutesReady=True`, and `100%` traffic on the current revision for
-both services.
+Both previous revisions returned the expected service identity and `status=ok`
+from Cloud Shell. The archive contained two sanitized log entries per service,
+and traffic was restored to the current revision after each test. The previous
+rollback timeout observed from the local network was therefore an observation-path
+problem, not evidence of an unhealthy application revision.
 
-The rollback gate is **failed/not approved** until the previous revisions can be
-explained and a controlled rollback health check succeeds. The deployment smoke
-tests for the current revisions had passed before this observation; a subsequent
-public request from this environment also timed out, so public reachability must
-be rechecked from an allowed network before further traffic mutation.
+The rollback gate is **passed** for this controlled health validation. Business
+endpoint rollback validation and a longer traffic soak remain outside this slice.
 
-No additional traffic mutation is authorized by this artifact. Preserve the
-current revisions at 100% until the failure is diagnosed.
+## 8. Rollback diagnosis result
 
-## 7. Rollback diagnosis result
+The earlier diagnosis archive remains useful: both revision pairs used the same
+runtime settings, passed startup probes, and showed no application crash. The
+Cloud Shell result resolves the earlier ambiguity in favor of the local
+observation/network path.
 
-The Cloud Shell diagnosis archive compared both revision pairs and read up to 200
-sanitized log entries per service. It found:
-
-- current and previous revisions use the same port, concurrency, timeout, and
-  max-scale settings;
-- both previous revisions reached `Ready=True` and passed the startup TCP probe;
-- both applications logged Uvicorn listening on `0.0.0.0:8080` and application
-  startup complete;
-- `pf-payroll-00062-t6q` served `/reference-data/health-institutions` with HTTP
-  200 before retirement;
-- `pf-rates-00060-krl` completed startup synchronization and had no crash evidence;
-- no new startup/request logs were present for the previous revisions during the
-  later rollback attempt.
-
-The evidence does not identify an application crash. The rollback timeout is
-therefore inconclusive between retired-revision reactivation, traffic routing,
-and the observation network path. A revision-specific or Cloud Shell-originated
-request is required before calling the rollback healthy or unhealthy.
-
-## 8. Current gate status
+## 9. Current gate status
 
 The contract is defined and approved for controlled validation. The following
 remain execution gates:
