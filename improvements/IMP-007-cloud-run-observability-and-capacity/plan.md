@@ -54,12 +54,12 @@ scale-to-zero and document rollback for every setting change.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-14 | in progress | Controlled 50/50 revision overlap passed for both services and traffic restored to stable: pf-rates 178/180 HTTP 200, pf-payroll 117/120 HTTP 200; DNS failures were isolated to Cloud Shell observation. | [operational validation](operational-validation.md); archive `IMP-007-gcp-overlap-20261014T011117Z.tar.gz` |
+| 2026-10-14 | in progress | Latest stable-DNS scale run archive `IMP-007-gcp-scale-20261014T012556Z.tar.gz`: pf-rates 2,557/2,560 HTTP 200 and pf-payroll 2,555/2,560; immediate instance metric query returned no timeSeries, so next step is delayed 30-minute metric check for pf-rates. | [operational validation](operational-validation.md); `scripts/cloudshell/IMP-007-gcp-instance-metric-check.sh` |
 
 ## 4. Release record
 
-- Commits: local commits prepared; see change log
-- Workflow runs: pending push and GitHub Actions access
-- Owner approval: recorded 2026-10-13
-- Service validation: pending
+- Commits: published; latest `pf-improvements` IMP-007 documentation commit `3a36ea9`
+- Workflow runs: production deploy/migration workflows passed
+- Owner approval: recorded 2026-10-13; production gates approved 2026-10-13
+- Service validation: representative and rollback validation passed; pf-rates scale-out conclusion pending delayed metric query
 - Rollback evidence: passed controlled Cloud Shell health rollback; current revisions restored at 100%
