@@ -19,6 +19,7 @@ permissions:
 
 jobs:
   validate:
+    name: Improvement metadata validation
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
