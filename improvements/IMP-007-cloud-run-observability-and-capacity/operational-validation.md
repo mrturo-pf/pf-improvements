@@ -159,7 +159,32 @@ threshold.
 Scale-out and overlap gates remain open. The next run must collect instance-count
 samples and use a stable DNS path before it can be accepted as capacity evidence.
 
-## 11. Current gate status
+## 12. Scale observation with Cloud Monitoring
+
+The REST-based Cloud Monitoring run completed on 2026-10-14:
+
+```text
+pf-rates:
+  HTTP: 959/960 responses 200
+  maximum observed instance_count: 1
+  traffic: 100% current revision
+
+pf-payroll:
+  HTTP: 957/960 responses 200
+  instance_count response: no timeSeries returned
+  traffic: 100% current revision
+```
+
+The run still recorded intermittent Cloud Shell DNS failures (`1` for
+`pf-rates`, `3` for `pf-payroll`). `pf-rates` provides evidence that the service
+stayed at one instance under this bounded health load; it does not prove that the
+configured scale-out path works. `pf-payroll` needs a corrected Monitoring query
+or metric availability check before its instance count can be assessed.
+
+Scale-out and overlap gates remain open. No traffic or service configuration was
+changed.
+
+## 13. Current gate status
 
 The contract is defined and approved for controlled validation. The following
 remain execution gates:
