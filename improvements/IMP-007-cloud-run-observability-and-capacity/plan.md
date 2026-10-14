@@ -53,7 +53,7 @@ scale-to-zero and document rollback for every setting change.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-13 | in progress | Controlled Cloud Shell rollback passed: `pf-rates` previous health 200 in 8s and `pf-payroll` previous health 200 in 17s; both restored to current revisions. | [operational validation](operational-validation.md); archive `IMP-007-gcp-rollback-20261013T235520Z.tar.gz` |
+| 2026-10-13 | in progress | Local dependency-failure and timeout contracts passed with test doubles: pf-payroll 8 tests and pf-rates 3 selected tests. Live dependency-failure validation remains intentionally unperformed. | [operational validation](operational-validation.md) |
 
 ## 4. Release record
 

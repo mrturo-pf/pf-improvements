@@ -124,6 +124,21 @@ runtime settings, passed startup probes, and showed no application crash. The
 Cloud Shell result resolves the earlier ambiguity in favor of the local
 observation/network path.
 
+## 8. Local dependency and timeout validation
+
+The controlled test-double scenarios were executed locally after the production
+release:
+
+```text
+pf-payroll HTTP dependency client tests: 8 passed
+pf-rates provider failure/timeout tests: 3 passed, 35 deselected
+```
+
+The coverage includes HTTP `503`, connection errors, read timeouts, provider
+timeouts, and offline/failure handling. These tests validate bounded error
+mapping and retry behavior without disabling a production dependency. They do not
+replace a live Cloud Run dependency-failure test.
+
 ## 9. Current gate status
 
 The contract is defined and approved for controlled validation. The following
