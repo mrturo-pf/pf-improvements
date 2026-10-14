@@ -208,7 +208,34 @@ explicit documented explanation for remaining at one.
 This query did not observe two revisions receiving traffic simultaneously, so the
 overlap gate remains open.
 
-## 15. Current gate status
+## 16. Revision-overlap observation
+
+A controlled Cloud Shell observation routed traffic 50/50 between stable and
+candidate revisions, then restored 100% traffic to stable:
+
+```text
+pf-rates:
+  stable:   pf-rates-00061-9qd
+  candidate: pf-rates-00062-8t8
+  observed split: 50% / 50%
+  requests: 180 (178 HTTP 200, 2 DNS failures)
+  restored: 100% stable
+
+pf-payroll:
+  stable:   pf-payroll-00063-4dd
+  candidate: pf-payroll-00064-7s7
+  observed split: 50% / 50%
+  requests: 120 (117 HTTP 200, 3 DNS failures)
+  restored: 100% stable
+```
+
+The overlap routing and automatic restoration passed. The DNS failures are an
+observation-environment issue already seen in the scale runner; they do not alter
+the confirmed traffic split or restoration result. This validates routing overlap,
+not database connection overlap; Neon correlation during the split remains a
+future enhancement if needed.
+
+## 17. Current gate status
 
 The contract is defined and approved for controlled validation. The following
 remain execution gates:

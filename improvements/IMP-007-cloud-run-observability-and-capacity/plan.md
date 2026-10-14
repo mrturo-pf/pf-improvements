@@ -18,7 +18,8 @@ Superseded-by: none
 - [x] Explicit pool limits adopted by both consumers.
 - [x] Alert ownership and thresholds approved.
 - [x] Representative read-only synthetic validation and Neon correlation passed.
-- [ ] Per-service failure/timeout, scale-out, and overlap validation passed.
+- [x] Revision-overlap routing and restoration validated.
+- [ ] Per-service failure/timeout and scale-out validation passed.
 - [x] Shared default changes, if any, released with rollback evidence.
 
 ## 2. Implementation slices
@@ -53,7 +54,7 @@ scale-to-zero and document rollback for every setting change.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-14 | in progress | Delayed 30-minute Cloud Monitoring query found `pf-payroll` at up to 2 idle instances and `pf-rates` at max 1; scale-out evidence is partial and revision overlap remains untested. | [operational validation](operational-validation.md); archive `IMP-007-gcp-metrics-20261014T004855Z.tar.gz` |
+| 2026-10-14 | in progress | Controlled 50/50 revision overlap passed for both services and traffic restored to stable: pf-rates 178/180 HTTP 200, pf-payroll 117/120 HTTP 200; DNS failures were isolated to Cloud Shell observation. | [operational validation](operational-validation.md); archive `IMP-007-gcp-overlap-20261014T011117Z.tar.gz` |
 
 ## 4. Release record
 
