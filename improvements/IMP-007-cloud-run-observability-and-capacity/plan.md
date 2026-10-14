@@ -53,7 +53,7 @@ scale-to-zero and document rollback for every setting change.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-13 | in progress | Local dependency-failure and timeout contracts passed with test doubles: pf-payroll 8 tests and pf-rates 3 selected tests. Live dependency-failure validation remains intentionally unperformed. | [operational validation](operational-validation.md) |
+| 2026-10-14 | in progress | Bounded Cloud Shell health observation completed: 4,800 requests total, 4,784 HTTP 200, 16 intermittent DNS failures; baseline/final maxScale remained 2, but no instance-count metric was collected, so scale-out remains unproven. | [operational validation](operational-validation.md); archive `IMP-007-gcp-scale-20261014T000923Z.tar.gz` |
 
 ## 4. Release record
 

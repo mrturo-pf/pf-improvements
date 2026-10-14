@@ -139,7 +139,27 @@ timeouts, and offline/failure handling. These tests validate bounded error
 mapping and retry behavior without disabling a production dependency. They do not
 replace a live Cloud Run dependency-failure test.
 
-## 9. Current gate status
+## 10. Bounded scale observation result
+
+A Cloud Shell bounded health observation ran for 180 seconds with 160 workers per
+service and no Cloud Run traffic mutation:
+
+```text
+pf-rates:   2,560 requests; 2,551 HTTP 200; 9 DNS failures
+pf-payroll: 2,240 requests; 2,233 HTTP 200; 7 DNS failures
+```
+
+Both services retained `maxScale=2` and 100% traffic on the current revision at
+baseline and final observation. The run did not collect Cloud Monitoring
+`instance_count`, so it cannot prove whether scale-out occurred. The DNS failures
+were intermittent Cloud Shell resolver errors and make the run unsuitable as a
+clean SLO sample, although the observed failure ratio remained below the warning
+threshold.
+
+Scale-out and overlap gates remain open. The next run must collect instance-count
+samples and use a stable DNS path before it can be accepted as capacity evidence.
+
+## 11. Current gate status
 
 The contract is defined and approved for controlled validation. The following
 remain execution gates:
