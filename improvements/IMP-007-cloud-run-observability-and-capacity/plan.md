@@ -53,7 +53,7 @@ scale-to-zero and document rollback for every setting change.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-14 | in progress | REST Cloud Monitoring run completed: `pf-rates` stayed at max observed instance count 1; `pf-payroll` returned no timeSeries; 4 intermittent DNS failures were recorded. Scale-out remains unproven. | [operational validation](operational-validation.md); archive `IMP-007-gcp-scale-20261014T003851Z.tar.gz` |
+| 2026-10-14 | in progress | Delayed 30-minute Cloud Monitoring query found `pf-payroll` at up to 2 idle instances and `pf-rates` at max 1; scale-out evidence is partial and revision overlap remains untested. | [operational validation](operational-validation.md); archive `IMP-007-gcp-metrics-20261014T004855Z.tar.gz` |
 
 ## 4. Release record
 

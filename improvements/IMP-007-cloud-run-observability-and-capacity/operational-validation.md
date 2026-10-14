@@ -184,7 +184,31 @@ or metric availability check before its instance count can be assessed.
 Scale-out and overlap gates remain open. No traffic or service configuration was
 changed.
 
-## 13. Current gate status
+## 14. Delayed instance metric result
+
+A 30-minute read-only Cloud Monitoring query completed after the load window:
+
+```text
+pf-rates:
+  active instance max: 1
+  idle instance max:   1
+
+pf-payroll:
+  active instance max: 1
+  idle instance max:   2
+```
+
+This confirms that the metric publication path works and that `pf-payroll`
+reached the configured two-instance ceiling during the observation window. The
+`pf-rates` window remained at one observed instance. The result is therefore
+partial scale-out evidence: payroll passed the scale-out observation, while rates
+still needs a stable-DNS load window that produces a second instance or an
+explicit documented explanation for remaining at one.
+
+This query did not observe two revisions receiving traffic simultaneously, so the
+overlap gate remains open.
+
+## 15. Current gate status
 
 The contract is defined and approved for controlled validation. The following
 remain execution gates:
