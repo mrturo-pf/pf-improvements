@@ -9,8 +9,6 @@ on:
       - "scripts/check-language.py"
       - "scripts/language-policy.txt"
       - ".github/workflows/language-check.yml"
-  pull_request:
-    branches: [main]
   workflow_dispatch: {}
 
 permissions:

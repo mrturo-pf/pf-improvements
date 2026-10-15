@@ -1,8 +1,14 @@
 name: Improvement metadata validation
 
 on:
-  pull_request:
+  push:
     branches: [main]
+    paths:
+      - "improvements/**"
+      - "generated/**"
+      - "improvements.json"
+      - "scripts/validate-improvements.py"
+      - ".github/workflows/improvement-validation.yml"
   workflow_dispatch: {}
 
 permissions:
