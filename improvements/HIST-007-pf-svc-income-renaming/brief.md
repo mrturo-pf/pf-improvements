@@ -8,6 +8,8 @@ Related artifacts: [investigation](investigation.md) · [recommendation](recomme
 Approved: 2026-10-05 by a0a11b7 (conversation)
 Superseded-by: none
 
+> **Phase boundary:** the design proposals were authorized on 2026-10-15 for documentation only. This brief does not authorize implementation, schema migration, resource creation, secret/IAM/Postman changes, deployment, cutover, commit, or push.
+
 > Investigation update 2026-10-15: the current service and rollback baseline remain documented; no `pf-svc-income` GCP resource or secret has been created. `IMP-001`, `IMP-002`, `IMP-004`, `IMP-005`, `IMP-006`, and `IMP-009` are released; `IMP-003` is superseded by `IMP-002`; `IMP-007` is closed with a bounded-evidence limitation; and `IMP-008` is validated/released. Implementation remains blocked only by rename-specific authorization and design gates.
 
 ## Objective

@@ -5,8 +5,12 @@ Status: investigating
 Level: L
 Scope: Ecosystem-wide identity rename of the `pf-payroll` service/repository to `pf-svc-income`, including repository, source package, database ownership references, GCP resources, CI/CD, secrets, documentation, and compatibility.
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: pending user decision
+Approved: design approved; implementation authorization pending
 Superseded-by: none
+
+> **Current phase:** investigation and decision-making only. No implementation, schema
+> migration, resource creation, secret/IAM/Postman mutation, deployment, cutover,
+> commit, or push is authorized by this investigation.
 
 ## 1. Investigation question
 

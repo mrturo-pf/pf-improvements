@@ -8,6 +8,8 @@ Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [pl
 Approved: 2026-10-05 by a0a11b7 (conversation)
 Superseded-by: none
 
+> **Decision boundary:** the target design was authorized on 2026-10-15 for documentation only, not execution. Repository/code changes, schema migrations, resource creation, secrets/IAM/Postman changes, deployment, cutover, commit, and push require separate explicit execution authorization.
+
 ## 1. Executive recommendation
 
 Approve a **phased identity rename** to `pf-svc-income` with these boundaries:

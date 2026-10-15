@@ -8,9 +8,15 @@ Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [re
 Approved: 2026-10-05 by a0a11b7 (conversation)
 Superseded-by: none
 
-> This is a living implementation record. It is intentionally not authorized for execution yet. No implementation, repository rename, secret rotation, push, or deployment has occurred.
+> **Current phase: investigation and decision-making. Implementation authorization is not granted.** The approved recommendation is a design decision, not permission to mutate repositories, create resources, run migrations, change secrets/IAM/Postman, deploy, cut over, commit, or push. No implementation, repository rename, secret rotation, push, or deployment has occurred.
 
 ## 1. Status and gates
+
+**Authorization boundary:** HIST-007 remains `planned` and pre-implementation.
+The design proposals were explicitly authorized on 2026-10-15, but the owner chose
+**documentation only**. No Phase 3 code, schema, Postman, GCP, secrets, IAM,
+commit, push, deployment, migration, or cutover action is authorized. A separate
+execution authorization is required before implementation begins.
 
 - [x] User decisions recorded.
 - [x] Recommendation approved explicitly.
@@ -120,7 +126,89 @@ the physical schema migration, package-boundary implementation, dependency align
 and the existing authorization/cutover gates. External improvement prerequisites
 remain resolved inputs.
 
-## 1.3 Required execution order
+## 1.3 Decision package prepared — implementation not authorized
+
+### Consumer and URL decision
+
+- Treat the current Cloud Run URL as evidence of the existing service only; do not
+  copy it to the renamed service. The future deployment must publish the target URL
+  from Cloud Run and use that value consistently.
+- Adopt `pf-svc-income-url` and `pf-svc-income-api-key` as the future Postman variable
+  names. Keep `/payroll/*` routes unchanged in this rename.
+- Update the collection and LOCAL/GCP environments in one Postman change after the
+  target URL and secret are explicitly approved. Do not add a compatibility alias
+  unless the rollback decision requires it and the alias has an expiry date.
+- Current evidence identifies Postman as the direct functional consumer surface;
+  repository references in `pf-common`, `pf-db`, and service docs are documentation,
+  workflow, or ownership references. No direct runtime caller from `pf-rates` or
+  `pf-sheets` was identified in the read-only search, but the cutover checklist must
+  re-run the search after target URLs are decided.
+
+### Migration design decision
+
+The future `pf-db` migration must be a hand-written, reversible Alembic migration:
+
+1. Assert the expected `PAY_*` objects and columns exist; fail before mutation if
+   the baseline differs.
+2. Enter the approved maintenance boundary and prevent application traffic from
+   writing during the rename.
+3. Rename tables, dependent semantic columns, sequences, indexes, constraints, and
+   the materialized view explicitly. Recreate the view with `INC_*` names and the
+   corrected `INC_MV_PAY_SUMMARY` identifier.
+4. Validate catalog metadata, row counts, primary/foreign keys, sequence ownership,
+   view columns, ORM mappings, and representative queries.
+5. Release traffic only after the new service passes smoke tests.
+6. Provide a downgrade that restores the complete `PAY_*` vocabulary and view
+   definition without data copying or destructive recreation.
+
+The migration must not add a generic income ledger, nullable honorarios fields, or
+new business behavior. `PAY_PERIOD → INC_PAYROLL`, `period_id → payroll_id`, and
+`period_year/month → accrual_year/month` remain approved semantic changes.
+
+### Package-boundary decision
+
+Create `income` only for pure or port-based capabilities with no payroll persistence
+or payroll route dependency. The first extraction slice should be limited to
+quantization/deflation primitives and a narrowed market-data port after tests prove
+that their DTOs and names are not payroll-specific.
+
+Keep persistence, payroll DTOs, payroll periods, employers/contracts, insurance,
+monthly employment tax, PDF, import/reconciliation, and payroll use cases in
+`payroll`. Enforce `payroll → income`; `income` must not import payroll infrastructure.
+
+Before extraction, align the SQLAlchemy constraint mismatch reported by
+`pf-common/scripts/sync_deps.py`; do not silently broaden the `pf-payroll` constraint.
+The alignment decision requires tests in both services and an explicit dependency
+owner.
+
+### Compatibility decisions to capture
+
+- URL: use the service-generated target URL; no custom domain is proposed for this
+  rename because none exists today. Implementation approval remains pending.
+- API key: use an atomic `PF_PAYROLL_API_KEY → PF_INCOME_API_KEY` cutover with no
+  application fallback. Implementation approval remains pending.
+- Schema: use a short maintenance boundary rather than a compatibility bridge;
+  this avoids dual ORM/schema semantics. Implementation approval remains pending.
+- Rollback: retain old service/schema/secret for 14 days or one representative
+  payroll flow, whichever is longer. Implementation approval remains pending.
+- Postman: update collection and both environments atomically after the target URL
+  and secret are created and approved. Implementation approval remains pending.
+
+### Future implementation authorization record
+
+The following approvals must be captured separately before Phase 3:
+
+- [ ] authorize code/package changes in `pf-payroll`;
+- [ ] authorize the `pf-db` migration and maintenance boundary;
+- [ ] authorize Postman collection/environment changes;
+- [ ] authorize new GCP Artifact Registry, Cloud Run, service account, and secrets;
+- [ ] authorize consumer cutover and rollback window;
+- [ ] authorize commits/pushes and deployment approvals for each affected repo.
+
+Until every applicable item is explicitly approved, this package remains design and
+investigation evidence only.
+
+## 1.4 Required execution order
 
 This order is normative for the proposal. Phase 1 is read-only. Approval gates are
 recorded before Phase 3 mutations; external follow-ups remain in the register.
@@ -153,7 +241,7 @@ contracts. Resolve or explicitly accept the registered external gates before Pha
 No target resource, database migration, consumer cutover, or deployment is
 authorized merely because it appears in this plan.
 
-## 1.4 Phase 2 decision package
+## 1.5 Phase 2 decision package
 
 The following decisions are prepared from the Phase 1 evidence. They are proposals for explicit approval, not executed changes. No credential rotation, IAM mutation, resource creation, schema migration, consumer update, or deployment is authorized by this section alone.
 
@@ -485,6 +573,7 @@ Commands are examples and must be run from the correct repository after reading 
 | 2026-10-07 | validating | Completed the local synthetic schema-rename and rollback probe. | `pf-db` migration shape remains implementation work. |
 | 2026-10-10 | blocked | Moved unrelated security, IAM, backup, error-baseline, and observability findings to `IMP-001` through `IMP-007`. | Scope control; detailed follow-ups belong in the ecosystem register. |
 | 2026-10-15 | investigating | Completed read-only consumer/URL, schema, and package-boundary validation. Found stale Postman payroll URL/variable contracts, no `INC_*` migration yet, no `src/income` package yet, and a SQLAlchemy dependency mismatch in `pf-common` sync validation. | Live Cloud Run metadata, Postman GCP environment, `pf-db` migration `0003`, `make identifier-check`, `pf-common/scripts/sync_deps.py` |
+| 2026-10-15 | investigating | Prepared the consumer/URL, reversible migration, package-boundary, compatibility, and authorization decision package. Design proposals were authorized, with documentation-only scope; Phase 3 execution remains unauthorized. | This section; design and recommendation artifacts |
 
 
 ## 6. Release record
