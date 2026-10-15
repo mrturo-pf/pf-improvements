@@ -61,14 +61,16 @@ performed.
 | Cloud Run ingress | `all` | service annotation |
 | Cloud Run max scale | `20` | service annotation |
 | Runtime service account | `gcp-scheduler-runner@coreassistant-474022.iam.gserviceaccount.com` | revision template metadata |
-| Cloud Run IAM policy | not retrieved | blocked by VPC Service Controls |
+| Cloud Run IAM policy | `roles/run.invoker` granted to `allUsers` | sanitized policy archive; service is publicly invocable at IAM level |
 
 The target is the standalone `gcp-scheduler-runner` service, not `pf-payroll`.
 The current job structurally depends on an `X-API-Key` header; its value was not read
-or recorded. The current evidence is sufficient to refine the design target but not to approve
-or execute the cutover. The IAM policy, caller ownership, current authentication
-header behavior, and exact route authorization contract still require an approved
-access path and owner decision.
+or recorded. Cloud Run also grants `roles/run.invoker` to `allUsers`, so IAM currently
+allows public invocation and the API key is an application-level control. The current
+evidence is sufficient to refine the design target but not to approve
+or execute the cutover. The caller identity, current authentication header behavior, and exact route
+authorization contract still require an owner decision. The IAM policy is now
+known: the cutover must add a dedicated caller before removing `allUsers`.
 
 ## 6. Current conclusion
 

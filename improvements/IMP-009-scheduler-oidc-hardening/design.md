@@ -18,14 +18,17 @@ Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [re
 | Service URL | `https://gcp-scheduler-runner-yqd4p7fzaa-uc.a.run.app` | observed |
 | OIDC audience | service URL without `/execute` | proposed; confirm with service contract |
 | Caller service account | dedicated Scheduler-only account, e.g. `gcp-scheduler-oidc@coreassistant-474022.iam.gserviceaccount.com` | proposed; owner must approve exact identity |
-| Invoker grant | `roles/run.invoker` on `gcp-scheduler-runner` only | proposed; IAM policy lookup pending |
-| Ingress | retain current `all` until authenticated cutover is validated | proposed |
+| Current invoker grant | `roles/run.invoker` to `allUsers` | observed; public IAM invocation |
+| Target invoker grant | `roles/run.invoker` on `gcp-scheduler-runner` only | proposed for the dedicated caller |
+| Ingress | current `all`; IAM must stop allowing `allUsers` after cutover | proposed transition |
 
 The audience should identify the Cloud Run service rather than the route. The route
 remains part of the HTTP request; the audience is validated by Cloud Run/IAM.
 The current Scheduler job includes `X-API-Key` and `X-Scheduler-Trigger` header names;
 only the latter may be retained if the route contract requires it. The API-key value
-must not be copied, migrated, or restored.
+must not be copied, migrated, or restored. Cloud Run currently grants
+`roles/run.invoker` to `allUsers`, so removing that public member is a required
+cutover step.
 Do not reuse the runtime service account
 `gcp-scheduler-runner@coreassistant-474022.iam.gserviceaccount.com` as the Scheduler
 caller unless ownership and least-privilege review explicitly approve that choice.
@@ -36,13 +39,15 @@ caller unless ownership and least-privilege review explicitly approve that choic
    recording API-key values. The job metadata confirms an `X-API-Key` header is
    currently configured, while OIDC/OAuth blocks are absent.
 2. Confirm the dedicated caller service account and its ownership.
-3. Grant only service-level `roles/run.invoker` to that caller.
+3. Grant only service-level `roles/run.invoker` to that caller while retaining the
+   current IAM grant until validation is ready.
 4. Configure Scheduler with an OIDC token using the caller account and proposed
    audience.
 5. Run authorized, wrong-audience, unauthorized-caller, expired-token, and route
    failure tests against a safe validation window.
 6. Observe one scheduled execution and one controlled failure.
-7. Remove the static API-key dependency only after evidence and owner approval.
+7. Remove the `allUsers` invoker member and static API-key dependency only after
+   successful evidence and owner approval.
 
 No static API-key fallback is allowed after cutover. Do not make the endpoint
 anonymous to compensate for an unverified token configuration.
@@ -68,7 +73,8 @@ data must not be copied into the improvement repository.
 Before mutation, obtain all of the following:
 
 - IAM policy for `gcp-scheduler-runner` through an approved VPC Service Controls
-  path;
+  path; **completed** by the sanitized archive, showing `allUsers` currently has
+  `roles/run.invoker`;
 - exact current authorization behavior for `/execute`, including whether
   `X-Scheduler-Trigger` remains required after IAM authentication;
 - owner approval of the dedicated caller service account;
@@ -77,6 +83,7 @@ Before mutation, obtain all of the following:
 - confirmation that the legacy API-key path can be removed without changing the
   public API contract.
 
-The current read-only inventory satisfies the resource and route discovery gates,
-but IAM and authorization behavior remain unverified. No IAM, Scheduler, Cloud Run,
-or secret mutation is permitted until these gates are recorded as passed.
+The current read-only inventory satisfies the resource, route, and IAM discovery
+gates. The exact application authorization behavior remains unverified. No IAM,
+Scheduler, Cloud Run, or secret mutation is permitted until the remaining approval
+and validation gates are recorded as passed.
