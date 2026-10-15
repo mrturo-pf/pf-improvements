@@ -72,7 +72,55 @@ reused during cutover validation.
 Rename-specific blockers are consumer inventory, URL cutover, schema migration
 validation, package-boundary review, and explicit authorization.
 
-## 1.2 Required execution order
+## 1.2 Read-only validation — 2026-10-15
+
+### Consumer and URL reconciliation
+
+- The live Cloud Run service is `pf-payroll`, URL
+  `https://pf-payroll-yqd4p7fzaa-uc.a.run.app`, ready revision
+  `pf-payroll-00064-7s7`, using runtime identity
+  `pf-payroll@coreassistant-474022.iam.gserviceaccount.com`.
+- The committed GCP Postman environment still points `pf-payroll-url` to
+  `https://pf-payroll-646185261155.us-central1.run.app` and retains the
+  `pf-payroll-api-key` variable. This is a stale target/identity contract that
+  must be reconciled before a rename cutover; no Postman mutation was made.
+- The collection uses `{{pf-payroll-url}}` and `{{pf-payroll-api-key}}` across the
+  payroll request group. The target migration must update the collection and both
+  environments together, preserving the `/payroll/*` route family.
+- Read-only repository search found no evidence that `pf-rates` or `pf-sheets`
+  calls the payroll service directly at runtime; their remaining references are
+  documentation or ecosystem metadata and still require intentional review.
+
+### Schema migration validation
+
+- `pf-db` migration `0003_rename_tables_service_prefix.py` establishes the current
+  `PAY_*` tables and `PAY_MV_SUMARY`; no `PAY_* → INC_*` migration exists yet.
+- The current `make identifier-check` passes for 36 identifiers. This validates the
+  existing policy only; it does not validate the proposed physical rename.
+- The proposed migration still requires a hand-written Alembic upgrade/downgrade,
+  representative existing-data validation, explicit dependent-index/constraint/
+  sequence/materialized-view checks, and consumer ORM compatibility checks.
+- No database mutation or migration execution was performed in this validation.
+
+### Package-boundary review
+
+- `pf-payroll` has no `src/income` package yet. Its current dependency direction is
+  internally layered, and `payroll.domain` has no SQLAlchemy/http client imports.
+- Initial extraction candidates remain `domain/quantizers.py`, `domain/deflation.py`,
+  and narrowed market-data resolution ports/helpers. Payroll repositories, models,
+  payroll-period DTOs/use cases, employer/contracts, insurance, tax, PDF, and import
+  flows remain payroll-specific.
+- `pf-common/scripts/sync_deps.py` currently fails because SQLAlchemy constraints
+  differ: `pf-payroll` pins `sqlalchemy>=2.0.36,<2.1`, while `pf-rates` declares
+  `sqlalchemy>=2.0.36`. Dependency alignment is required before sharing package
+  infrastructure or treating the package split as complete.
+
+These findings narrow the active HIST-007 blockers to stale consumer/URL contracts,
+the physical schema migration, package-boundary implementation, dependency alignment,
+and the existing authorization/cutover gates. External improvement prerequisites
+remain resolved inputs.
+
+## 1.3 Required execution order
 
 This order is normative for the proposal. Phase 1 is read-only. Approval gates are
 recorded before Phase 3 mutations; external follow-ups remain in the register.
@@ -105,7 +153,7 @@ contracts. Resolve or explicitly accept the registered external gates before Pha
 No target resource, database migration, consumer cutover, or deployment is
 authorized merely because it appears in this plan.
 
-## 1.3 Phase 2 decision package
+## 1.4 Phase 2 decision package
 
 The following decisions are prepared from the Phase 1 evidence. They are proposals for explicit approval, not executed changes. No credential rotation, IAM mutation, resource creation, schema migration, consumer update, or deployment is authorized by this section alone.
 
@@ -436,6 +484,7 @@ Commands are examples and must be run from the correct repository after reading 
 | 2026-10-07 | investigating | Completed rename-relevant route, consumer, Postman, schema, and deployment-identity inventory. | Read-only evidence; target identity does not yet exist. |
 | 2026-10-07 | validating | Completed the local synthetic schema-rename and rollback probe. | `pf-db` migration shape remains implementation work. |
 | 2026-10-10 | blocked | Moved unrelated security, IAM, backup, error-baseline, and observability findings to `IMP-001` through `IMP-007`. | Scope control; detailed follow-ups belong in the ecosystem register. |
+| 2026-10-15 | investigating | Completed read-only consumer/URL, schema, and package-boundary validation. Found stale Postman payroll URL/variable contracts, no `INC_*` migration yet, no `src/income` package yet, and a SQLAlchemy dependency mismatch in `pf-common` sync validation. | Live Cloud Run metadata, Postman GCP environment, `pf-db` migration `0003`, `make identifier-check`, `pf-common/scripts/sync_deps.py` |
 
 
 ## 6. Release record
