@@ -8,7 +8,7 @@ Related artifacts: [investigation](investigation.md) · [recommendation](recomme
 Approved: 2026-10-05 by a0a11b7 (conversation)
 Superseded-by: none
 
-> Investigation update 2026-10-12: the current service and rollback baseline remain documented; no `pf-svc-income` GCP resource or secret has been created. `IMP-001`, `IMP-002`, and `IMP-005` are released, `IMP-003` is superseded by `IMP-002`, and `IMP-008` is validated locally. Implementation remains blocked by rename-specific authorization and design gates; `IMP-004`, `IMP-006`, and `IMP-007` remain release-stage follow-ups rather than undifferentiated blockers.
+> Investigation update 2026-10-15: the current service and rollback baseline remain documented; no `pf-svc-income` GCP resource or secret has been created. `IMP-001`, `IMP-002`, `IMP-004`, `IMP-005`, `IMP-006`, and `IMP-009` are released; `IMP-003` is superseded by `IMP-002`; `IMP-007` is closed with a bounded-evidence limitation; and `IMP-008` is validated/released. Implementation remains blocked only by rename-specific authorization and design gates.
 
 ## Objective
 
@@ -52,7 +52,7 @@ The 2026-10-07 inventory confirms:
 - `IMP-003` is superseded by `IMP-002`, so no duplicate runtime-role work is required;
 - WIF/deployer identity hardening from `IMP-005` is complete;
 - the `IMP-008` identifier policy is validated and applies to the pending physical migration;
-- `IMP-004` remains a separate `pf-rates` shared-secret review, while `IMP-006` and `IMP-007` are release-validation follow-ups.
+- `IMP-004`, `IMP-006`, `IMP-008`, and `IMP-009` are resolved inputs; `IMP-007` is closed with its bounded-evidence limitation explicitly accepted for planning. None is an active blocker for HIST-007.
 
 The new service, secret, account, and repository remain design/deployment work, not completed outcomes.
 

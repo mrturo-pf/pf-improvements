@@ -29,11 +29,11 @@ exist. The rename still requires consumer inventory, URL reconciliation, schema
 migration validation, least-privilege deployment approval, and explicit
 authorization before execution.
 
-The external outcomes are now differentiated: `IMP-001`, `IMP-002`, and `IMP-005`
-are released; `IMP-003` is superseded by `IMP-002`; and `IMP-008` is validated
-locally. `IMP-004` remains an independent `pf-rates` secret-access review, while
-`IMP-006` and `IMP-007` remain release-validation workstreams. This recommendation
-uses those outcomes and does not treat the resolved entries as active blockers.
+The external outcomes are now differentiated: `IMP-001`, `IMP-002`, `IMP-004`,
+`IMP-005`, `IMP-006`, and `IMP-009` are released; `IMP-003` is superseded by
+`IMP-002`; `IMP-007` is closed with a bounded-evidence limitation; and `IMP-008` is
+validated/released. This recommendation uses those outcomes and does not treat them
+as active blockers.
 
 ### Complementary validation decisions
 
@@ -203,11 +203,11 @@ periods[]                    → payrolls[] when the collection contains payroll
 6. Monitor the approved rollback window and remove old resources only after explicit
    authorization.
 
-Security, IAM, backup, error-baseline, and observability designs are tracked by
-`IMP-001` through `IMP-007`; this recommendation consumes their current outcomes
-instead of reproducing their detailed designs. Released outcomes are evidence for
-cutover, while still-open entries are gates only at the release stage where they
-apply.
+Security, IAM, backup, error-baseline, observability, and Scheduler designs are
+tracked by `IMP-001` through `IMP-009`; this recommendation consumes their current
+outcomes instead of reproducing their detailed designs. Released outcomes and the
+accepted bounded-evidence limitation are inputs to cutover validation, not active
+blockers.
 
 ## 6. Secret cutover strategy
 
@@ -294,9 +294,8 @@ Before implementation or resource creation, require:
 - consumer, URL, OpenAPI, API documentation, and Postman reconciliation;
 - explicit authorization for repository changes, resource creation, secret changes,
   commits, pushes, and deployment;
-- resolution or explicit acceptance of the still-open registered gates that affect
-  cutover (`IMP-004`, `IMP-006`, and `IMP-007`);
+- reuse of the released `IMP-004`, `IMP-006`, `IMP-008`, and `IMP-009` evidence and
+  the accepted bounded-evidence limitation from `IMP-007` during cutover validation;
 
-`IMP-008` identifier policy is validated locally and must be applied to the
-physical migration; only release evidence remains pending. The rename recommendation
+The external prerequisite gates are no longer blockers. The rename recommendation
 does not authorize the migration or activate any deployment.

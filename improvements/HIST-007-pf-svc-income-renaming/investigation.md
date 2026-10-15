@@ -399,9 +399,8 @@ The local probe confirmed the approved rename shape for synthetic data:
 - rows, IDs, foreign keys, materialized-view columns, and rollback were checked.
 
 This probe does not replace a hand-written `pf-db` migration or validation against
-representative existing data. The validated `IMP-008` identifier policy now governs
-that migration; only release evidence remains pending. See `IMP-008` in the
-ecosystem register.
+representative existing data. The validated/released `IMP-008` identifier policy now
+governs that migration. See `IMP-008` in the ecosystem register.
 
 The following findings are intentionally outside this rename investigation and are
 tracked in the register. Their current states are included so this investigation
@@ -410,15 +409,17 @@ does not present resolved work as an active blocker:
 - `IMP-001`: `released`; Scheduler credential remediation and cleanup complete;
 - `IMP-002`: `released`; Neon backup/restore, runtime-role, sensitive-artifact, and ownership hardening complete, with provider-managed role residual risk accepted;
 - `IMP-003`: `superseded` by `IMP-002`; no duplicate runtime-role implementation;
-- `IMP-004`: `investigating`; independent `pf-rates` shared-secret access review;
+- `IMP-004`: `released`; independent `pf-rates` shared-secret access review complete;
 - `IMP-005`: `released`; deployer/runtime identity hardening and WIF complete;
-- `IMP-006`: `investigating`; reusable HTTP error baseline remains open;
-- `IMP-007`: `planned`; Cloud Run observability and capacity baseline remains open;
-- `IMP-008`: `validated`; identifier policy is ready to govern the physical migration, with release evidence pending.
+- `IMP-006`: `released`; reusable HTTP error baseline available for adoption;
+- `IMP-007`: `closed with bounded-evidence limitation`; observability and capacity baseline is available with its limitation accepted;
+- `IMP-008`: `validated/released`; identifier policy governs the physical migration;
+- `IMP-009`: `released`; Scheduler OIDC and authenticated `/execute` path validated with HTTP 200.
 
-The rename uses the resulting gate decisions from these workstreams. The resolved
-entries are evidence, not pending remediation; the still-open entries apply only to
-the release stage or resource topology affected by their scope.
+The rename uses the resulting gate decisions from these workstreams. These entries
+are evidence and accepted constraints, not active blockers. Remaining HIST-007 gates
+are rename-specific: URL reconciliation, schema migration, package boundaries,
+consumer cutover, and explicit execution authorization.
 
 ## 11. Execution order
 
@@ -460,7 +461,12 @@ The rename-specific result is:
 
 ## 12. Investigation status after complementary validation
 
-The documentation and contract investigation is sufficiently advanced to prepare local code, migration, documentation, and test changes. The resolved `IMP-001`, `IMP-002`, `IMP-003`, and `IMP-005` outcomes no longer block that preparation. Before any GCP mutation or cutover, the remaining gates are URL reconciliation, schema migration validation, package-boundary review, release-stage HTTP error classification/observability evidence, and approval of the 14-day rollback window. `IMP-004` must be resolved or explicitly accepted only if the cutover changes the current `pf-rates` shared-secret topology.
+The documentation and contract investigation is sufficiently advanced to prepare local code,
+migration, documentation, and test changes. The outcomes of `IMP-001` through `IMP-009`
+are now resolved, released, superseded, or explicitly accepted with limitations and do
+not block HIST-007. Before any GCP mutation or cutover, the remaining gates are URL
+reconciliation, schema migration validation, package-boundary review, consumer
+cutover, and approval of the 14-day rollback window.
 
 The recommendation remains to proceed only with local/PR preparation until those rename-specific gates close. The most economical and safe path remains a short schema maintenance window, a temporary parallel Cloud Run service at scale-to-zero, least-privilege IAM, and a 14-day rollback window extended until representative payroll behavior is proven.
 

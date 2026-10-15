@@ -21,9 +21,9 @@ Superseded-by: none
 - [x] GitHub workflow/environment/history inventory completed read-only; repository and environment secret names were reviewed without reading values.
 - [x] Environment-scoped secret inventory completed.
 - [x] Cutover-relevant outcomes from `IMP-001` through `IMP-003` and `IMP-005` are resolved or explicitly accepted.
-- [ ] `IMP-004` shared-secret access review is resolved or explicitly accepted if the cutover changes the current `pf-rates` secret topology.
-- [ ] `IMP-006` HTTP error baseline is available for release validation.
-- [ ] `IMP-007` Cloud Run observability/capacity baseline is available for release validation.
+- [x] `IMP-004` shared-secret access review is released; its scoped secret-policy result is an accepted input.
+- [x] `IMP-006` HTTP error baseline is released and available for release validation.
+- [x] `IMP-007` Cloud Run observability/capacity baseline is closed with a documented bounded-evidence limitation accepted for cutover planning.
 - [x] `IMP-008` identifier policy is validated; its release evidence is tracked separately and the policy applies to the physical migration.
 - [ ] Cloud Run URL policy and Postman target choice approved; neither advertised
   URL is assumed stale without a decision.
@@ -34,16 +34,13 @@ Superseded-by: none
 - [ ] Rollback window of 14 calendar days (or until one representative payroll flow
   completes, whichever is longer) approved.
 
-The lifecycle states intentionally describe different artifacts: the ecosystem
-index tracks the overall investigation as `investigating`; the brief and
-recommendation record an approved design; and this plan remains `planned` because
-implementation is not authorized and several cutover/release gates remain open.
-The resolved outcomes of `IMP-001`, `IMP-002`, `IMP-003`, and `IMP-005` are now
-consumed here as evidence rather than treated as active blockers. `IMP-004`,
-`IMP-006`, and `IMP-007` remain separately owned workstreams with limited gate
-impact described below.
+The lifecycle states intentionally describe different artifacts: HIST-007 remains
+`planned` because the rename itself is not authorized for implementation, while the
+external security, access, error-baseline, observability, and identifier-policy inputs
+are now resolved, released, superseded, or explicitly accepted with limitations.
+Those outcomes are consumed here as evidence rather than treated as active blockers.
 
-## 1.1 Latest evidence and blockers (2026-10-12)
+## 1.1 Latest evidence and blockers (2026-10-15)
 
 Inventory confirms that the current `pf-payroll` service remains active and the
 `pf-svc-income` target resources do not exist. Rename-specific blockers remain
@@ -60,14 +57,17 @@ reopened:
 - `IMP-003` is superseded by `IMP-002`; no duplicate role-hardening work is needed.
 - `IMP-005` is released; WIF deployments succeeded and legacy deploy keys/grants were
   removed.
-- `IMP-008` is validated locally; its identifier policy applies to the new `pf-db`
-  migration, while final release evidence remains separate.
+- `IMP-008` is validated/released; its identifier policy applies to the new `pf-db`
+  migration and physical rename.
+- `IMP-009` is released; Scheduler OIDC and the authenticated `/execute` path are
+  validated with HTTP 200.
 
-Still-open register work is narrower: `IMP-004` concerns the independent `pf-rates`
-shared-secret cleanup; `IMP-006` defines the reusable HTTP error baseline; and
-`IMP-007` defines the Cloud Run observability/capacity baseline. They must be
-resolved or explicitly accepted at the relevant release gates, but they no longer
-justify describing all `IMP-001`–`IMP-007` work as an undifferentiated blocker.
+The previously external gates are now resolved inputs: `IMP-004` is released,
+`IMP-006` is released, `IMP-007` is closed with its bounded-evidence limitation
+accepted, `IMP-008` is validated/released, and `IMP-009` is released. `IMP-003` is
+superseded by `IMP-002`. None of these improvements is an active blocker for the
+rename proposal; their documented limitations and release evidence must still be
+reused during cutover validation.
 
 Rename-specific blockers are consumer inventory, URL cutover, schema migration
 validation, package-boundary review, and explicit authorization.
