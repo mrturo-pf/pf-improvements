@@ -204,7 +204,7 @@ Query the Project before making planning decisions; this generated file stores n
 - Level: `M`; type: `reliability`
 - Owner: `pf-common`
 - Affected: `pf-db`, `pf-rates`, `pf-payroll`
-- Next action: Run the approved dependency-failure and timeout scenarios, then execute the authorized Cloud Run scale-out/overlap window and collect alert, release, and rollback evidence.
+- Next action: Closed with bounded-evidence limitation: pf-payroll scale-out was observed, while pf-rates scale-out was not observed under the approved bounded load; no Cloud Run defect was confirmed.
 - Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-007-cloud-run-observability-and-capacity/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/2
 

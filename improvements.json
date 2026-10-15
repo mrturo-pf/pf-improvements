@@ -32,7 +32,7 @@
       "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/2",
       "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-007-cloud-run-observability-and-capacity/plan.md",
-      "next_action": "Run the approved dependency-failure and timeout scenarios, then execute the authorized Cloud Run scale-out/overlap window and collect alert, release, and rollback evidence."
+      "next_action": "Closed with bounded-evidence limitation: pf-payroll scale-out was observed, while pf-rates scale-out was not observed under the approved bounded load; no Cloud Run defect was confirmed."
     },
     {
       "id": "IMP-009",
