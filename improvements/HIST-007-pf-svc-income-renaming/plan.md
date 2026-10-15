@@ -578,6 +578,7 @@ Commands are examples and must be run from the correct repository after reading 
 | 2026-10-15 | investigating | Prepared the consumer/URL, reversible migration, package-boundary, compatibility, and authorization decision package. Decisions 1–6 were approved; Phase 3 execution remains unauthorized pending the separate operational authorization record. | This section; design and recommendation artifacts |
 | 2026-10-15 | in progress | Started the first implementation slice: aligned SQLAlchemy constraints, fixed the async export-job read path, and introduced `income.domain` quantization/deflation with compatibility exports and tests. | `pf-common` sync passed; `pf-payroll` 571 tests passed; `pf-rates` targeted regression passed |
 | 2026-10-15 | in progress | Added the reversible `pf-db` migration `0017` for the `PAY_* → INC_*` rename. Local PostgreSQL upgrade, downgrade to `0016`, and re-upgrade passed; catalog checks confirmed `INC_PAYROLL`, `INC_PAY_ITEM`, `INC_MV_PAY_SUMMARY`, `payroll_id`, `accrual_year`, and `accrual_month`. | `pf-db` commit `7a5caa9`, branch `hist-007-schema-inc-migration` |
+| 2026-10-15 | in progress | Initial ORM rename probe was intentionally not published: 562 payroll tests passed but 9 compatibility tests exposed existing test/repository coupling to `PAY_*` and fake-session result shapes. The models were restored; ORM, repository, and test updates must land as one coordinated slice. | Local payroll test run; no additional working-tree changes retained |
 
 
 ## 6. Release record
