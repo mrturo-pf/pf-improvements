@@ -1,7 +1,7 @@
 # Plan: rename `pf-payroll` to `pf-svc-income`
 
 Date: 2026-10-05
-Status: planned
+Status: in progress
 Level: L
 Scope: Cross-repository/service identity rename and GCP migration.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md)
@@ -12,11 +12,11 @@ Superseded-by: none
 
 ## 1. Status and gates
 
-**Authorization boundary:** HIST-007 remains `planned` and pre-implementation.
-The design proposals were explicitly authorized on 2026-10-15, but the owner chose
-**documentation only**. No Phase 3 code, schema, Postman, GCP, secrets, IAM,
-commit, push, deployment, migration, or cutover action is authorized. A separate
-execution authorization is required before implementation begins.
+**Authorization boundary:** HIST-007 entered implementation on 2026-10-15 after
+explicit authorization of code, dependencies, schema migration, Postman, GCP/IAM/
+secrets, commits, pushes, deployment, cutover, and rollback. Production mutation
+remains staged: local code/dependency slices come first; schema migration, GCP,
+Postman cutover, deployment, and traffic cutover require their validation gates.
 
 - [x] User decisions recorded.
 - [x] Recommendation approved explicitly.
@@ -184,15 +184,17 @@ owner.
 ### Compatibility decisions to capture
 
 - URL: use the service-generated target URL; no custom domain is proposed for this
-  rename because none exists today. Implementation approval remains pending.
+  rename because none exists today. **Approved 2026-10-15.**
 - API key: use an atomic `PF_PAYROLL_API_KEY → PF_INCOME_API_KEY` cutover with no
-  application fallback. Implementation approval remains pending.
+  application fallback. **Approved 2026-10-15.**
 - Schema: use a short maintenance boundary rather than a compatibility bridge;
-  this avoids dual ORM/schema semantics. Implementation approval remains pending.
+  this avoids dual ORM/schema semantics. **Approved 2026-10-15.**
 - Rollback: retain old service/schema/secret for 14 days or one representative
-  payroll flow, whichever is longer. Implementation approval remains pending.
+  payroll flow, whichever is longer. **Approved 2026-10-15.**
 - Postman: update collection and both environments atomically after the target URL
-  and secret are created and approved. Implementation approval remains pending.
+  and secret are created and approved. **Approved 2026-10-15.**
+- Dependencies: align SQLAlchemy constraints explicitly across the affected services
+  and validate both before package extraction. **Approved 2026-10-15.**
 
 ### Future implementation authorization record
 
@@ -573,7 +575,8 @@ Commands are examples and must be run from the correct repository after reading 
 | 2026-10-07 | validating | Completed the local synthetic schema-rename and rollback probe. | `pf-db` migration shape remains implementation work. |
 | 2026-10-10 | blocked | Moved unrelated security, IAM, backup, error-baseline, and observability findings to `IMP-001` through `IMP-007`. | Scope control; detailed follow-ups belong in the ecosystem register. |
 | 2026-10-15 | investigating | Completed read-only consumer/URL, schema, and package-boundary validation. Found stale Postman payroll URL/variable contracts, no `INC_*` migration yet, no `src/income` package yet, and a SQLAlchemy dependency mismatch in `pf-common` sync validation. | Live Cloud Run metadata, Postman GCP environment, `pf-db` migration `0003`, `make identifier-check`, `pf-common/scripts/sync_deps.py` |
-| 2026-10-15 | investigating | Prepared the consumer/URL, reversible migration, package-boundary, compatibility, and authorization decision package. Design proposals were authorized, with documentation-only scope; Phase 3 execution remains unauthorized. | This section; design and recommendation artifacts |
+| 2026-10-15 | investigating | Prepared the consumer/URL, reversible migration, package-boundary, compatibility, and authorization decision package. Decisions 1–6 were approved; Phase 3 execution remains unauthorized pending the separate operational authorization record. | This section; design and recommendation artifacts |
+| 2026-10-15 | in progress | Started the first implementation slice: aligned SQLAlchemy constraints, fixed the async export-job read path, and introduced `income.domain` quantization/deflation with compatibility exports and tests. | `pf-common` sync passed; `pf-payroll` 571 tests passed; `pf-rates` targeted regression passed |
 
 
 ## 6. Release record

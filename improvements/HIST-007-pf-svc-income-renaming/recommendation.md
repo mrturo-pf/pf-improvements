@@ -8,7 +8,9 @@ Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [pl
 Approved: 2026-10-05 by a0a11b7 (conversation)
 Superseded-by: none
 
-> **Decision boundary:** the target design was authorized on 2026-10-15 for documentation only, not execution. Repository/code changes, schema migrations, resource creation, secrets/IAM/Postman changes, deployment, cutover, commit, and push require separate explicit execution authorization.
+> **Decision boundary:** complete implementation was authorized on 2026-10-15.
+> Execution remains staged through the migration, consumer, deployment, validation, and
+> rollback gates defined in the plan.
 
 ## 1. Executive recommendation
 

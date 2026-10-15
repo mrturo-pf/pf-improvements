@@ -8,9 +8,9 @@ Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [
 Approved: design approved; implementation authorization pending
 Superseded-by: none
 
-> **Current phase:** investigation and decision-making only. No implementation, schema
-> migration, resource creation, secret/IAM/Postman mutation, deployment, cutover,
-> commit, or push is authorized by this investigation.
+> **Current phase:** implementation has begun under explicit authorization. This
+> investigation still records evidence and gates; production schema, GCP, Postman,
+> deployment, cutover, and rollback actions remain staged behind validation.
 
 ## 1. Investigation question
 
