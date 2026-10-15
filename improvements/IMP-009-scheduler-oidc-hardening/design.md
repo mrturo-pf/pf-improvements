@@ -57,19 +57,27 @@ anonymous to compensate for an unverified token configuration.
 
 | Case | Expected result | Evidence |
 |---|---|---|
-| Authorized Scheduler OIDC request to `/execute` | Existing successful operation; no API key | sanitized status, timestamp, revision |
+| Authorized Scheduler OIDC request to `/execute` | **Observed 401** after API-key removal; application route contract remains incompatible | sanitized status and service-side logs |
 | OIDC token with wrong audience | rejected by Cloud Run/IAM; no operation | status and owner-visible failure record |
 | Caller without `roles/run.invoker` | rejected; no operation | status and IAM evidence |
 | Expired or malformed token | rejected; no operation | status and failure evidence |
 | Correct token, wrong route | normal route error; no unintended operation | status and route evidence |
-| Scheduler dispatch after cutover | dispatch accepted by Scheduler; endpoint HTTP outcome separately verified | sanitized dispatch metadata plus approved service-side evidence |
+| Scheduler dispatch after cutover | dispatch accepted; `/execute` returned 401; `/health` returned 200 with the same OIDC caller | sanitized dispatch and Cloud Run logs |
 | Controlled Scheduler failure | alert/ownership path is observable | status, alert, rollback decision |
 | Rollback | OIDC schedule/configuration disabled without restoring exposed key | change record and health check |
 
 Payloads, tokens, authorization headers, secret values, and personal or financial
 data must not be copied into the improvement repository.
 
-## 4. Access and approval gates
+## 4. Current result
+
+Cloud Scheduler OIDC was validated end-to-end against `GET /health` with HTTP 200.
+The private IAM path is therefore correct. `POST /execute` returned HTTP 401 after
+removing `X-API-Key`, which identifies an application-level route dependency. Do
+not restore the exposed credential; update the target service contract or add an
+explicit IAM-protected scheduler path in the service implementation.
+
+## 5. Access and approval gates
 
 Before mutation, obtain all of the following:
 

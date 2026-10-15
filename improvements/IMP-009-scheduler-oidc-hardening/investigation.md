@@ -77,14 +77,21 @@ policy is now known: the cutover uses only the dedicated caller.
 The approved controlled phases applied the dedicated OIDC caller and removed the public
 IAM member and legacy Scheduler API-key header. The sanitized phase 2 evidence shows
 `roles/run.invoker` only for the dedicated caller and OIDC configured with the proposed
-audience. Scheduler accepted one dispatch. The service-side HTTP result and a controlled
-failure case remain to be evidenced without exporting logs, payloads, or headers.
+audience. Scheduler accepted one dispatch. The service-side OIDC probe reached `GET /health` with HTTP `200`, proving the
+caller, audience, and Cloud Run IAM path work. The production `POST /execute`
+dispatch returned HTTP `401` after the API-key header was removed, so the route
+still has an application-level authorization dependency or an incompatible route
+contract. A controlled failure case is evidenced; the application route must be
+updated or explicitly redesigned without restoring the exposed credential.
 
 ## 7. Current conclusion
 
-The read-only inventory and controlled cutover are complete, while final OIDC
-closure remains pending service-side evidence. The design and validation matrix are
-recorded in [design.md](design.md).
+The read-only inventory and IAM/OIDC cutover are complete. Final closure is blocked
+by the application-level `POST /execute` authorization contract: Cloud Run OIDC
+works on `/health`, while `/execute` returns `401` without the legacy API key. The
+next change belongs to the `gcp-scheduler-runner` implementation owner and must
+support the private IAM-protected path without restoring the exposed credential.
+The design and validation matrix are recorded in [design.md](design.md).
 It targets the standalone `gcp-scheduler-runner` service, its `/execute` route, a
 dedicated Scheduler caller, and a precise Cloud Run audience. Do not make further Scheduler, IAM, Cloud Run ingress, or credential changes until
 service-side execution evidence and the failure/monitoring path are recorded.

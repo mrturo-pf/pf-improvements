@@ -15,8 +15,8 @@ Superseded-by: none
 - [ ] Brief, recommendation, and proposed design approved.
 - [x] Caller identity and resource-level IAM model applied: dedicated caller with service-level invoker grant.
 - [x] Audience, route, environment, and ingress cutover applied; public `allUsers` access removed.
-- [ ] Synthetic authorized/unauthorized validation passed with service-side evidence.
-- [~] Scheduler dispatch accepted after cutover; endpoint result and failure case still require service-side evidence.
+- [~] Cloud Scheduler OIDC reached `/health` with HTTP 200; `/execute` returned 401 and requires an application-contract change.
+- [ ] Authorized/unauthorized `/execute` validation passes after the target service is updated.
 - [x] Legacy API-key header removed; rollback does not restore a credential.
 
 ## 2. Implementation slices
@@ -48,7 +48,7 @@ window closes.
 |---|---|---|---|
 | 2026-10-12 | investigating | Promoted IMP-009 to formal artifacts; no Scheduler, IAM, Cloud Run, or secret mutation. | IMP-001 release record and register |
 | 2026-10-15 | investigating | Collected sanitized Scheduler and Cloud Run metadata; confirmed header names include `X-API-Key` and `X-Scheduler-Trigger`, no OIDC/OAuth block, and `allUsers` has `roles/run.invoker`. No mutation. | [investigation](investigation.md#5-read-only-inventory-2026-10-15) · [design](design.md) |
-| 2026-10-15 | investigating | Phase 1 and phase 2 applied: dedicated OIDC caller granted `roles/run.invoker`, Scheduler audience configured, `allUsers` removed, and `X-API-Key` removed. Scheduler dispatch was accepted; endpoint outcome remains unverified because Cloud Logging/service evidence is still required. | Sanitized phase 2 archive |
+| 2026-10-15 | investigating | Phase 1 and phase 2 applied: dedicated OIDC caller granted `roles/run.invoker`, Scheduler audience configured, `allUsers` removed, and `X-API-Key` removed. `/health` returned 200 through Scheduler OIDC, while `/execute` returned 401 and needs a target-service contract change. | Sanitized phase 2 and OIDC health archives |
 
 ## 4. Release record
 
@@ -56,5 +56,6 @@ window closes.
 - Workflow runs: pending
 - Owner approval: phase execution confirmed interactively; formal design closure pending
 - IAM/Scheduler mutation: phase 1 and phase 2 applied
-- Scheduled execution evidence: dispatch accepted; service-side HTTP outcome pending
+- Scheduled execution evidence: `/health` 200 via Scheduler OIDC; `/execute` 401
 - Rollback evidence: no credential restoration path; dedicated invoker rollback documented
+- Remaining implementation: update `gcp-scheduler-runner` route authorization without restoring API key
