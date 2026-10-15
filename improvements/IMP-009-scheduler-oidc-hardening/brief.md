@@ -1,11 +1,11 @@
 # Brief: Scheduler OIDC hardening
 
 Date: 2026-10-12
-Status: investigating
+Status: released
 Level: M
 Scope: Replace static Scheduler API-key authentication with least-privilege OIDC authentication.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [design](design.md) · [plan](plan.md) · [IMP-001 source](../HIST-008-gcp-scheduler-credential-exposure/investigation.md) · [register](../../index.md)
-Approved: pending explicit owner approval
+Approved: 2026-10-15; owner-confirmed controlled execution
 Superseded-by: none
 
 ## Objective

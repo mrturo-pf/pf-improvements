@@ -1,7 +1,7 @@
 # Investigation: Scheduler OIDC hardening
 
 Date: 2026-10-12
-Status: investigating
+Status: validated
 Level: M
 Scope: Replace static Scheduler API-key authentication with least-privilege OIDC authentication after separate design and validation.
 Owner: `pf-payroll`
@@ -68,30 +68,29 @@ The current job structurally depends on an `X-API-Key` header; its value was not
 or recorded. Cloud Run also grants `roles/run.invoker` to `allUsers`, so IAM currently
 allows public invocation and the API key is an application-level control. The current
 evidence was sufficient to refine and execute the controlled cutover. The caller
-identity and IAM transition were approved through the phase confirmations; the
-service-side route outcome and failure/monitoring evidence remain pending. The IAM
-policy is now known: the cutover uses only the dedicated caller.
+identity and IAM transition were approved through the phase confirmations. The IAM
+policy is now known: the cutover uses only the dedicated caller. Final service-side
+execution evidence is recorded below.
 
 ## 6. Phase 1 and phase 2 result
 
 The approved controlled phases applied the dedicated OIDC caller and removed the public
 IAM member and legacy Scheduler API-key header. The sanitized phase 2 evidence shows
-`roles/run.invoker` only for the dedicated caller and OIDC configured with the proposed
-audience. Scheduler accepted one dispatch. The service-side OIDC probe reached `GET /health` with HTTP `200`, proving the
-caller, audience, and Cloud Run IAM path work. The production `POST /execute`
-dispatch returned HTTP `401` after the API-key header was removed, so the route
-still has an application-level authorization dependency or an incompatible route
-contract. A controlled failure case is evidenced; the application route must be
-updated or explicitly redesigned without restoring the exposed credential.
+`roles/run.invoker` only for the dedicated caller and OIDC configured with the approved
+audience. Scheduler accepted a controlled dispatch. The service-side OIDC probe reached
+`GET /health` with HTTP `200`, proving the caller, audience, and Cloud Run IAM path work.
+After the route authorization update, a production `POST /execute` dispatch reached
+Cloud Run with HTTP `200` at 2026-10-15T19:06:09Z. The final workflow run `38798409962`
+completed all three jobs successfully.
 
 ## 7. Current conclusion
 
-The read-only inventory and IAM/OIDC cutover are complete. Final closure is blocked
-by the application-level `POST /execute` authorization contract: Cloud Run OIDC
-works on `/health`, while `/execute` returns `401` without the legacy API key. The
-next change belongs to the `gcp-scheduler-runner` implementation owner and must
-support the private IAM-protected path without restoring the exposed credential.
-The design and validation matrix are recorded in [design.md](design.md).
-It targets the standalone `gcp-scheduler-runner` service, its `/execute` route, a
-dedicated Scheduler caller, and a precise Cloud Run audience. Do not make further Scheduler, IAM, Cloud Run ingress, or credential changes until
-service-side execution evidence and the failure/monitoring path are recorded.
+The read-only inventory, IAM/OIDC cutover, service route update, deployment, Scheduler
+configuration, and controlled `/execute` dispatch are complete. The final run
+`38798409962` passed `quality-gate`, `deploy`, and `setup-scheduler`. Scheduler is
+enabled with the dedicated OIDC caller and `/execute` returned HTTP 200 without the
+legacy API key.
+
+IMP-009 is released. The orphaned service-account key created during the failed
+rotation attempt was deleted, and the active keys used by `GCP` and `GCP-Auto` were
+verified to be the only remaining user-managed keys.

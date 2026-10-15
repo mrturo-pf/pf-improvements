@@ -1,11 +1,11 @@
 # Recommendation: Scheduler OIDC hardening
 
 Date: 2026-10-12
-Status: designed
+Status: released
 Level: M
 Scope: Replace static Scheduler API-key authentication with least-privilege OIDC authentication.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [design](design.md) · [plan](plan.md) · [IMP-001 source](../IMP-001-scheduler-credential-exposure-remediation/recommendation.md) · [register](../../index.md)
-Approved: pending explicit owner approval
+Approved: 2026-10-15; owner-confirmed controlled execution
 Superseded-by: none
 
 ## 1. Recommendation
@@ -52,6 +52,10 @@ exposed or untracked credential.
 
 ## 5. Decision gate
 
-Approve the caller identity, audience, ingress model, route, validation window, and
-rollback procedure described in [design.md](design.md) before any IAM, Scheduler,
-Cloud Run, or secret mutation.
+The caller identity, audience, ingress model, route, validation window, and rollback
+procedure were approved through the controlled execution. The final workflow run
+`38798409962` passed all quality, deployment, and Scheduler setup jobs, and a real
+Scheduler dispatch reached `/execute` with HTTP 200 without the legacy API key.
+
+The recommendation is released. The orphaned service-account key from the failed
+rotation attempt was deleted, and only the active `GCP` and `GCP-Auto` keys remain.

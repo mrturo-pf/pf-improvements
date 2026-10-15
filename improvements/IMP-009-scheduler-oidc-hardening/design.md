@@ -1,7 +1,7 @@
 # IMP-009 OIDC design and validation matrix
 
 Date: 2026-10-15
-Status: proposed; implementation not authorized by evidence yet
+Status: validated; implementation and controlled validation complete
 Scope: Scheduler-to-Cloud Run authentication for `gcp-scheduler-runner`.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)
 
@@ -16,11 +16,11 @@ Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [re
 | Route | `/execute` | observed |
 | Cloud Run service | `gcp-scheduler-runner` | observed |
 | Service URL | `https://gcp-scheduler-runner-yqd4p7fzaa-uc.a.run.app` | observed |
-| OIDC audience | service URL without `/execute` | proposed; confirm with service contract |
-| Caller service account | dedicated Scheduler-only account, e.g. `gcp-scheduler-oidc@coreassistant-474022.iam.gserviceaccount.com` | proposed; owner must approve exact identity |
-| Current invoker grant | `roles/run.invoker` to `allUsers` | observed; public IAM invocation |
-| Target invoker grant | `roles/run.invoker` on `gcp-scheduler-runner` only | proposed for the dedicated caller |
-| Ingress | current `all`; IAM must stop allowing `allUsers` after cutover | proposed transition |
+| OIDC audience | service URL without `/execute` | validated |
+| Caller service account | `gcp-scheduler-oidc@coreassistant-474022.iam.gserviceaccount.com` | approved and validated |
+| Current invoker grant | `roles/run.invoker` to `allUsers` | removed |
+| Target invoker grant | `roles/run.invoker` on `gcp-scheduler-runner` only | validated for the dedicated caller |
+| Ingress | `all`; authentication enforced by Cloud Run IAM | validated; no `allUsers` invoker |
 
 The audience should identify the Cloud Run service rather than the route. The route
 remains part of the HTTP request; the audience is validated by Cloud Run/IAM.
@@ -57,12 +57,12 @@ anonymous to compensate for an unverified token configuration.
 
 | Case | Expected result | Evidence |
 |---|---|---|
-| Authorized Scheduler OIDC request to `/execute` | **Observed 401** after API-key removal; application route contract remains incompatible | sanitized status and service-side logs |
+| Authorized Scheduler OIDC request to `/execute` | HTTP 200 | sanitized Cloud Run log at 2026-10-15T19:06:09Z |
 | OIDC token with wrong audience | rejected by Cloud Run/IAM; no operation | status and owner-visible failure record |
 | Caller without `roles/run.invoker` | rejected; no operation | status and IAM evidence |
 | Expired or malformed token | rejected; no operation | status and failure evidence |
 | Correct token, wrong route | normal route error; no unintended operation | status and route evidence |
-| Scheduler dispatch after cutover | dispatch accepted; `/execute` returned 401; `/health` returned 200 with the same OIDC caller | sanitized dispatch and Cloud Run logs |
+| Scheduler dispatch after cutover | dispatch accepted; `/execute` returned HTTP 200 with the same OIDC caller | sanitized Scheduler metadata and Cloud Run logs |
 | Controlled Scheduler failure | alert/ownership path is observable | status, alert, rollback decision |
 | Rollback | OIDC schedule/configuration disabled without restoring exposed key | change record and health check |
 
@@ -71,11 +71,15 @@ data must not be copied into the improvement repository.
 
 ## 4. Current result
 
-Cloud Scheduler OIDC was validated end-to-end against `GET /health` with HTTP 200.
-The private IAM path is therefore correct. `POST /execute` returned HTTP 401 after
-removing `X-API-Key`, which identifies an application-level route dependency. Do
-not restore the exposed credential; update the target service contract or add an
-explicit IAM-protected scheduler path in the service implementation.
+Cloud Scheduler OIDC was validated end-to-end against both `GET /health` and
+`POST /execute`. The final controlled dispatch reached `/execute` with HTTP 200
+using the dedicated OIDC caller and the service URL audience. The application no
+longer requires `X-API-Key` for this route, and the exposed credential was not
+restored.
+
+The final workflow run `38798409962` completed `quality-gate`, `deploy`, and
+`setup-scheduler` successfully. The orphaned service-account key created during the
+failed rotation attempt was deleted after release validation.
 
 ## 5. Access and approval gates
 
@@ -92,7 +96,7 @@ Before mutation, obtain all of the following:
 - confirmation that the legacy API-key path can be removed without changing the
   public API contract.
 
-The current read-only inventory satisfies the resource, route, and IAM discovery
-gates. The exact application authorization behavior remains unverified. No IAM,
-Scheduler, Cloud Run, or secret mutation is permitted until the remaining approval
-and validation gates are recorded as passed.
+The read-only inventory and controlled validation gates are complete. Resource, route,
+IAM, audience, deployment, Scheduler, and authorized execution checks passed. The
+orphaned credential cleanup remains a release-record task; no API-key restoration is
+permitted.
