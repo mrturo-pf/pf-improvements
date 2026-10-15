@@ -45,7 +45,8 @@ caller unless ownership and least-privilege review explicitly approve that choic
    audience.
 5. Run authorized, wrong-audience, unauthorized-caller, expired-token, and route
    failure tests against a safe validation window.
-6. Observe one scheduled execution and one controlled failure.
+6. Observe one Scheduler dispatch and obtain service-side evidence for one successful
+   execution and one controlled failure.
 7. Remove the `allUsers` invoker member and static API-key dependency only after
    successful evidence and owner approval.
 
@@ -61,7 +62,7 @@ anonymous to compensate for an unverified token configuration.
 | Caller without `roles/run.invoker` | rejected; no operation | status and IAM evidence |
 | Expired or malformed token | rejected; no operation | status and failure evidence |
 | Correct token, wrong route | normal route error; no unintended operation | status and route evidence |
-| Scheduler dispatch after cutover | successful scheduled execution | job execution metadata |
+| Scheduler dispatch after cutover | dispatch accepted by Scheduler; endpoint HTTP outcome separately verified | sanitized dispatch metadata plus approved service-side evidence |
 | Controlled Scheduler failure | alert/ownership path is observable | status, alert, rollback decision |
 | Rollback | OIDC schedule/configuration disabled without restoring exposed key | change record and health check |
 

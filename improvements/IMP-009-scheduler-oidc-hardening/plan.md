@@ -13,11 +13,11 @@ Superseded-by: none
 - [x] `IMP-001` containment/remediation is released and treated as a completed prerequisite.
 - [x] Scheduler job, Cloud Run target, and current IAM policy inventoried; current route authorization behavior remains unverified.
 - [ ] Brief, recommendation, and proposed design approved.
-- [ ] Caller identity and resource-level IAM model approved.
-- [ ] Audience, route, environment, and ingress contract approved.
-- [ ] Synthetic authorized/unauthorized validation passed.
-- [ ] One scheduled execution and failure case observed.
-- [ ] Legacy API-key path removed with rollback evidence.
+- [x] Caller identity and resource-level IAM model applied: dedicated caller with service-level invoker grant.
+- [x] Audience, route, environment, and ingress cutover applied; public `allUsers` access removed.
+- [ ] Synthetic authorized/unauthorized validation passed with service-side evidence.
+- [~] Scheduler dispatch accepted after cutover; endpoint result and failure case still require service-side evidence.
+- [x] Legacy API-key header removed; rollback does not restore a credential.
 
 ## 2. Implementation slices
 
@@ -48,12 +48,13 @@ window closes.
 |---|---|---|---|
 | 2026-10-12 | investigating | Promoted IMP-009 to formal artifacts; no Scheduler, IAM, Cloud Run, or secret mutation. | IMP-001 release record and register |
 | 2026-10-15 | investigating | Collected sanitized Scheduler and Cloud Run metadata; confirmed header names include `X-API-Key` and `X-Scheduler-Trigger`, no OIDC/OAuth block, and `allUsers` has `roles/run.invoker`. No mutation. | [investigation](investigation.md#5-read-only-inventory-2026-10-15) · [design](design.md) |
+| 2026-10-15 | investigating | Phase 1 and phase 2 applied: dedicated OIDC caller granted `roles/run.invoker`, Scheduler audience configured, `allUsers` removed, and `X-API-Key` removed. Scheduler dispatch was accepted; endpoint outcome remains unverified because Cloud Logging/service evidence is still required. | Sanitized phase 2 archive |
 
 ## 4. Release record
 
 - Commits: pending
 - Workflow runs: pending
-- Owner approval: pending
-- IAM/Scheduler mutation: pending
-- Scheduled execution evidence: pending
-- Rollback evidence: pending
+- Owner approval: phase execution confirmed interactively; formal design closure pending
+- IAM/Scheduler mutation: phase 1 and phase 2 applied
+- Scheduled execution evidence: dispatch accepted; service-side HTTP outcome pending
+- Rollback evidence: no credential restoration path; dedicated invoker rollback documented

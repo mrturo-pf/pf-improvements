@@ -67,15 +67,24 @@ The target is the standalone `gcp-scheduler-runner` service, not `pf-payroll`.
 The current job structurally depends on an `X-API-Key` header; its value was not read
 or recorded. Cloud Run also grants `roles/run.invoker` to `allUsers`, so IAM currently
 allows public invocation and the API key is an application-level control. The current
-evidence is sufficient to refine the design target but not to approve
-or execute the cutover. The caller identity, current authentication header behavior, and exact route
-authorization contract still require an owner decision. The IAM policy is now
-known: the cutover must add a dedicated caller before removing `allUsers`.
+evidence was sufficient to refine and execute the controlled cutover. The caller
+identity and IAM transition were approved through the phase confirmations; the
+service-side route outcome and failure/monitoring evidence remain pending. The IAM
+policy is now known: the cutover uses only the dedicated caller.
 
-## 6. Current conclusion
+## 6. Phase 1 and phase 2 result
 
-The read-only inventory is partially complete and the OIDC design remains pending
-explicit owner approval. The proposed design and validation matrix are recorded in [design.md](design.md).
+The approved controlled phases applied the dedicated OIDC caller and removed the public
+IAM member and legacy Scheduler API-key header. The sanitized phase 2 evidence shows
+`roles/run.invoker` only for the dedicated caller and OIDC configured with the proposed
+audience. Scheduler accepted one dispatch. The service-side HTTP result and a controlled
+failure case remain to be evidenced without exporting logs, payloads, or headers.
+
+## 7. Current conclusion
+
+The read-only inventory and controlled cutover are complete, while final OIDC
+closure remains pending service-side evidence. The design and validation matrix are
+recorded in [design.md](design.md).
 It targets the standalone `gcp-scheduler-runner` service, its `/execute` route, a
-dedicated Scheduler caller, and a precise Cloud Run audience. Do not mutate Scheduler, IAM, Cloud Run ingress,
-or API-key configuration until the design is explicitly approved.
+dedicated Scheduler caller, and a precise Cloud Run audience. Do not make further Scheduler, IAM, Cloud Run ingress, or credential changes until
+service-side execution evidence and the failure/monitoring path are recorded.
