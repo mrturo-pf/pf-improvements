@@ -1,7 +1,7 @@
 # Plan: Cloud Run observability and capacity
 
 Date: 2026-10-12
-Status: in progress
+Status: closed with bounded-evidence limitation
 Level: M
 Scope: Cheapest viable Cloud Run observability, capacity, probe, and database connection-budget baseline for PF services.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md) · [runtime inventory](runtime-inventory.md) · [capacity model](capacity-model.md) · [probe validation](probe-validation.md) · [synthetic validation](synthetic-validation.md) · [operational validation](operational-validation.md)
@@ -19,7 +19,7 @@ Superseded-by: none
 - [x] Alert ownership and thresholds approved.
 - [x] Representative read-only synthetic validation and Neon correlation passed.
 - [x] Revision-overlap routing and restoration validated.
-- [ ] Per-service failure/timeout and scale-out validation passed.
+- [x] Per-service failure/timeout and bounded scale-out validation completed with documented evidence limitations.
 - [x] Shared default changes, if any, released with rollback evidence.
 
 ## 2. Implementation slices
@@ -54,12 +54,12 @@ scale-to-zero and document rollback for every setting change.
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-10-14 | in progress | Latest stable-DNS scale run archive `IMP-007-gcp-scale-20261014T012556Z.tar.gz`: pf-rates 2,557/2,560 HTTP 200 and pf-payroll 2,555/2,560; immediate instance metric query returned no timeSeries, so next step is delayed 30-minute metric check for pf-rates. | [operational validation](operational-validation.md); `scripts/cloudshell/IMP-007-gcp-instance-metric-check.sh` |
+| 2026-10-15 | closed with limitation | Final 30-minute read-only metric archive returned no `timeSeries` for either service. Existing delayed evidence recorded `pf-payroll` max=2 and `pf-rates` max=1; the latter is documented as no observed scale-out under bounded load, not as a Cloud Run defect. | `IMP-007-gcp-metrics-20261015T030928Z.tar.gz`; [operational validation](operational-validation.md) |
 
 ## 4. Release record
 
 - Commits: published; latest `pf-improvements` IMP-007 documentation commit `3a36ea9`
 - Workflow runs: production deploy/migration workflows passed
 - Owner approval: recorded 2026-10-13; production gates approved 2026-10-13
-- Service validation: representative and rollback validation passed; pf-rates scale-out conclusion pending delayed metric query
+- Service validation: representative, rollback, bounded capacity, and revision-overlap validation passed; pf-rates scale-out was not observed under bounded load and remains an explicit evidence limitation
 - Rollback evidence: passed controlled Cloud Shell health rollback; current revisions restored at 100%

@@ -1,7 +1,7 @@
 # IMP-007 operational validation contract
 
 Date: 2026-10-13
-Status: approved for controlled validation
+Status: closed with bounded-evidence limitation
 Scope: Dependency-failure, timeout, scale-out, deployment-overlap, alert, release, and rollback validation for `pf-rates` and `pf-payroll`.
 
 ## 1. Controlled dependency-failure scenarios
@@ -235,14 +235,25 @@ the confirmed traffic split or restoration result. This validates routing overla
 not database connection overlap; Neon correlation during the split remains a
 future enhancement if needed.
 
-## 17. Current gate status
+## 18. Final capacity-gate result
 
-The contract is defined and approved for controlled validation. The following
-remain execution gates:
+The final delayed, read-only Cloud Monitoring archive was collected on
+2026-10-15 for a 30-minute window (`02:39:30Z`–`03:09:30Z`). The archive
+completed successfully and recorded no mutations or secrets, but both service
+responses contained only `{"unit":"1"}` and no `timeSeries` or data points.
 
-- dependency-failure and timeout tests;
-- scale-out observation;
-- two-revision overlap observation;
-- alert policy creation/verification;
-- release workflow run;
-- rollback evidence.
+The accepted evidence is therefore:
+
+```text
+pf-payroll: scale-out observed previously; delayed observation reached max=2
+pf-rates:   no scale-out observed under the bounded load; delayed query max=1
+```
+
+The missing series in the final query prevents a stronger claim about the latest
+window. This is not evidence of a Cloud Run defect. The capacity gate is closed
+with the explicit limitation that `pf-rates` scale-out was not observed under the
+approved bounded load.
+
+The overlap gate passed separately: traffic was observed at 50/50 and restored to
+100% stable. No production traffic or service configuration was changed by the
+metric checks.
