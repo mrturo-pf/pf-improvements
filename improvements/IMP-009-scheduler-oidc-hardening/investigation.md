@@ -56,7 +56,7 @@ performed.
 | Scheduler job | `gcp-scheduler-runner-chile` | enabled; metadata only |
 | Schedule | `30 4 * * *` UTC | job metadata |
 | Method and target | `POST https://gcp-scheduler-runner-yqd4p7fzaa-uc.a.run.app/execute` | URI and method only |
-| Scheduler OIDC/OAuth metadata | not present in the sanitized fields returned | does not inspect headers or secret values |
+| Scheduler OIDC/OAuth metadata | not present; HTTP headers include `X-API-Key` and `X-Scheduler-Trigger` | names only; values and body were not read |
 | Cloud Run service | `gcp-scheduler-runner` | service metadata |
 | Cloud Run ingress | `all` | service annotation |
 | Cloud Run max scale | `20` | service annotation |
@@ -64,7 +64,8 @@ performed.
 | Cloud Run IAM policy | not retrieved | blocked by VPC Service Controls |
 
 The target is the standalone `gcp-scheduler-runner` service, not `pf-payroll`.
-The current evidence is sufficient to refine the design target but not to approve
+The current job structurally depends on an `X-API-Key` header; its value was not read
+or recorded. The current evidence is sufficient to refine the design target but not to approve
 or execute the cutover. The IAM policy, caller ownership, current authentication
 header behavior, and exact route authorization contract still require an approved
 access path and owner decision.

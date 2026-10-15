@@ -47,7 +47,7 @@ window closes.
 | Date | Status | Change | Evidence |
 |---|---|---|---|
 | 2026-10-12 | investigating | Promoted IMP-009 to formal artifacts; no Scheduler, IAM, Cloud Run, or secret mutation. | IMP-001 release record and register |
-| 2026-10-15 | investigating | Collected sanitized Scheduler and Cloud Run metadata; IAM policy lookup was blocked by VPC Service Controls. No mutation. | [investigation](investigation.md#5-read-only-inventory-2026-10-15) |
+| 2026-10-15 | investigating | Collected sanitized Scheduler and Cloud Run metadata; confirmed header names include `X-API-Key` and `X-Scheduler-Trigger`, with no OIDC/OAuth block. IAM policy lookup was blocked by VPC Service Controls. No mutation. | [investigation](investigation.md#5-read-only-inventory-2026-10-15) · [design](design.md) |
 
 ## 4. Release record
 

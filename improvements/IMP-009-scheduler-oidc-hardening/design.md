@@ -23,6 +23,9 @@ Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [re
 
 The audience should identify the Cloud Run service rather than the route. The route
 remains part of the HTTP request; the audience is validated by Cloud Run/IAM.
+The current Scheduler job includes `X-API-Key` and `X-Scheduler-Trigger` header names;
+only the latter may be retained if the route contract requires it. The API-key value
+must not be copied, migrated, or restored.
 Do not reuse the runtime service account
 `gcp-scheduler-runner@coreassistant-474022.iam.gserviceaccount.com` as the Scheduler
 caller unless ownership and least-privilege review explicitly approve that choice.
@@ -30,7 +33,8 @@ caller unless ownership and least-privilege review explicitly approve that choic
 ## 2. Authentication transition
 
 1. Inventory the current `/execute` authorization behavior without reading or
-   recording API-key values.
+   recording API-key values. The job metadata confirms an `X-API-Key` header is
+   currently configured, while OIDC/OAuth blocks are absent.
 2. Confirm the dedicated caller service account and its ownership.
 3. Grant only service-level `roles/run.invoker` to that caller.
 4. Configure Scheduler with an OIDC token using the caller account and proposed
@@ -65,7 +69,8 @@ Before mutation, obtain all of the following:
 
 - IAM policy for `gcp-scheduler-runner` through an approved VPC Service Controls
   path;
-- exact current authorization behavior for `/execute`;
+- exact current authorization behavior for `/execute`, including whether
+  `X-Scheduler-Trigger` remains required after IAM authentication;
 - owner approval of the dedicated caller service account;
 - owner approval of the service URL audience and ingress model;
 - an approved validation window and rollback operator;
