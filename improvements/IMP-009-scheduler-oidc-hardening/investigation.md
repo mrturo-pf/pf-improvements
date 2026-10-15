@@ -45,7 +45,34 @@ metadata only. Do not record tokens, headers, secret values, or real payloads.
 3. What audience and service-account ownership are approved?
 4. How is a failed scheduled execution detected and rolled back safely?
 
-## 5. Current conclusion
+## 5. Read-only inventory (2026-10-15)
 
-Prepare a separate OIDC design and validation matrix. Do not mutate Scheduler, IAM,
-Cloud Run ingress, or API-key configuration until the design is explicitly approved.
+A sanitized read-only inventory was collected for project `coreassistant-474022` and
+region `us-central1`. No Scheduler, IAM, Cloud Run, secret, or API mutation was
+performed.
+
+| Resource | Observed value | Evidence boundary |
+|---|---|---|
+| Scheduler job | `gcp-scheduler-runner-chile` | enabled; metadata only |
+| Schedule | `30 4 * * *` UTC | job metadata |
+| Method and target | `POST https://gcp-scheduler-runner-yqd4p7fzaa-uc.a.run.app/execute` | URI and method only |
+| Scheduler OIDC/OAuth metadata | not present in the sanitized fields returned | does not inspect headers or secret values |
+| Cloud Run service | `gcp-scheduler-runner` | service metadata |
+| Cloud Run ingress | `all` | service annotation |
+| Cloud Run max scale | `20` | service annotation |
+| Runtime service account | `gcp-scheduler-runner@coreassistant-474022.iam.gserviceaccount.com` | revision template metadata |
+| Cloud Run IAM policy | not retrieved | blocked by VPC Service Controls |
+
+The target is the standalone `gcp-scheduler-runner` service, not `pf-payroll`.
+The current evidence is sufficient to refine the design target but not to approve
+or execute the cutover. The IAM policy, caller ownership, current authentication
+header behavior, and exact route authorization contract still require an approved
+access path and owner decision.
+
+## 6. Current conclusion
+
+The read-only inventory is partially complete and the OIDC design remains pending
+explicit owner approval. Prepare the validation matrix around the standalone
+`gcp-scheduler-runner` target, its `/execute` route, a dedicated Scheduler caller,
+and a precise Cloud Run audience. Do not mutate Scheduler, IAM, Cloud Run ingress,
+or API-key configuration until the design is explicitly approved.
