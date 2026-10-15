@@ -1,7 +1,7 @@
 # Investigation: Cloud Run observability and capacity
 
 Date: 2026-10-12
-Status: investigating
+Status: closed with bounded-evidence limitation
 Level: M
 Scope: Establish the cheapest viable Cloud Run observability, probe, scaling, concurrency, and database connection-budget baseline for PF services.
 Owner: `pf-common`
@@ -38,11 +38,11 @@ credentials, raw request payloads, personal/financial data, or database contents
 - Alerts should begin with existing Cloud Run/Cloud Monitoring signals and only add
   custom metrics when a concrete gap is demonstrated.
 
-Open questions:
+Resolution of open questions:
 
-1. Which health endpoint is suitable for startup/readiness versus liveness?
-2. Which latency/error thresholds are meaningful for the current traffic profile?
-3. Which alerts are actionable enough to justify operational ownership?
+1. `GET /health` remains the process-liveness and post-deployment smoke-test endpoint; dependency readiness is intentionally not added to this slice.
+2. No latency or error thresholds are promoted to shared defaults without a representative traffic baseline; existing Cloud Run signals remain the minimum signal set.
+3. No custom alert policy is added because no actionable gap was demonstrated within the approved evidence boundary.
 
 ## 4. Slice 1 result
 
@@ -52,9 +52,9 @@ control gaps: request concurrency, timeout, probe declarations, and explicit poo
 limits. Both `/health` routes are process-only checks. The detailed evidence is in
 [runtime-inventory.md](runtime-inventory.md).
 
-The next blocking question is the PostgreSQL connection budget and rollout overlap
-policy owned by `pf-db`; no numeric budget is assumed from undocumented defaults.
-The parametric capacity model is drafted in [capacity-model.md](capacity-model.md).
+The PostgreSQL connection budget and rollout overlap policy were subsequently
+approved by `pf-db`; the adopted values and bounded validation evidence are recorded
+in [capacity-model.md](capacity-model.md) and [operational-validation.md](operational-validation.md).
 
 ## 5. Current conclusion
 

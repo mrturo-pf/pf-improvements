@@ -156,8 +156,9 @@ were intermittent Cloud Shell resolver errors and make the run unsuitable as a
 clean SLO sample, although the observed failure ratio remained below the warning
 threshold.
 
-Scale-out and overlap gates remain open. The next run must collect instance-count
-samples and use a stable DNS path before it can be accepted as capacity evidence.
+At this stage the scale-out observation was incomplete; the later delayed metric
+archive provides bounded evidence and the accepted limitation is recorded below.
+The overlap gate is resolved by the dedicated routing observation.
 
 ## 12. Scale observation with Cloud Monitoring
 
@@ -181,8 +182,8 @@ stayed at one instance under this bounded health load; it does not prove that th
 configured scale-out path works. `pf-payroll` needs a corrected Monitoring query
 or metric availability check before its instance count can be assessed.
 
-Scale-out and overlap gates remain open. No traffic or service configuration was
-changed.
+The scale-out evidence remained bounded and no traffic or service configuration
+was changed. The accepted limitation is carried into the final capacity decision.
 
 ## 14. Delayed instance metric result
 
@@ -205,8 +206,9 @@ partial scale-out evidence: payroll passed the scale-out observation, while rate
 still needs a stable-DNS load window that produces a second instance or an
 explicit documented explanation for remaining at one.
 
-This query did not observe two revisions receiving traffic simultaneously, so the
-overlap gate remains open.
+This query did not observe two revisions receiving traffic simultaneously; the
+separate controlled 50/50 routing observation below resolves the traffic-overlap
+gate, while database-connection overlap remains an accepted evidence limitation.
 
 ## 16. Revision-overlap observation
 

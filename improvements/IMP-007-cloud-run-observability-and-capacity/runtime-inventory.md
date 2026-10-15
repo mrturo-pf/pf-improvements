@@ -75,13 +75,14 @@ other-consumer reservations justify a review.
    service, but it does not prove that old and new Cloud Run revisions cannot both
    hold connections during rollout.
 3. **Confirmed:** smoke testing checks process health only.
-4. **Gap:** startup/readiness/liveness semantics, representative timeout behavior,
-   and alert thresholds remain open; concurrency and timeout are now explicit in
-   the shared workflow.
+4. **Accepted limitation:** startup/readiness/liveness semantics, representative
+   timeout behavior, and alert thresholds are not expanded in this improvement;
+   concurrency and timeout are explicit in the shared workflow.
 5. **Documentation note:** local development ports (`8000`/`8001`) differ from
    the shared production port `8080`; deployment docs now describe both contexts.
-6. **Open:** active-session usage from `pg_stat_activity`, representative timeout
-   behavior, and alert thresholds remain to be validated.
+6. **Follow-up evidence:** active-session usage from `pg_stat_activity`, broader
+   timeout behavior, and alert thresholds may be revisited if traffic or service
+   behavior changes; they are not blockers for the closed baseline.
 
 No application, workflow, Cloud Run, IAM, database, or alert configuration was
 changed by this inventory.

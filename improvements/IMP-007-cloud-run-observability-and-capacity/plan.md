@@ -43,7 +43,7 @@ request scenarios with synthetic data. Define only actionable alerts.
 
 The contract for dependency failure, timeout, scale-out, overlap, alert ownership,
 release, and rollback is approved in [operational validation](operational-validation.md).
-Execution evidence remains open.
+Execution evidence is closed with the bounded limitations recorded there.
 
 ### Slice 4 — Adoption decision
 

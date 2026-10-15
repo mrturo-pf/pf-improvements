@@ -1,7 +1,7 @@
 # IMP-007 synthetic validation
 
 Date: 2026-10-13
-Status: partially validated; remaining scenarios open
+Status: closed with bounded-evidence limitation
 Scope: Local synthetic validation of health burst, startup, timeout, and representative request behavior.
 
 ## Attempted validation
@@ -133,8 +133,9 @@ or representative request validation.
 
 ## 8. Gate decision
 
-The health-burst portion is complete. The per-service synthetic validation gate
-remains **open** for startup/cold-start, representative request, dependency
-failure, timeout, scale-out, and two-revision connection checks. Do not change
-shared Cloud Run concurrency, timeout, probe, or alert defaults until those
-scenarios pass with the approved corporate test environment.
+The health-burst portion is complete. The per-service validation is **closed with bounded-evidence limitations**. The
+representative read-only path, health burst, bounded capacity observations, and
+revision-overlap routing passed. `pf-rates` scale-out was not observed under the
+approved bounded load, and database connection overlap was not directly correlated;
+neither limitation justified changing shared Cloud Run defaults. Do not change
+concurrency, timeout, probe, or alert defaults without new evidence.

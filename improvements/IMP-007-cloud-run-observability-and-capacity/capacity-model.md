@@ -43,7 +43,7 @@ rather than hidden in an unexplained factor.
 | Revision overlap | unknown | requires `pf-db`/operations decision |
 | Service pool upper bounds | implicit | must become explicit before release |
 | Migration job connections | unknown | requires `pf-db` confirmation |
-| PostgreSQL connection budget | not documented locally | blocking approval input |
+| PostgreSQL connection budget | `80` PF connections | approved in `pf-db/docs/connection-budget.md` |
 | Headroom percentage/quantity | unknown | requires owner decision |
 
 ## 3. Sensitivity scenarios
@@ -120,5 +120,6 @@ back to library defaults.
 Slice 2 is approved and the explicit pool contract is adopted by both consumers.
 The model uses `70` of the approved `80` connections during conservative
 two-revision rollout conditions, leaving `10` connections of margin. Probe,
-concurrency, timeout, and synthetic evidence remain open. No Cloud Run setting
-was changed.
+concurrency, timeout, and synthetic evidence are closed with the bounded
+limitations recorded in [operational-validation.md](operational-validation.md).
+No Cloud Run setting was changed.

@@ -1,7 +1,7 @@
 # IMP-007 probe and signal validation
 
 Date: 2026-10-13
-Status: validated with scope limits
+Status: validated with accepted scope limitations
 Scope: Current process-health semantics and deployment smoke-test behavior for `pf-rates` and `pf-payroll`.
 Evidence boundary: repository tests, Dockerfiles, and shared workflow only. No production traffic, credentials, or dependency failure injection.
 
@@ -49,17 +49,15 @@ Cloud Run built-in request count, latency, 4xx/5xx, instance count, and revision
 health remain the minimum signal set. No threshold is approved yet because the
 current repository contains no representative traffic baseline.
 
-## 4. Open validation gaps
+## 4. Accepted validation limitations
 
-The following require synthetic or observed traffic before changing shared
-defaults:
+The following were bounded by the available synthetic or observed traffic and are
+not promoted to shared defaults in this improvement:
 
-- request concurrency target;
-- request timeout;
-- p95/p99 latency threshold;
-- error-rate threshold and alert window;
-- dependency failure behavior;
-- cold-start and scale-out behavior;
-- rollback under two-revision connection overlap.
+- no new request-concurrency or timeout target beyond the explicit current values;
+- no p95/p99 latency or error-rate alert threshold without a representative traffic baseline;
+- dependency failure behavior validated through local/provider failure tests, not live dependency injection;
+- `pf-rates` scale-out was not observed under the approved bounded load;
+- revision overlap validated for traffic routing, not direct database-connection correlation.
 
 No Cloud Run workflow default, probe declaration, or alert policy was changed.
