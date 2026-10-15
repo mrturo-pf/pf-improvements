@@ -5,7 +5,7 @@ Status: investigating
 Level: M
 Scope: Replace static Scheduler API-key authentication with least-privilege OIDC authentication after separate design and validation.
 Owner: `pf-payroll`
-Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md) · [IMP-001 source](../HIST-008-gcp-scheduler-credential-exposure/investigation.md) · [register](../../index.md)
+Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [design](design.md) · [plan](plan.md) · [IMP-001 source](../HIST-008-gcp-scheduler-credential-exposure/investigation.md) · [register](../../index.md)
 Superseded-by: none
 
 ## 1. Question
@@ -72,7 +72,7 @@ access path and owner decision.
 ## 6. Current conclusion
 
 The read-only inventory is partially complete and the OIDC design remains pending
-explicit owner approval. Prepare the validation matrix around the standalone
-`gcp-scheduler-runner` target, its `/execute` route, a dedicated Scheduler caller,
-and a precise Cloud Run audience. Do not mutate Scheduler, IAM, Cloud Run ingress,
+explicit owner approval. The proposed design and validation matrix are recorded in [design.md](design.md).
+It targets the standalone `gcp-scheduler-runner` service, its `/execute` route, a
+dedicated Scheduler caller, and a precise Cloud Run audience. Do not mutate Scheduler, IAM, Cloud Run ingress,
 or API-key configuration until the design is explicitly approved.

@@ -4,7 +4,7 @@ Date: 2026-10-12
 Status: investigating
 Level: M
 Scope: Replace static Scheduler API-key authentication with least-privilege OIDC authentication.
-Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md) · [IMP-001 source](../HIST-008-gcp-scheduler-credential-exposure/investigation.md) · [register](../../index.md)
+Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [design](design.md) · [plan](plan.md) · [IMP-001 source](../HIST-008-gcp-scheduler-credential-exposure/investigation.md) · [register](../../index.md)
 Approved: pending explicit owner approval
 Superseded-by: none
 

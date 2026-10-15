@@ -4,7 +4,7 @@ Date: 2026-10-12
 Status: designed
 Level: M
 Scope: Replace static Scheduler API-key authentication with least-privilege OIDC authentication.
-Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md) · [IMP-001 source](../IMP-001-scheduler-credential-exposure-remediation/recommendation.md) · [register](../../index.md)
+Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [design](design.md) · [plan](plan.md) · [IMP-001 source](../IMP-001-scheduler-credential-exposure-remediation/recommendation.md) · [register](../../index.md)
 Approved: pending explicit owner approval
 Superseded-by: none
 
@@ -53,4 +53,5 @@ exposed or untracked credential.
 ## 5. Decision gate
 
 Approve the caller identity, audience, ingress model, route, validation window, and
-rollback procedure before any IAM, Scheduler, Cloud Run, or secret mutation.
+rollback procedure described in [design.md](design.md) before any IAM, Scheduler,
+Cloud Run, or secret mutation.

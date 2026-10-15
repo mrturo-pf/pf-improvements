@@ -4,7 +4,7 @@ Date: 2026-10-12
 Status: investigating
 Level: M
 Scope: Replace static Scheduler API-key authentication with least-privilege OIDC authentication.
-Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md)
+Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md) · [design](design.md)
 Approved: pending explicit owner approval
 Superseded-by: none
 
@@ -12,7 +12,7 @@ Superseded-by: none
 
 - [x] `IMP-001` containment/remediation is released and treated as a completed prerequisite.
 - [~] Scheduler job and Cloud Run target inventory collected; IAM policy and current header authorization remain blocked by VPC Service Controls/approval.
-- [ ] Brief and recommendation approved.
+- [ ] Brief, recommendation, and proposed design approved.
 - [ ] Caller identity and resource-level IAM model approved.
 - [ ] Audience, route, environment, and ingress contract approved.
 - [ ] Synthetic authorized/unauthorized validation passed.
@@ -29,7 +29,7 @@ and current authentication metadata. Do not read secret values or tokens.
 ### Slice 2 — Design validation
 
 Confirm caller service-account ownership, audience, invoker scope, route behavior,
-failure handling, and rollback without mutation.
+failure handling, and rollback without mutation using [design.md](design.md).
 
 ### Slice 3 — Controlled implementation
 
