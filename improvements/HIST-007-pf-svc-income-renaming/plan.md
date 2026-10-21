@@ -602,13 +602,14 @@ This confirms the database was correct; the observed `PAY_EMPLOYER` failure came
 ### Cloud Run and workflow evidence
 
 - `pf-rates` deployment workflow run `39531595670`, final attempt `5`, completed successfully.
-- `pf-payroll` deployment workflow run `39532026048`, final attempt `9`, completed successfully.
+- `pf-payroll` compatibility baseline workflow run `39532026048`, final attempt `9`, completed successfully.
+- Target `pf-svc-income` deployment workflow run `39669948251` on `main` commit `6de8fa52`, completed successfully.
 - The failed attempts exposed stale-image reuse, mutable-tag redeployment, Cloud Run eventual-consistency revision selection, WIF/IAM smoke authentication, and missing protected-smoke diagnostics. These were corrected in the reusable `pf-common` workflow.
 
 ### Final smoke results
 
 - `pf-rates`: pipeline and database-backed endpoints passed after the immutable-image and schema verification changes.
-- `pf-payroll`: `/health` and authenticated `/payroll/employers` passed after deployment selected the newly created Ready revision containing `INC_EMPLOYER`.
+- `pf-payroll` target deployment: `/health` reported `service=pf-svc-income` and authenticated `/payroll/employers` passed against the new target service and `INC_EMPLOYER` schema.
 - Protected smoke now records the response body (bounded and without API-key values) on non-2xx responses.
 
 ### Current state and next phase
