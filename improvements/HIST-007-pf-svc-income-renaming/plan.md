@@ -8,7 +8,7 @@ Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [re
 Approved: 2026-10-05 by a0a11b7 (conversation)
 Superseded-by: none
 
-> **Current phase: investigation and decision-making. Implementation authorization is not granted.** The approved recommendation is a design decision, not permission to mutate repositories, create resources, run migrations, change secrets/IAM/Postman, deploy, cut over, commit, or push. No implementation, repository rename, secret rotation, push, or deployment has occurred.
+> **Current phase: controlled implementation of the service-identity rename.** The physical `PAY_* → INC_*` schema migration and ORM compatibility slice are complete and validated in production. The service identity remains `pf-payroll`; repository/resource/consumer cutover work is now the active HIST-007 scope.
 
 ## 1. Status and gates
 
@@ -31,20 +31,19 @@ Postman cutover, deployment, and traffic cutover require their validation gates.
 - [x] `IMP-006` HTTP error baseline is released and available for release validation.
 - [x] `IMP-007` Cloud Run observability/capacity baseline is closed with a documented bounded-evidence limitation accepted for cutover planning.
 - [x] `IMP-008` identifier policy is validated; its release evidence is tracked separately and the policy applies to the physical migration.
-- [ ] Cloud Run URL policy and Postman target choice approved; neither advertised
-  URL is assumed stale without a decision.
-- [ ] Repository rename authorization received.
-- [ ] Implementation slices completed and validated.
-- [ ] Cross-repository commits/pushes authorized separately.
-- [ ] Deployment approval explicitly authorized.
+- [x] Cloud Run URL policy and Postman target choice approved for the current service; the identity rename cutover remains pending.
+- [x] Repository/code/schema implementation authorization received.
+- [x] Schema migration, ORM alignment, deployment hardening, and production smoke validation completed.
+- [x] Cross-repository commits/pushes and deployment execution authorized and validated for the compatibility slice.
+- [ ] Repository rename to `pf-svc-income` completed.
+- [ ] New service identity, GCP resources, secrets, URLs, and Postman consumers cut over.
 - [ ] Rollback window of 14 calendar days (or until one representative payroll flow
-  completes, whichever is longer) approved.
+  completes, whichever is longer) approved and evidenced for the identity cutover.
 
-The lifecycle states intentionally describe different artifacts: HIST-007 remains
-`planned` because the rename itself is not authorized for implementation, while the
-external security, access, error-baseline, observability, and identifier-policy inputs
-are now resolved, released, superseded, or explicitly accepted with limitations.
-Those outcomes are consumed here as evidence rather than treated as active blockers.
+The lifecycle state is `in progress`: the schema/ORM compatibility slice is complete,
+while the approved service-identity rename remains active. External security, access,
+error-baseline, observability, and identifier-policy inputs are consumed as evidence,
+not treated as blockers.
 
 ## 1.1 Latest evidence and blockers (2026-10-15)
 
@@ -581,15 +580,56 @@ Commands are examples and must be run from the correct repository after reading 
 | 2026-10-15 | in progress | Initial ORM rename probe was intentionally not published: 562 payroll tests passed but 9 compatibility tests exposed existing test/repository coupling to `PAY_*` and fake-session result shapes. The models were restored; ORM, repository, and test updates must land as one coordinated slice. | Local payroll test run; no additional working-tree changes retained |
 
 
-## 6. Release record
+## 6. Release record — schema/ORM compatibility slice
 
-- Commits: pending
-- Workflow run IDs: pending
-- Deployment URL: pending
-- Old-service rollback window: pending user decision
-- Final smoke tests: pending
-- Known blockers/follow-ups: pending
+### Commits and migrations
 
-## 7. Final summary placeholder
+- `pf-db`: migration `0017` implements the reversible `PAY_* → INC_*` rename; the production dump reports Alembic head `0018`.
+- `pf-payroll`: `163833e feat(payroll): align ORM with income schema (#5)` aligns the ORM to `INC_*` objects.
+- `pf-rates`: `054e376 fix(rates): map economic index to accrual columns (#7)` aligns rates period semantics with the renamed schema vocabulary.
+- `pf-common`: deployment hardening includes immutable image deployment, schema checks, protected-smoke diagnostics, and revision-readiness handling; the final implementation is tracked through PRs `#12`, `#13`, and the follow-up revision-readiness fix.
 
-To be completed after validation/release: what shipped, what did not, authoritative contract locations, old-resource disposition, and workflow/process improvements discovered.
+### Database dump evidence
+
+`modules/pf-db/secrets/neon_dump.sql` was inspected read-only. It contains:
+
+- `INC_EMPLOYER`, `INC_EMP_CONT`, `INC_PAYROLL`, `INC_PAY_CONCEPT`, `INC_PAY_ITEM`, and related `INC_*` objects;
+- no `PAY_EMPLOYER` table;
+- `alembic_version = 0018`.
+
+This confirms the database was correct; the observed `PAY_EMPLOYER` failure came from stale container code/revision selection, not a missing production migration.
+
+### Cloud Run and workflow evidence
+
+- `pf-rates` deployment workflow run `39531595670`, final attempt `5`, completed successfully.
+- `pf-payroll` deployment workflow run `39532026048`, final attempt `9`, completed successfully.
+- The failed attempts exposed stale-image reuse, mutable-tag redeployment, Cloud Run eventual-consistency revision selection, WIF/IAM smoke authentication, and missing protected-smoke diagnostics. These were corrected in the reusable `pf-common` workflow.
+
+### Final smoke results
+
+- `pf-rates`: pipeline and database-backed endpoints passed after the immutable-image and schema verification changes.
+- `pf-payroll`: `/health` and authenticated `/payroll/employers` passed after deployment selected the newly created Ready revision containing `INC_EMPLOYER`.
+- Protected smoke now records the response body (bounded and without API-key values) on non-2xx responses.
+
+### Current state and next phase
+
+The physical schema rename and ORM compatibility slice are complete. The active work is the
+service-identity rename to `pf-svc-income`: repository/package identity, GCP resources,
+secrets, URLs, Postman variables, consumer cutover, rollback window, and cleanup.
+
+## 7. Implementation problems and corrections
+
+| Problem | Evidence | Correction |
+|---|---|---|
+| Old image queried `PAY_EMPLOYER` against an `INC_*` database | Cloud Run `UndefinedTableError`; image inspection showed old ORM | Rebuilt with schema verification and no release cache |
+| Same commit tag hid a new image digest | Reruns reused `:<github.sha>` | Deploy by Artifact Registry immutable digest |
+| Cloud Run selected an older Ready revision | Traffic returned to `pf-payroll-00064-7s7` while newer revisions existed | Use `latestCreatedRevisionName`, wait for `Ready=True`, then update traffic |
+| Protected smoke WIF/IAM failed | Missing deployer Secret Manager access and redundant second WIF exchange | Grant least-privilege accessor; run protected smoke in authenticated deploy job |
+| Smoke failure hid application body | Only HTTP 500 was printed | Capture bounded response body without secrets |
+
+## 8. Final summary for this phase
+
+Completed: reversible schema rename, production schema application, ORM alignment, image/schema
+verification, immutable deployment, Cloud Run readiness handling, IAM correction, and final
+HTTP smoke validation. Pending: the approved `pf-payroll → pf-svc-income` service-identity
+rename and its consumer cutover/rollback/cleanup evidence.

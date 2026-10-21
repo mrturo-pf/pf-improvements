@@ -13,7 +13,7 @@ Superseded-by: none
 > Postman, GCP, deployment, cutover, and rollback actions require their planned
 > evidence before mutation.
 
-> Investigation update 2026-10-15: the current service and rollback baseline remain documented; no `pf-svc-income` GCP resource or secret has been created. `IMP-001`, `IMP-002`, `IMP-004`, `IMP-005`, `IMP-006`, and `IMP-009` are released; `IMP-003` is superseded by `IMP-002`; `IMP-007` is closed with a bounded-evidence limitation; and `IMP-008` is validated/released. Implementation remains blocked only by rename-specific authorization and design gates.
+> Implementation update 2026-10-21: the physical `PAY_* → INC_*` schema/ORM compatibility slice is complete and production smoke validation passed. `pf-payroll` remains the active service identity; the authorized next phase is the repository/package/GCP/consumer identity cutover to `pf-svc-income`. The implementation exposed stale-image, mutable-tag, Cloud Run revision-readiness, WIF/IAM, and protected-smoke diagnostics issues; all are recorded in `plan.md` with their corrections.
 
 ## Objective
 
@@ -59,7 +59,7 @@ The 2026-10-07 inventory confirms:
 - the `IMP-008` identifier policy is validated and applies to the pending physical migration;
 - `IMP-004`, `IMP-006`, `IMP-008`, and `IMP-009` are resolved inputs; `IMP-007` is closed with its bounded-evidence limitation explicitly accepted for planning. None is an active blocker for HIST-007.
 
-The new service, secret, account, and repository remain design/deployment work, not completed outcomes.
+The new service, secret, account, repository, and consumer cutover remain pending identity-rename outcomes. The existing `pf-payroll` service and `INC_*` schema are the validated compatibility baseline.
 
 ## Research validation update (2026-10-07)
 

@@ -477,3 +477,22 @@ The recommendation remains to proceed only with local/PR preparation until those
 ## 12. Conclusion
 
 Proceed with the approved phased identity, schema, package, and domain-language migration to `pf-svc-income`. Keep payroll-specific use cases in `payroll`; extract only stable generic capabilities into `income` with dependency direction `payroll → income`. Rename the physical schema to the approved `INC_*` vocabulary, rename period-oriented DTOs/commands to payroll-oriented names, and use `/payroll/{payroll_id}` for the detail route. Do not implement independent bonuses or honorarios in this rename; prepare the seams they will consume.
+
+## 13. Post-implementation evidence addendum — 2026-10-21
+
+The schema/ORM compatibility slice described by this investigation was implemented and
+validated after the original investigation text was written. `pf-db` production is at
+Alembic `0018` and contains `INC_*` objects; `pf-payroll` and `pf-rates` pipelines and
+database-backed smoke tests completed successfully in workflow runs `39532026048`
+(attempt 9) and `39531595670` (attempt 5), respectively.
+
+The implementation exposed and corrected five operational failure modes: stale Docker
+layers, redeployment by mutable commit tag, Cloud Run eventual-consistency selection of
+an older Ready revision, redundant WIF/IAM authentication in protected smoke tests, and
+insufficient protected-smoke response diagnostics. These are now recorded in the plan's
+release record. They are not blockers for the remaining identity rename.
+
+The remaining HIST-007 work is the approved service identity migration from `pf-payroll`
+to `pf-svc-income`: repository/package identity, GCP resources and secrets, Postman and
+consumer URLs, cutover, rollback window, and cleanup. The `/payroll/*` domain route family
+and `INC_*` database vocabulary remain authoritative.

@@ -184,7 +184,7 @@
       "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/11",
       "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/HIST-007-pf-svc-income-renaming/plan.md",
-      "next_action": "Recommendation approved 2026-10-05; implementation still blocked on live inventory, package-boundary details, migration locking strategy, and rollback exit evidence",
+      "next_action": "Schema/ORM compatibility slice and production smoke validation complete; continue the authorized pf-payroll to pf-svc-income identity cutover with GCP resources, consumers, rollback window, and cleanup evidence",
       "metadata_status": "historical; priority and type not inferred"
     },
     {

@@ -15,7 +15,7 @@ Query the Project before making planning decisions; this generated file stores n
 - Level: `L`; type: `unclassified`
 - Owner: `pf-base`
 - Affected: `pf-svc-income`, `pf-db`, `pf-common`, `pf-rates`, `pf-sheets`
-- Next action: Recommendation approved 2026-10-05; implementation still blocked on live inventory, package-boundary details, migration locking strategy, and rollback exit evidence
+- Next action: Schema/ORM compatibility slice and production smoke validation complete; continue the authorized pf-payroll to pf-svc-income identity cutover with GCP resources, consumers, rollback window, and cleanup evidence
 - Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/HIST-007-pf-svc-income-renaming/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/11
 
