@@ -633,3 +633,9 @@ Completed: reversible schema rename, production schema application, ORM alignmen
 verification, immutable deployment, Cloud Run readiness handling, IAM correction, and final
 HTTP smoke validation. Pending: the approved `pf-payroll → pf-svc-income` service-identity
 rename and its consumer cutover/rollback/cleanup evidence.
+
+The first identity slice is prepared in `pf-payroll` branch
+`feature/hist-007-pf-svc-income-identity`, commit `3d7424d`: it introduces
+`PF_INCOME_API_KEY`, distribution identity `pf-svc-income`, target workflow
+identity `pf-svc-income`, and corresponding local/deployment documentation while
+preserving the `/payroll/*` routes and `src/payroll` domain package.
