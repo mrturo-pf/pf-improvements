@@ -13,9 +13,9 @@ Superseded-by: none
 
 ### 1. Baseline and inventory
 
-- [ ] Confirm the current request count, folder boundaries, dependencies, and
+- [x] Confirm the current request count, folder boundaries, dependencies, and
   intentional exclusions.
-- [ ] Export normalized OpenAPI route inventories from `pf-rates` and
+- [x] Export normalized OpenAPI route inventories from `pf-rates` and
   `pf-svc-income` without secrets or live payloads.
 - [ ] Define the sanitized `pf-sheets` Web App route inventory, if included.
 - [ ] Record all current gaps and stale requests in the Issue and validation
@@ -23,18 +23,17 @@ Superseded-by: none
 
 ### 2. Coverage checker
 
-- [ ] Implement a deterministic method/path comparison tool in the owning
+- [x] Implement a deterministic method/path comparison tool in the owning
   repository (`pf-postman` unless the service contract requires an adapter).
-- [ ] Normalize path parameters, trailing slashes, and documented exclusions.
-- [ ] Fail on missing, stale, or duplicate mappings.
+- [x] Normalize path parameters, trailing slashes, and service URL variables.
+- [x] Fail on missing, stale, and undocumented duplicate mappings.
 - [ ] Add fixtures for valid coverage, intentional exclusion, duplicate request,
   and stale path cases.
 
 ### 3. Request assertions
 
-- [ ] Add reusable status and response-time assertions where appropriate.
-- [ ] Add JSON, CSV, binary, and async-job assertion helpers without forcing one
-  response model onto every endpoint.
+- [x] Add reusable status, response-time, content-type, and JSON parse assertions where appropriate.
+- [x] Add JSON and CSV response handling without forcing one response model onto every endpoint; binary and async-job assertions remain pending.
 - [ ] Add endpoint-specific required-field and invariant assertions.
 - [ ] Preserve chained Preview → Import behavior and assert its setup state.
 - [ ] Ensure assertions never print API keys, authorization headers, or sensitive
@@ -42,24 +41,26 @@ Superseded-by: none
 
 ### 4. Safe Newman runner
 
-- [ ] Add a local documented Newman command for the read-only smoke subset.
+- [x] Add a local documented Newman command for the read-only smoke subset.
 - [ ] Materialize environment values only in ephemeral files or process
   environment variables.
-- [ ] Add JUnit output and sanitized CLI summaries.
+- [x] Add JUnit output and sanitized CLI summaries.
 - [ ] Define deterministic service readiness, timeouts, and retry policy.
 - [ ] Run the smoke subset against LOCAL before any remote target.
 
 ### 5. Integration fixtures
 
-- [ ] Define synthetic setup data and ownership for imports, employers,
-  contracts, templates, and asynchronous exports.
-- [ ] Add cleanup steps and verify cleanup success.
-- [ ] Isolate integration data from developer and production data.
+- [x] Define synthetic setup data and ownership for employers, contracts, and
+  templates; JSON validation imports are covered, while committing imports and
+  asynchronous exports remain pending.
+- [x] Add cleanup steps and verify cleanup success in the guarded local runner.
+- [x] Isolate integration data from developer and production data through unique
+  identifiers and a loopback-only target guard.
 - [ ] Document file fixtures and request ordering dependencies.
 
 ### 6. CI and release gates
 
-- [ ] Add a workflow for coverage validation and safe smoke execution.
+- [x] Add a workflow for coverage validation and safe smoke execution.
 - [ ] Run it on collection, environment, service contract, and runner changes.
 - [ ] Keep destructive/provider-refresh workflows manual and target-guarded.
 - [ ] Upload JUnit reports without raw payloads or secrets.
@@ -77,15 +78,104 @@ Superseded-by: none
 ## Validation gates
 
 - [ ] Collection and environment JSON validation passes.
-- [ ] Coverage checker passes with no unexplained gaps.
-- [ ] Newman smoke tests pass against LOCAL.
-- [ ] Integration fixtures pass with cleanup verification.
+- [x] Coverage checker passes with no unexplained gaps.
+- [x] Newman smoke tests pass against LOCAL.
+- [x] Integration fixtures pass with disposable local database reset verification.
 - [ ] Destructive tests remain excluded from default CI.
 - [ ] Reports contain no secrets, credentials, personal data, payslips, salaries,
   health data, or raw production payloads.
 - [ ] Relevant service and Postman documentation is synchronized.
 - [ ] Final evidence records commit SHAs, workflow run IDs, target environment,
   request counts, and sanitized conclusions.
+
+## Validation evidence
+
+### Local read-only smoke — 2026-10-25
+
+- Target: local `pf-rates` and `pf-svc-income`; `pf-sheets` is excluded by default because its committed URL is external.
+- Database: local PostgreSQL with base, real, and test-only fixtures.
+- Runner: Newman through `scripts/run-postman-smoke.py`.
+- Requests selected: 25 read-only local requests.
+- Assertions: 106 status, latency, content-type, JSON parse, health-contract, and CSV-content assertions.
+- Failures: 0.
+- Report: temporary JUnit report; no credentials or payloads committed.
+- Corrections discovered: added test-only `UF`/`UTM` fixtures, a `UF` exchange
+  rate for payroll validation, and updated the collection's local payroll fixture
+  variable from stale ID `1` to `527`.
+
+### Local JSON import validation — 2026-10-25
+
+- Target: local `pf-svc-income` with local `pf-rates` and PostgreSQL fixtures.
+- Request: `POST /payroll/import/json` with `mode=validate`.
+- Result: HTTP `200`.
+- Payroll count before/after: `25 → 25`; no data persisted.
+- No GCP, Neon, or production target was contacted.
+
+### Local spreadsheet validation — 2026-10-25
+
+- Target: local `pf-svc-income` only.
+- Fixture: temporary XLSX generated from the repository sample fixture.
+- Result: HTTP `422` because the fixture employer/contract and derived net-pay
+  values do not form a valid committed payroll scenario.
+- Payroll count remained `25`; no data persisted.
+- Follow-up: create a dedicated valid XLSX fixture for the selected employer and
+  contract instead of reusing the stale ACME sample.
+
+### Local mutating integration — 2026-10-25
+
+- Employer create: passed.
+- Contract create: passed after correcting employer-scoped overlap validation
+  and applying the local database constraint migration.
+- Regression coverage: 12 repository tests passed, including an assertion that
+  the overlap query includes `employer_id`.
+- Template create/update: passed.
+- Template deactivation: passed.
+- Employer cleanup: blocked because template deactivation is soft-delete and the
+  API has no hard-delete operation for the template foreign-key dependency.
+- The run did not contact GCP, Neon, or production. The local backup remains
+  available for reset/restore.
+- The local-only backup/reset wrapper
+  `postman/scripts/run-local-integration.sh` executed successfully: the complete
+  employer/contract/template workflow passed and the disposable database reset
+  completed. Production deletion semantics remain unchanged.
+
+### Local PDF preview — 2026-10-25
+
+- Target: local `pf-svc-income` only.
+- Fixture: synthetic PDF generated in `/tmp`; no repository or secret PDFs were
+  used.
+- Basic unresolved fixture: HTTP `200` with no template match and no persisted data.
+- Template-shaped fixture: HTTP `200`, `template_id=walmart-chile-v1`, and three
+  resolved rows (`SALARY_BASE`, `INCOME_TAX`, `UNEMPLOYMENT_INSURANCE`).
+
+### Local PDF Preview → JSON validation — 2026-10-25
+
+- Converted the resolved preview into the documented JSON import shape.
+- `POST /payroll/import/json` with `mode=validate`: HTTP `200`.
+- `validated=true`, `saved=null`, `period_count=1`, `item_count=3`.
+- The response contained only a pending UF warning for complementary insurance;
+  no data was persisted.
+
+### Local XLSX export → import validation — 2026-10-25
+
+- The local export endpoint returned an XLSX successfully.
+- Re-importing that export with `mode=validate` returned HTTP `422` because
+  historical contribution and complementary-insurance totals do not match the
+  current calculation rules.
+- Payroll count remained `25`; no data persisted.
+- This is a contract/fixture round-trip gap, not a reason to weaken assertions.
+
+### Local minimal XLSX validation — 2026-10-25
+
+- A minimal synthetic XLSX containing only period, employer, contract kind, and
+  `salary_base` passed `POST /payroll/import/spreadsheet` with `mode=validate`.
+- Result: HTTP `200`; payroll count remained `25 → 25`.
+- This is the valid fixture shape to keep for future integration automation;
+  historical exported contribution columns must not be reused as authoritative
+  inputs.
+
+The run proves the local read-only tier only and intentionally excludes the external `pf-sheets` Web App. It does not authorize GCP,
+production, mutating, destructive, refresh, import, or stop-job execution.
 
 ## Rollback and failure handling
 
