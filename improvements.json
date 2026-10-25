@@ -387,6 +387,24 @@
       "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/HIST-021-spreadsheet-export/plan.md",
       "next_action": "Living plan records implementation corrections and live verification",
       "metadata_status": "historical; priority and type not inferred"
+    },
+    {
+      "id": "IMP-011",
+      "slug": "api-endpoint-coverage-and-postman-automation",
+      "level": "L",
+      "type": "testing",
+      "owner": "pf-postman",
+      "affected": [
+        "pf-postman",
+        "pf-rates",
+        "pf-svc-income",
+        "pf-sheets"
+      ],
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "issue_url": "https://github.com/mrturo-pf/pf-base/issues/35",
+      "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-011-api-endpoint-coverage-and-postman-automation/plan.md",
+      "next_action": "Approve the layered coverage, assertion, Newman, fixture, and safety design before implementation",
+      "metadata_status": "proposed; operational status and priority remain GitHub Project fields"
     }
   ]
 }

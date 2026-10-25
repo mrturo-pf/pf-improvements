@@ -34,6 +34,7 @@ This index intentionally does not duplicate those fields.
 | `HIST-019` | `pdf-template-management` | [Issue](https://github.com/mrturo-pf/pf-base/issues/23) | [artifact](improvements/HIST-019-pdf-template-management/recommendation.md) |
 | `HIST-020` | `pf-rates-batch-lookup` | [Issue](https://github.com/mrturo-pf/pf-base/issues/24) | [artifact](improvements/HIST-020-pf-rates-batch-lookup/recommendation.md) |
 | `HIST-021` | `spreadsheet-export` | [Issue](https://github.com/mrturo-pf/pf-base/issues/25) | [artifact](improvements/HIST-021-spreadsheet-export/recommendation.md) |
+| `IMP-011` | `api-endpoint-coverage-and-postman-automation` | [Issue](https://github.com/mrturo-pf/pf-base/issues/35) | [artifact](improvements/IMP-011-api-endpoint-coverage-and-postman-automation/recommendation.md) |
 
 ## Source-of-truth rules
 

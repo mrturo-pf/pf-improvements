@@ -3,7 +3,7 @@
 > Generated from `improvements.json`. Do not edit manually.
 
 - Schema version: `1`
-- Items: `25`
+- Items: `26`
 
 ## Improvement references
 
@@ -234,3 +234,12 @@ Query the Project before making planning decisions; this generated file stores n
 - Next action: Validate generated context and repository automation before historical migration.
 - Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-010-ecosystem-improvement-tracking-migration/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/4
+
+### IMP-011 — api-endpoint-coverage-and-postman-automation
+
+- Level: `L`; type: `testing`
+- Owner: `pf-postman`
+- Affected: `pf-postman`, `pf-rates`, `pf-svc-income`, `pf-sheets`
+- Next action: Approve the layered coverage, assertion, Newman, fixture, and safety design before implementation
+- Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-011-api-endpoint-coverage-and-postman-automation/plan.md
+- Issue: https://github.com/mrturo-pf/pf-base/issues/35
