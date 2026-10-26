@@ -65,6 +65,7 @@ Superseded-by: none
 - [x] Exclude unstable resource IDs, such as export job status, payroll period, and template IDs, from the default smoke tier.
 - [ ] Run it on collection, environment, service contract, and runner changes.
 - [x] Add loopback-only expected error contract checks for auth, missing resources, and invalid import payloads.
+- [x] Add an explicit HTTPS-only GCP error-contract workflow; remote mutations remain excluded.
 - [ ] Keep destructive/provider-refresh workflows manual and target-guarded.
 - [ ] Upload JUnit reports without raw payloads or secrets.
 - [ ] Define failure ownership and rerun instructions.
