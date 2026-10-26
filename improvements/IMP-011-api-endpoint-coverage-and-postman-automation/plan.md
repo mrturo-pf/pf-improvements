@@ -62,7 +62,7 @@ Superseded-by: none
 
 - [x] Add a workflow for coverage validation and safe smoke execution.
 - [x] Add a manual disposable LOCAL integration workflow with database reset cleanup.
-- [x] Exclude unstable resource IDs, such as export job status and payroll period IDs, from the default smoke tier.
+- [x] Exclude unstable resource IDs, such as export job status, payroll period, and template IDs, from the default smoke tier.
 - [ ] Run it on collection, environment, service contract, and runner changes.
 - [ ] Keep destructive/provider-refresh workflows manual and target-guarded.
 - [ ] Upload JUnit reports without raw payloads or secrets.
