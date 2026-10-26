@@ -64,6 +64,7 @@ Superseded-by: none
 - [x] Add a manual disposable LOCAL integration workflow with database reset cleanup.
 - [x] Exclude unstable resource IDs, such as export job status, payroll period, and template IDs, from the default smoke tier.
 - [ ] Run it on collection, environment, service contract, and runner changes.
+- [x] Add loopback-only expected error contract checks for auth, missing resources, and invalid import payloads.
 - [ ] Keep destructive/provider-refresh workflows manual and target-guarded.
 - [ ] Upload JUnit reports without raw payloads or secrets.
 - [ ] Define failure ownership and rerun instructions.
@@ -186,6 +187,13 @@ Superseded-by: none
 
 The run proves the local read-only tier only and intentionally excludes the external `pf-sheets` Web App. It does not authorize GCP,
 production, mutating, destructive, refresh, import, or stop-job execution.
+
+### CI LOCAL integration — 2026-10-26
+
+- Workflow: `run-postman-integration-local.yml`.
+- Run: [40258479096](https://github.com/mrturo-pf/pf-postman/actions/runs/40258479096).
+- OpenAPI coverage, local error contracts, read-only smoke, mutation fixtures,
+  and disposable database reset all passed.
 
 ### Local Neon snapshot replica validation — 2026-10-25
 
