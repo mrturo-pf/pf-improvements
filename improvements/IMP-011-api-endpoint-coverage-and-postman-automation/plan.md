@@ -61,6 +61,7 @@ Superseded-by: none
 ### 6. CI and release gates
 
 - [x] Add a workflow for coverage validation and safe smoke execution.
+- [x] Add a manual disposable LOCAL integration workflow with database reset cleanup.
 - [ ] Run it on collection, environment, service contract, and runner changes.
 - [ ] Keep destructive/provider-refresh workflows manual and target-guarded.
 - [ ] Upload JUnit reports without raw payloads or secrets.
@@ -96,7 +97,7 @@ Superseded-by: none
 - Database: local PostgreSQL with base, real, and test-only fixtures.
 - Runner: Newman through `scripts/run-postman-smoke.py`.
 - Requests selected: 25 read-only local requests.
-- Assertions: 106 status, latency, content-type, JSON parse, health-contract, and CSV-content assertions.
+- Assertions: 130 status, latency, content-type, JSON parse, health-contract, CSV-content, array-shape, object-field, and async-status assertions.
 - Failures: 0.
 - Report: temporary JUnit report; no credentials or payloads committed.
 - Corrections discovered: kept economic-index fixtures scoped to `IPC_CL`,
