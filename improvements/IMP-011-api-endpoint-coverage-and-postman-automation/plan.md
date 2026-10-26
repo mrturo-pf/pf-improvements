@@ -188,6 +188,14 @@ Superseded-by: none
 The run proves the local read-only tier only and intentionally excludes the external `pf-sheets` Web App. It does not authorize GCP,
 production, mutating, destructive, refresh, import, or stop-job execution.
 
+### GCP read-only validation — 2026-10-26
+
+- OpenAPI coverage workflow: [run 40259031635](https://github.com/mrturo-pf/pf-postman/actions/runs/40259031635) passed.
+- Read-only Postman smoke workflow: [run 40259103021](https://github.com/mrturo-pf/pf-postman/actions/runs/40259103021) passed.
+- Target: deployed `pf-rates` and `pf-svc-income` only; no mutations, imports,
+  refreshes, deletes, or async job triggers were executed.
+- `pf-sheets` remained excluded because its Web App is a separate external target.
+
 ### CI LOCAL integration — 2026-10-26
 
 - Workflow: `run-postman-integration-local.yml`.
