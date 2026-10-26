@@ -227,6 +227,59 @@ production, mutating, destructive, refresh, import, or stop-job execution.
 - No GCP, Neon, or production mutation was performed; all activity used the local
   restored copy.
 
+## Remaining work before closure
+
+The following work remains intentionally open for the next session. None of it
+authorizes production mutation by itself.
+
+### Immediate blockers
+
+- [ ] Merge and apply `pf-db` PR #21 (`0021_reapply_income_summary_view_grants.py`)
+  so the GCP `PDF preview → JSON validate` flow no longer fails on
+  `INC_MV_PAY_SUMMARY` privileges.
+- [ ] Re-run the GCP synthetic PDF validation workflow after the migration and
+  record `template_id`, resolved row count, `validated`, and `saved=null`.
+- [ ] Reconcile the GCP database-role/grant evidence with the runtime identity
+  without recording connection strings, credentials, or secret payloads.
+
+### Assertion coverage
+
+- [ ] Execute the PDF Preview, JSON import, and XLSX import assertions through
+  Newman in an integration collection/workflow, not only through the direct
+  local runner and curl-based local evidence.
+- [ ] Add and execute the complete async export lifecycle: trigger, capture
+  `job_id`, poll, terminal status, and `file_id`/`error_message` validation.
+- [ ] Add binary response validation for XLSX/PDF and exact CSV column contracts.
+- [ ] Add controlled GCP error-contract execution after the grant blocker is
+  resolved; keep expected `401/403`, `404`, `409`, and `400/422` cases separate
+  from happy-path smoke.
+
+### `pf-sheets` coverage decision
+
+- [ ] Decide whether `pf-sheets` uses a local Web App mock, a separate external
+  read-only workflow, or inventory-only coverage.
+- [ ] Document the chosen target, credentials boundary, route inventory, and why
+  it is excluded from the main local microservice smoke.
+
+### CI and operations
+
+- [ ] Define automatic trigger policy for collection, environment, OpenAPI,
+  service-contract, fixture, and runner changes; the current integration workflow
+  is manual by design.
+- [ ] Document failure ownership, rerun commands, JUnit artifact retention, and
+  fixture-vs-service failure triage.
+- [ ] Keep destructive/provider-refresh execution behind explicit manual inputs,
+  target guards, bounded timeouts, and cleanup/restore evidence.
+- [ ] Record final commit SHAs, workflow run IDs, target environments, request and
+  assertion counts, sanitized failures, and unresolved limitations.
+
+### Closure gate
+
+- [ ] Update Issue #35 and the GitHub Project after the remaining evidence is
+  reconciled.
+- [ ] Move `IMP-011` through the approved lifecycle to `Released`/`Closed` only
+  after the GCP, `pf-sheets`, CI-trigger, and evidence decisions are complete.
+
 ## Rollback and failure handling
 
 - Disable the new workflow or revert its workflow/runner commit without changing
