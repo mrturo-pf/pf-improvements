@@ -140,6 +140,14 @@ Superseded-by: none
   employer/contract/template workflow passed and the disposable database reset
   completed. Production deletion semantics remain unchanged.
 
+### Stable local PDF fixture — 2026-10-25
+
+- Added `postman/scripts/generate-synthetic-payroll-pdf.py` to generate a
+  deterministic text-layer PDF without real payroll data.
+- The fixture targets `walmart-chile-v1`, period October 2026, and three mapped
+  labels. It is generated into `/tmp`, never committed as a binary artifact.
+- Preview and preview → JSON `mode=validate` both pass locally with HTTP 200.
+
 ### Local PDF preview — 2026-10-25
 
 - Target: local `pf-svc-income` only.
