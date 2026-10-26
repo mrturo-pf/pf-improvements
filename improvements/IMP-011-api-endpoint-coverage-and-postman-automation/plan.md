@@ -99,8 +99,8 @@ Superseded-by: none
 - Assertions: 106 status, latency, content-type, JSON parse, health-contract, and CSV-content assertions.
 - Failures: 0.
 - Report: temporary JUnit report; no credentials or payloads committed.
-- Corrections discovered: added test-only `UF`/`UTM` fixtures, a `UF` exchange
-  rate for payroll validation, and updated the collection's local payroll fixture
+- Corrections discovered: kept economic-index fixtures scoped to `IPC_CL`,
+  added a `UF` exchange rate for payroll validation, and updated the collection's local payroll fixture
   variable from stale ID `1` to `527`.
 
 ### Local JSON import validation — 2026-10-25
@@ -176,6 +176,28 @@ Superseded-by: none
 
 The run proves the local read-only tier only and intentionally excludes the external `pf-sheets` Web App. It does not authorize GCP,
 production, mutating, destructive, refresh, import, or stop-job execution.
+
+### Local Neon snapshot replica validation — 2026-10-25
+
+- Restored `modules/pf-db/secrets/neon_dump.sql` into a disposable local
+  PostgreSQL 16 database after removing only the PostgreSQL 18-only
+  `transaction_timeout` setting from a temporary copy.
+- Snapshot state verified: Alembic `0020` head, 3 employers, 23 payrolls, and
+  1 template.
+- Corrected the collection to use `IPC_CL` for economic-index requests; `UF`
+  remains represented only as a monetary/exchange-rate unit.
+- Adjusted smoke: 25 read-only requests, 106 assertions, 0 failures against the
+  restored snapshot; no fixture was inserted into the replica.
+- OpenAPI coverage passed.
+- PDF preview resolved `walmart-chile-v1` with 3 rows.
+- Mutating integration setup passed and the snapshot was restored from a backup
+  afterward; template soft-delete still prevents API-only employer cleanup.
+- JSON import `mode=validate` passed with a free snapshot period (`WALMART-CHILE`,
+  2026-10), returning HTTP 200 without persistence.
+- Minimal XLSX import `mode=validate` passed for the same free period, returning
+  HTTP 200 without persistence.
+- No GCP, Neon, or production mutation was performed; all activity used the local
+  restored copy.
 
 ## Rollback and failure handling
 
