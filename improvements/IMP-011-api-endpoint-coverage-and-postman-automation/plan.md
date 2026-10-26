@@ -193,6 +193,7 @@ production, mutating, destructive, refresh, import, or stop-job execution.
 
 - OpenAPI coverage workflow: [run 40259031635](https://github.com/mrturo-pf/pf-postman/actions/runs/40259031635) passed.
 - Read-only Postman smoke workflow: [run 40259103021](https://github.com/mrturo-pf/pf-postman/actions/runs/40259103021) passed.
+- GCP error-contract workflow: [run 40259513866](https://github.com/mrturo-pf/pf-postman/actions/runs/40259513866) passed for expected `403`, `404`, and `400/422` cases.
 - Target: deployed `pf-rates` and `pf-svc-income` only; no mutations, imports,
   refreshes, deletes, or async job triggers were executed.
 - `pf-sheets` remained excluded because its Web App is a separate external target.
