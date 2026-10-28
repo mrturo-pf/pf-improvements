@@ -242,11 +242,15 @@ production, mutating, destructive, refresh, import, or stop-job execution.
   runtime role's direct `REFRESH MATERIALIZED VIEW` was rejected with
   `must be owner`, confirmed `SELECT public."INC_FN_REFRESH_PAY_SUMMARY"()`
   succeeded, and downgraded `0022` back to `0021` with the function removed.
-- A local, uncommitted remediation has been prepared for review: `pf-db`
-  migration `0022_secure_summary_view_refresh.py` creates a locked-down
-  `SECURITY DEFINER` refresh function and grants only `EXECUTE`; `pf-svc-income`
-  calls that function instead of issuing `REFRESH MATERIALIZED VIEW` directly.
-  It has not been merged, deployed, or applied to GCP.
+- Remediation PRs are open for review:
+  - `pf-db` [PR #22](https://github.com/mrturo-pf/pf-db/pull/22), commit
+    `932a0081f740239922ee7ee4a681415b07013140`.
+  - `pf-svc-income` [PR #14](https://github.com/mrturo-pf/pf-svc-income/pull/14),
+    commit `0741159044350e66b53539ba91d4fca0a2d146e2`.
+- `pf-db` migration validation, documentation, and lint checks passed. The
+  service PR's test/lint, build/security scan, Trivy, and documentation checks
+  passed after explicitly setting the pytest-asyncio fixture loop scope for the
+  Python 3.14 CI runner. Neither PR has been merged or deployed to GCP.
 - The same sanitized log inspection found request-debug output containing the
   `x-api-key` header name and value in Cloud Run stdout. The value is not recorded
   here. This is a separate security incident/follow-up: stop header logging and
