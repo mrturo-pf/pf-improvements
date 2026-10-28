@@ -282,8 +282,10 @@ production, mutating, destructive, refresh, import, or stop-job execution.
 - Newman executed the synthetic PDF preview, chained PDF → JSON `mode=validate`,
   and minimal XLSX `mode=validate` requests.
 - Result: 3 requests, 9 assertions, 0 failures.
-- The same run passed the read-only smoke tier with 22 requests, 118 assertions,
+- The same run passed the read-only smoke tier with 23 requests, 124 assertions,
   and 0 failures, plus mutation fixtures and disposable database reset cleanup.
+- The Newman contract subset passed with 4 requests, 12 assertions, and 0
+  failures, including XLSX binary response checks.
 - The temporary Newman collection materialized fixture paths without modifying
   committed collection/environment files or persisting payroll data.
 
@@ -350,7 +352,11 @@ authorizes production mutation by itself.
   collection now has trigger/status assertions and a documented manual-only
   boundary in commit `c556bfd`; execution remains intentionally outside default
   CI because it starts a Google Drive export.
-- [ ] Add binary response validation for XLSX/PDF and exact CSV column contracts.
+- [x] Add binary response validation for the supported XLSX export and exact
+  CSV column contracts where the collection exposes them. The local Newman run
+  `40627503496` passed XLSX binary content-type/body assertions; PDF is an input
+  to preview and has no binary download endpoint in `pf-svc-income`, so no output
+  PDF contract was invented.
 - [ ] Add controlled GCP error-contract execution after the grant blocker is
   resolved; keep expected `401/403`, `404`, `409`, and `400/422` cases separate
   from happy-path smoke.
