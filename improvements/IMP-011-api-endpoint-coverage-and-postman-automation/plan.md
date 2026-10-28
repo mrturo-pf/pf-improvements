@@ -275,6 +275,18 @@ production, mutating, destructive, refresh, import, or stop-job execution.
   `PF_SVC_INCOME_API_KEY_GCP` changed. The residual exposure risk remains
   documented and must not be reported as remediated by IMP-011.
 
+### Newman payroll validation contracts — 2026-10-28
+
+- Workflow: `run-postman-integration-local.yml`.
+- Run: [40626637215](https://github.com/mrturo-pf/pf-postman/actions/runs/40626637215).
+- Newman executed the synthetic PDF preview, chained PDF → JSON `mode=validate`,
+  and minimal XLSX `mode=validate` requests.
+- Result: 3 requests, 9 assertions, 0 failures.
+- The same run passed the read-only smoke tier with 22 requests, 118 assertions,
+  and 0 failures, plus mutation fixtures and disposable database reset cleanup.
+- The temporary Newman collection materialized fixture paths without modifying
+  committed collection/environment files or persisting payroll data.
+
 ### CI LOCAL integration — 2026-10-26
 
 - Workflow: `run-postman-integration-local.yml`.
@@ -329,9 +341,10 @@ authorizes production mutation by itself.
 
 ### Assertion coverage
 
-- [ ] Execute the PDF Preview, JSON import, and XLSX import assertions through
+- [x] Execute the PDF Preview, JSON import, and XLSX import assertions through
   Newman in an integration collection/workflow, not only through the direct
-  local runner and curl-based local evidence.
+  local runner and curl-based local evidence. Run `40626637215` passed with 3
+  requests, 9 assertions, and 0 failures.
 - [ ] Add and execute the complete async export lifecycle: trigger, capture
   `job_id`, poll, terminal status, and `file_id`/`error_message` validation.
 - [ ] Add binary response validation for XLSX/PDF and exact CSV column contracts.
