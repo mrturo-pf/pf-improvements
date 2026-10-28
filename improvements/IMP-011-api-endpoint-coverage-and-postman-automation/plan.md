@@ -345,8 +345,11 @@ authorizes production mutation by itself.
   Newman in an integration collection/workflow, not only through the direct
   local runner and curl-based local evidence. Run `40626637215` passed with 3
   requests, 9 assertions, and 0 failures.
-- [ ] Add and execute the complete async export lifecycle: trigger, capture
-  `job_id`, poll, terminal status, and `file_id`/`error_message` validation.
+- [ ] Execute the complete async export lifecycle: trigger, capture `job_id`,
+  poll, terminal status, and `file_id`/`error_message` validation. The Postman
+  collection now has trigger/status assertions and a documented manual-only
+  boundary in commit `c556bfd`; execution remains intentionally outside default
+  CI because it starts a Google Drive export.
 - [ ] Add binary response validation for XLSX/PDF and exact CSV column contracts.
 - [ ] Add controlled GCP error-contract execution after the grant blocker is
   resolved; keep expected `401/403`, `404`, `409`, and `400/422` cases separate
