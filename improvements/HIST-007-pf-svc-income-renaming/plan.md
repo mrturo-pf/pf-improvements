@@ -32,7 +32,8 @@ execution of every mapped operation. The result is therefore strong
 post-migration read-only/contract evidence, but full endpoint certification
 still requires separately approved execution of the remaining mutating and
 provider-dependent requests. Keep provider refresh, destructive operations, and
-external exports in their explicit manual tier.
+external exports in their explicit manual tier. The read-only GCP error-contract
+workflow `40767718876` also passed against both service URLs.
 
 ## 1. Status and gates
 
