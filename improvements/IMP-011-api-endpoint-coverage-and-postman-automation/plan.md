@@ -270,10 +270,10 @@ production, mutating, destructive, refresh, import, or stop-job execution.
   `40623764482`; traffic is on `pf-svc-income-00007-nqf`.
 - API-key rotation was attempted without printing or persisting the generated
   value, but Secret Manager rejected the write with the organization's
-  VPC Service Controls policy. Neither `PF_INCOME_API_KEY` nor
-  `PF_SVC_INCOME_API_KEY_GCP` changed. Rotation must be performed from an
-  approved in-perimeter environment, then followed by service redeploy and
-  Postman validation.
+  VPC Service Controls policy. The owner explicitly decided to skip rotation
+  for this improvement. Neither `PF_INCOME_API_KEY` nor
+  `PF_SVC_INCOME_API_KEY_GCP` changed. The residual exposure risk remains
+  documented and must not be reported as remediated by IMP-011.
 
 ### CI LOCAL integration — 2026-10-26
 
