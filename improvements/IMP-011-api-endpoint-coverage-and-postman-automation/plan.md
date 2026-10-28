@@ -191,12 +191,67 @@ production, mutating, destructive, refresh, import, or stop-job execution.
 
 ### GCP read-only validation — 2026-10-26
 
+- `pf-db` PR #21 was subsequently merged and deployed after this validation; see
+  the migration evidence below. The post-migration PDF validation remains open.
 - OpenAPI coverage workflow: [run 40259031635](https://github.com/mrturo-pf/pf-postman/actions/runs/40259031635) passed.
 - Read-only Postman smoke workflow: [run 40259103021](https://github.com/mrturo-pf/pf-postman/actions/runs/40259103021) passed.
 - GCP error-contract workflow: [run 40259513866](https://github.com/mrturo-pf/pf-postman/actions/runs/40259513866) passed for expected `403`, `404`, and `400/422` cases.
 - Target: deployed `pf-rates` and `pf-svc-income` only; no mutations, imports,
   refreshes, deletes, or async job triggers were executed.
 - `pf-sheets` remained excluded because its Web App is a separate external target.
+
+### pf-db migration deployment — 2026-10-26
+
+- PR #21 (`0021_reapply_income_summary_view_grants.py`) merged successfully:
+  commit `44491802c1e3cef2f3db2a9f3876103349cbf1`.
+- Neon migration deployment workflow [run 40261211424](https://github.com/mrturo-pf/pf-db/actions/runs/40261211424) passed.
+- Documentation workflow [run 40261211372](https://github.com/mrturo-pf/pf-db/actions/runs/40261211372) passed.
+- Remaining validation: rerun the GCP synthetic PDF flow and reconcile the runtime
+  role/grant evidence.
+
+### GCP post-migration PDF → JSON validation — 2026-10-28
+
+- Workflow: [run 40618005125](https://github.com/mrturo-pf/pf-postman/actions/runs/40618005125).
+- Target: configured deployed `pf-svc-income` HTTPS URL; synthetic PDF only.
+- PDF generation and preview setup completed, but JSON validation returned HTTP
+  `500` before the `validated=true` and `saved=null` assertions.
+- No successful post-migration proof of `INC_MV_PAY_SUMMARY` runtime access was
+  obtained. No payloads, credentials, or sensitive artifacts were uploaded.
+- Follow-up remains limited to inspecting/reconciling the deployed runtime role
+  and grants, then rerunning this workflow; no additional merge is required.
+
+### GCP runtime grant diagnosis — 2026-10-28
+
+- Cloud Run service `pf-svc-income` is running revision `pf-svc-income-00004-pcs`
+  with service account `pf-svc-income@coreassistant-474022.iam.gserviceaccount.com`.
+- The runtime database secret is configured for PostgreSQL role `pf_payroll_app`;
+  the secret value itself was not recorded.
+- Sanitized Cloud Run logs identify the failing operation as
+  `REFRESH MATERIALIZED VIEW "INC_MV_PAY_SUMMARY"` with
+  `asyncpg.exceptions.InsufficientPrivilegeError`.
+- Migration `0021` grants `SELECT` on the materialized view, but PostgreSQL
+  requires object ownership (or an explicitly controlled `SECURITY DEFINER`
+  operation) for `REFRESH MATERIALIZED VIEW`. Therefore the migration deploy is
+  confirmed, but it cannot by itself authorize this runtime refresh.
+- Do not grant the runtime role ownership as an unreviewed workaround. The
+  service/database owners must choose a least-privilege design, then rerun the
+  GCP validation.
+- Disposable PostgreSQL 16 validation passed locally: upgraded through `0020`,
+  created a disposable `pf_payroll_app` role with `SELECT` on `INC_PAYROLL`,
+  applied `0021` and `0022`, verified the function owner/grants, confirmed the
+  runtime role's direct `REFRESH MATERIALIZED VIEW` was rejected with
+  `must be owner`, confirmed `SELECT public."INC_FN_REFRESH_PAY_SUMMARY"()`
+  succeeded, and downgraded `0022` back to `0021` with the function removed.
+- A local, uncommitted remediation has been prepared for review: `pf-db`
+  migration `0022_secure_summary_view_refresh.py` creates a locked-down
+  `SECURITY DEFINER` refresh function and grants only `EXECUTE`; `pf-svc-income`
+  calls that function instead of issuing `REFRESH MATERIALIZED VIEW` directly.
+  It has not been merged, deployed, or applied to GCP.
+- The same sanitized log inspection found request-debug output containing the
+  `x-api-key` header name and value in Cloud Run stdout. The value is not recorded
+  here. This is a separate security incident/follow-up: stop header logging and
+  rotate the affected API key through the approved secret-management process
+  before treating the GCP validation evidence as clean.
 
 ### CI LOCAL integration — 2026-10-26
 
@@ -234,9 +289,10 @@ authorizes production mutation by itself.
 
 ### Immediate blockers
 
-- [ ] Merge and apply `pf-db` PR #21 (`0021_reapply_income_summary_view_grants.py`)
-  so the GCP `PDF preview → JSON validate` flow no longer fails on
-  `INC_MV_PAY_SUMMARY` privileges.
+- [x] Merge and apply `pf-db` PR #21 (`0021_reapply_income_summary_view_grants.py`).
+  PR #21 was merged as `44491802c1e3cef2f3db2a9f3876103349cbf1` on
+  2026-10-26, and the Neon migration deploy completed successfully in workflow
+  run `40261211424`.
 - [ ] Re-run the GCP synthetic PDF validation workflow after the migration and
   record `template_id`, resolved row count, `validated`, and `saved=null`.
 - [ ] Reconcile the GCP database-role/grant evidence with the runtime identity
