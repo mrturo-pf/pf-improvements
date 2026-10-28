@@ -266,7 +266,14 @@ production, mutating, destructive, refresh, import, or stop-job execution.
   commit `11d84ab`: HTTP 500 responses are generic and the unexpected-error
   handler no longer emits exception tracebacks that can include request scope
   headers. The PR's targeted tests, Ruff, typecheck, dead-code, and duplicate-code
-  hooks passed. Merge/deploy and API-key rotation remain pending.
+  hooks passed. PR #15 was merged as `9cb463e` and deployed successfully in run
+  `40623764482`; traffic is on `pf-svc-income-00007-nqf`.
+- API-key rotation was attempted without printing or persisting the generated
+  value, but Secret Manager rejected the write with the organization's
+  VPC Service Controls policy. Neither `PF_INCOME_API_KEY` nor
+  `PF_SVC_INCOME_API_KEY_GCP` changed. Rotation must be performed from an
+  approved in-perimeter environment, then followed by service redeploy and
+  Postman validation.
 
 ### CI LOCAL integration — 2026-10-26
 
