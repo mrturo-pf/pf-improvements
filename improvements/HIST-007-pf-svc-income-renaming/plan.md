@@ -17,17 +17,22 @@ history. The local integration run `40627503496` passed 23 requests and 124
 assertions with zero failures, including the four payroll contract requests (12
 assertions) and the XLSX binary export contract. This is valid evidence that the
 implemented payroll API contracts remained executable after the database/ORM
-compatibility work.
+compatibility work. The controlled GCP rerun `40767422152` against
+`https://pf-svc-income-yqd4p7fzaa-uc.a.run.app` selected the same 23 read-only
+requests and produced 124 assertions with zero failures and zero errors. The
+GCP OpenAPI-to-Postman reconciliation returned `expected=27, postman=29` for
+`pf-svc-income` and `expected=19, postman=22` for `pf-rates`, with no missing,
+stale, or duplicate mapping report.
 
 It is **not**, by itself, proof that every HIST-007 endpoint was executed: the
 run is a smoke/contract subset, while the collection contains additional
 mutating and provider-dependent requests. The OpenAPI-to-Postman coverage check
 proves catalog mapping (missing/stale/duplicate operations), not successful
-execution of every mapped operation. To claim full post-migration endpoint
-coverage for HIST-007, attach an execution run against the exact migrated
-`pf-svc-income` target with the OpenAPI coverage result, request/assertion
-counts, target revision, and documented exclusions. Keep provider refresh,
-destructive operations, and external exports in their explicit manual tier.
+execution of every mapped operation. The result is therefore strong
+post-migration read-only/contract evidence, but full endpoint certification
+still requires separately approved execution of the remaining mutating and
+provider-dependent requests. Keep provider refresh, destructive operations, and
+external exports in their explicit manual tier.
 
 ## 1. Status and gates
 
