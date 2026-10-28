@@ -363,10 +363,17 @@ authorizes production mutation by itself.
 
 ### `pf-sheets` coverage decision
 
-- [ ] Decide whether `pf-sheets` uses a local Web App mock, a separate external
-  read-only workflow, or inventory-only coverage.
-- [ ] Document the chosen target, credentials boundary, route inventory, and why
-  it is excluded from the main local microservice smoke.
+- [x] Use inventory-only coverage for `pf-sheets` in IMP-011. Its Web App runs in
+  Google Apps Script and depends on SpreadsheetApp, Drive/Cache services, a
+  deployed Web App URL, and the Script Property `GET_CLP_API_KEY`; a local mock
+  would not prove the real runtime contract, while an external workflow would
+  require Google credentials and could mutate a real Sheet.
+- [x] The sanitized route inventory is documented in
+  `modules/pf-sheets/docs/api.md`: `GET_CLP` and `GET_CLP_RANGE`, both using the
+  `key` query parameter and the documented single/batch response contracts.
+  Unit/Jest coverage remains the executable validation for domain, interface, and
+  infrastructure behavior. `pf-sheets` is explicitly excluded from the main
+  local microservice smoke and no external target is invoked by default.
 
 ### CI and operations
 
