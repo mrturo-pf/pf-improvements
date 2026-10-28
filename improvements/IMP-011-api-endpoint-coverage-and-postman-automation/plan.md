@@ -254,8 +254,12 @@ production, mutating, destructive, refresh, import, or stop-job execution.
 - Root cause: the shared `pf-common` reusable deploy workflow only injected
   `PF_RATES_API_KEY` for the legacy `pf-payroll` name, while the current caller
   is `pf-svc-income`. Fix [PR #17](https://github.com/mrturo-pf/pf-common/pull/17),
-  commit `9c4cdd6`, adds verification and injection for `pf-svc-income`; it is
-  not yet merged or deployed.
+  commit `9c4cdd6`, was merged as `c5f11eee`.
+- The redeployed service revision `pf-svc-income-00006-727` contains the
+  `PF_RATES_API_KEY` Secret Manager reference and receives 100% traffic.
+- Final GCP PDF → JSON validation [run 40623037144](https://github.com/mrturo-pf/pf-postman/actions/runs/40623037144)
+  passed: synthetic preview resolved `walmart-chile-v1` with 3 rows, and JSON
+  validation returned `validated=true`, `saved=null`, and `item_count=3`.
 - The same sanitized log inspection found request-debug output containing the
   `x-api-key` header name and value in Cloud Run stdout. The value is not recorded
   here. This is a separate security incident/follow-up: stop header logging and
@@ -305,12 +309,14 @@ authorizes production mutation by itself.
 - [x] Merge and deploy the least-privilege refresh remediation (`pf-db` PR #22
   and `pf-svc-income` PR #14). The post-deploy rerun proved the materialized-view
   privilege error no longer occurs.
-- [ ] Merge `pf-common` PR #17 and redeploy `pf-svc-income` so the active
-  revision receives `PF_RATES_API_KEY`.
-- [ ] Re-run the GCP synthetic PDF validation workflow and record `template_id`,
-  resolved row count, `validated`, and `saved=null`.
-- [ ] Reconcile the GCP database-role/grant evidence with the runtime identity
-  without recording connection strings, credentials, or secret payloads.
+- [x] Merge `pf-common` PR #17 and redeploy `pf-svc-income` so the active
+  revision receives `PF_RATES_API_KEY`; traffic is on `pf-svc-income-00006-727`.
+- [x] Re-run the GCP synthetic PDF validation workflow and record
+  `template_id=walmart-chile-v1`, `resolved_rows=3`, `validated=true`,
+  `saved=null`, and `item_count=3` in run `40623037144`.
+- [x] Reconcile the GCP runtime role/grant behavior without recording
+  connection strings, credentials, or secret payloads; the dedicated runtime
+  role uses the `SECURITY DEFINER` refresh function and does not own the view.
 
 ### Assertion coverage
 
