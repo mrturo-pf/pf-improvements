@@ -10,6 +10,25 @@ Superseded-by: none
 
 > **Current phase: controlled implementation of the service-identity rename.** The physical `PAY_* → INC_*` schema migration and ORM compatibility slice are complete and validated in production. The service identity remains `pf-payroll`; repository/resource/consumer cutover work is now the active HIST-007 scope.
 
+### IMP-011 evidence reuse
+
+`IMP-011` provides reusable post-migration API regression evidence for this
+history. The local integration run `40627503496` passed 23 requests and 124
+assertions with zero failures, including the four payroll contract requests (12
+assertions) and the XLSX binary export contract. This is valid evidence that the
+implemented payroll API contracts remained executable after the database/ORM
+compatibility work.
+
+It is **not**, by itself, proof that every HIST-007 endpoint was executed: the
+run is a smoke/contract subset, while the collection contains additional
+mutating and provider-dependent requests. The OpenAPI-to-Postman coverage check
+proves catalog mapping (missing/stale/duplicate operations), not successful
+execution of every mapped operation. To claim full post-migration endpoint
+coverage for HIST-007, attach an execution run against the exact migrated
+`pf-svc-income` target with the OpenAPI coverage result, request/assertion
+counts, target revision, and documented exclusions. Keep provider refresh,
+destructive operations, and external exports in their explicit manual tier.
+
 ## 1. Status and gates
 
 **Authorization boundary:** HIST-007 entered implementation on 2026-10-15 after
