@@ -347,11 +347,15 @@ authorizes production mutation by itself.
   Newman in an integration collection/workflow, not only through the direct
   local runner and curl-based local evidence. Run `40626637215` passed with 3
   requests, 9 assertions, and 0 failures.
-- [ ] Execute the complete async export lifecycle: trigger, capture `job_id`,
-  poll, terminal status, and `file_id`/`error_message` validation. The Postman
-  collection now has trigger/status assertions and a documented manual-only
-  boundary in commit `c556bfd`; execution remains intentionally outside default
-  CI because it starts a Google Drive export.
+- [x] Execute the complete async export lifecycle: trigger, capture `job_id`,
+  poll, terminal status, and `file_id`/`error_message` validation. GCP run on
+  2026-10-28 created job `10`, reached `succeeded`, processed `30655/30655`
+  items, wrote `29467` rows, and returned file
+  `1y6bPNSivoDjOhBbOl5WcBUgrGkJkzAkD`. Cloud Run logged
+  `gdrive_file_updated` for `financial-data.csv`, proving the configured service
+  identity updated the existing Drive artifact in place; no new temporary file
+  was created. The Postman collection keeps this lifecycle outside default CI
+  because it starts a Google Drive export.
 - [x] Add binary response validation for the supported XLSX export and exact
   CSV column contracts where the collection exposes them. The local Newman run
   `40627503496` passed XLSX binary content-type/body assertions; PDF is an input
@@ -377,15 +381,21 @@ authorizes production mutation by itself.
 
 ### CI and operations
 
-- [ ] Define automatic trigger policy for collection, environment, OpenAPI,
-  service-contract, fixture, and runner changes; the current integration workflow
-  is manual by design.
-- [ ] Document failure ownership, rerun commands, JUnit artifact retention, and
-  fixture-vs-service failure triage.
+- [x] Define automatic trigger policy for collection, environment, OpenAPI,
+  service-contract, fixture, and runner changes. The policy is documented in
+  `postman/README.md`: asset validation runs on pull requests and pushes to
+  `main`; Postman sync is push-to-main only; coverage, smoke, error contracts,
+  disposable integration, provider refreshes, destructive operations, and async
+  exports remain explicit manual workflows with target and safety boundaries.
+- [x] Document failure ownership, rerun commands, JUnit artifact retention, and
+  fixture-vs-service failure triage in `postman/README.md`. Standard workflow
+  reports now declare 14-day artifact retention; closure evidence remains
+  recorded in this plan with run IDs, targets, counts, and sanitized failures.
 - [ ] Keep destructive/provider-refresh execution behind explicit manual inputs,
   target guards, bounded timeouts, and cleanup/restore evidence.
-- [ ] Record final commit SHAs, workflow run IDs, target environments, request and
-  assertion counts, sanitized failures, and unresolved limitations.
+- [x] Record final commit SHAs, workflow run IDs, target environments, request and
+  assertion counts, sanitized failures, and unresolved limitations. Final evidence
+  is consolidated below and in the linked repository workflow artifacts.
 
 ### Next-session handoff
 
@@ -423,6 +433,9 @@ Current verified evidence:
 - Local Newman payroll contracts: run `40627503496`, 4 requests, 12 assertions,
   0 failures, including XLSX binary export.
 - Local smoke: run `40627503496`, 23 requests, 124 assertions, 0 failures.
+- GCP async export: job `10`, `succeeded`, `30655/30655` processed, `29467`
+  rows written, file `1y6bPNSivoDjOhBbOl5WcBUgrGkJkzAkD`; Cloud Run logged an
+  in-place `gdrive_file_updated` event for `financial-data.csv`.
 - `pf-sheets`: inventory-only decision documented; no external target invoked.
 - API-key rotation: explicitly skipped by owner; both secrets unchanged.
 
@@ -430,6 +443,19 @@ Current verified evidence:
 
 - [ ] Update Issue #35 and the GitHub Project after the remaining evidence is
   reconciled.
+
+### Final evidence reconciliation
+
+| Area | Evidence |
+|---|---|
+| `pf-postman` collection and CI | `e6fef2e`; validation/sync run `40627285358`/`40627285266`; local integration `40627503496` passed with 23 requests, 124 assertions, and 0 failures |
+| Payroll contracts | Newman run `40627503496`: 4 requests, 12 assertions, 0 failures; XLSX binary contract included |
+| GCP PDF validation | Run `40623037144`: `validated=true`, `saved=null`, `item_count=3` |
+| GCP async export | Job `10` on the controlled `pf-rates` target: `succeeded`, `30655/30655` processed, `29467` rows written, file `1y6bPNSivoDjOhBbOl5WcBUgrGkJkzAkD`; Cloud Run logged in-place `gdrive_file_updated` |
+| Database migration | `pf-db` PR `#23`, merge SHA `7501121`; deploy run `40760834661` succeeded; migration `0023` restored sequence usage |
+| `pf-sheets` | Inventory-only route decision documented; no external Sheets target invoked |
+| Known limitations | API-key rotation intentionally skipped; residual log-exposure risk remains accepted and is not claimed as remediated |
+
 - [ ] Move `IMP-011` through the approved lifecycle to `Released`/`Closed` only
   after the GCP, `pf-sheets`, CI-trigger, and evidence decisions are complete.
 
