@@ -262,9 +262,11 @@ production, mutating, destructive, refresh, import, or stop-job execution.
   validation returned `validated=true`, `saved=null`, and `item_count=3`.
 - The same sanitized log inspection found request-debug output containing the
   `x-api-key` header name and value in Cloud Run stdout. The value is not recorded
-  here. This is a separate security incident/follow-up: stop header logging and
-  rotate the affected API key through the approved secret-management process
-  before treating the GCP validation evidence as clean.
+  here. A redaction fix is open in `pf-svc-income` [PR #15](https://github.com/mrturo-pf/pf-svc-income/pull/15),
+  commit `11d84ab`: HTTP 500 responses are generic and the unexpected-error
+  handler no longer emits exception tracebacks that can include request scope
+  headers. The PR's targeted tests, Ruff, typecheck, dead-code, and duplicate-code
+  hooks passed. Merge/deploy and API-key rotation remain pending.
 
 ### CI LOCAL integration — 2026-10-26
 
