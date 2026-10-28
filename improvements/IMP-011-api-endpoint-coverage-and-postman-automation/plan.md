@@ -387,6 +387,45 @@ authorizes production mutation by itself.
 - [ ] Record final commit SHAs, workflow run IDs, target environments, request and
   assertion counts, sanitized failures, and unresolved limitations.
 
+### Next-session handoff
+
+The implementation and local/GCP read-only baseline are complete. Continue with
+these remaining items in order:
+
+1. **Async export execution — manual safety boundary**
+   - Run the prepared `pf-rates` trigger/status contract only through an explicitly
+     approved manual workflow and bounded target/window.
+   - Capture `job_id`, poll to a terminal state, and validate `file_id` on success
+     or `error_message` on failure/cancellation.
+   - Confirm ownership and cleanup of any Google Drive artifact. Never invoke stop
+     requests automatically and do not add this lifecycle to default CI.
+2. **CI trigger policy**
+   - Decide automatic triggers for collection, environment, OpenAPI, service
+     contract, fixture, and runner changes.
+   - Preserve destructive/provider-refresh operations behind manual inputs and
+     target guards.
+3. **Operational documentation**
+   - Document failure ownership, rerun commands, JUnit retention, artifact links,
+     and fixture-vs-service triage.
+4. **Final evidence and closure**
+   - Reconcile final SHAs, workflow run IDs, targets, request/assertion counts,
+     sanitized failures, and known limitations.
+   - Update Issue #35 and the GitHub Project.
+   - Keep the skipped API-key rotation and residual log-exposure risk visible as
+     an accepted limitation; do not claim that risk is remediated.
+   - Move `IMP-011` through the approved lifecycle to `Released`/`Closed` only
+     after the async, CI-policy, operations, and evidence decisions are complete.
+
+Current verified evidence:
+
+- GCP PDF → JSON validate: run `40623037144`, `validated=true`, `saved=null`,
+  `item_count=3`.
+- Local Newman payroll contracts: run `40627503496`, 4 requests, 12 assertions,
+  0 failures, including XLSX binary export.
+- Local smoke: run `40627503496`, 23 requests, 124 assertions, 0 failures.
+- `pf-sheets`: inventory-only decision documented; no external target invoked.
+- API-key rotation: explicitly skipped by owner; both secrets unchanged.
+
 ### Closure gate
 
 - [ ] Update Issue #35 and the GitHub Project after the remaining evidence is
