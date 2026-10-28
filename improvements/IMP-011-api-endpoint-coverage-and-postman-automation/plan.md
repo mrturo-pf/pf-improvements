@@ -1,12 +1,12 @@
 # Plan: API endpoint coverage and Postman automation
 
 Date: 2026-10-25
-Status: proposed
+Status: released
 Level: L
 Scope: Implement and release automated endpoint coverage and safe Postman execution across the PF ecosystem.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md)
 Related Issue: [#35](https://github.com/mrturo-pf/pf-base/issues/35)
-Approved: pending owner decision
+Approved: 2026-10-28 by a0a11b7 (explicit authorization)
 Superseded-by: none
 
 ## Implementation slices
@@ -441,8 +441,8 @@ Current verified evidence:
 
 ### Closure gate
 
-- [ ] Update Issue #35 and the GitHub Project after the remaining evidence is
-  reconciled.
+- [x] Update Issue #35 and the GitHub Project after the remaining evidence is
+  reconciled. Issue #35 is closed as completed and the Project item is `Released`.
 
 ### Final evidence reconciliation
 
@@ -456,8 +456,8 @@ Current verified evidence:
 | `pf-sheets` | Inventory-only route decision documented; no external Sheets target invoked |
 | Known limitations | API-key rotation intentionally skipped; residual log-exposure risk remains accepted and is not claimed as remediated |
 
-- [ ] Move `IMP-011` through the approved lifecycle to `Released`/`Closed` only
-  after the GCP, `pf-sheets`, CI-trigger, and evidence decisions are complete.
+- [x] Move `IMP-011` through the approved lifecycle to `Released`/`Closed`. The
+  Project item is `Released` and Issue #35 is `Closed` with completion evidence.
 
 ## Rollback and failure handling
 

@@ -1,12 +1,12 @@
 # Recommendation: API endpoint coverage and Postman automation
 
 Date: 2026-10-25
-Status: proposed
+Status: released
 Level: L
 Scope: Automated endpoint inventory, Postman assertions, Newman execution, and safe CI orchestration for the PF HTTP surfaces.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [plan](plan.md)
 Related Issue: [#35](https://github.com/mrturo-pf/pf-base/issues/35)
-Approved: pending owner decision
+Approved: 2026-10-28 by a0a11b7 (explicit authorization)
 Superseded-by: none
 
 ## 1. Recommendation
