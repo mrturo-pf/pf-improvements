@@ -242,15 +242,20 @@ production, mutating, destructive, refresh, import, or stop-job execution.
   runtime role's direct `REFRESH MATERIALIZED VIEW` was rejected with
   `must be owner`, confirmed `SELECT public."INC_FN_REFRESH_PAY_SUMMARY"()`
   succeeded, and downgraded `0022` back to `0021` with the function removed.
-- Remediation PRs are open for review:
-  - `pf-db` [PR #22](https://github.com/mrturo-pf/pf-db/pull/22), commit
-    `932a0081f740239922ee7ee4a681415b07013140`.
-  - `pf-svc-income` [PR #14](https://github.com/mrturo-pf/pf-svc-income/pull/14),
-    commit `0741159044350e66b53539ba91d4fca0a2d146e2`.
-- `pf-db` migration validation, documentation, and lint checks passed. The
-  service PR's test/lint, build/security scan, Trivy, and documentation checks
-  passed after explicitly setting the pytest-asyncio fixture loop scope for the
-  Python 3.14 CI runner. Neither PR has been merged or deployed to GCP.
+- `pf-db` PR #22 and `pf-svc-income` PR #14 were merged and deployed
+  successfully. The Neon migration deploy passed in run `40620797261`; the
+  Cloud Run deploy passed in run `40620835077`, with traffic on revision
+  `pf-svc-income-00005-b9g`.
+- Post-deploy GCP rerun [run 40621978307](https://github.com/mrturo-pf/pf-postman/actions/runs/40621978307)
+  reached the new service. PDF preview returned HTTP 200 with the synthetic
+  template and three rows, but JSON validation returned HTTP 502 because the
+  service called `pf-rates` without `PF_RATES_API_KEY` and received HTTP 403 for
+  the UF exchange-rate request.
+- Root cause: the shared `pf-common` reusable deploy workflow only injected
+  `PF_RATES_API_KEY` for the legacy `pf-payroll` name, while the current caller
+  is `pf-svc-income`. Fix [PR #17](https://github.com/mrturo-pf/pf-common/pull/17),
+  commit `9c4cdd6`, adds verification and injection for `pf-svc-income`; it is
+  not yet merged or deployed.
 - The same sanitized log inspection found request-debug output containing the
   `x-api-key` header name and value in Cloud Run stdout. The value is not recorded
   here. This is a separate security incident/follow-up: stop header logging and
@@ -297,8 +302,13 @@ authorizes production mutation by itself.
   PR #21 was merged as `44491802c1e3cef2f3db2a9f3876103349cbf1` on
   2026-10-26, and the Neon migration deploy completed successfully in workflow
   run `40261211424`.
-- [ ] Re-run the GCP synthetic PDF validation workflow after the migration and
-  record `template_id`, resolved row count, `validated`, and `saved=null`.
+- [x] Merge and deploy the least-privilege refresh remediation (`pf-db` PR #22
+  and `pf-svc-income` PR #14). The post-deploy rerun proved the materialized-view
+  privilege error no longer occurs.
+- [ ] Merge `pf-common` PR #17 and redeploy `pf-svc-income` so the active
+  revision receives `PF_RATES_API_KEY`.
+- [ ] Re-run the GCP synthetic PDF validation workflow and record `template_id`,
+  resolved row count, `validated`, and `saved=null`.
 - [ ] Reconcile the GCP database-role/grant evidence with the runtime identity
   without recording connection strings, credentials, or secret payloads.
 
