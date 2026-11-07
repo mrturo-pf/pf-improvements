@@ -35,6 +35,28 @@ provider-dependent requests. Keep provider refresh, destructive operations, and
 external exports in their explicit manual tier. The read-only GCP error-contract
 workflow `40767718876` also passed against both service URLs.
 
+### Local validation evidence from `pf-base`
+
+The local runner `scripts/run-all-postman-tests.sh` provides a disposable local
+validation slice for the current `pf-svc-income` implementation. A successful
+run validates service startup and health for `pf-db`, `pf-rates`, and
+`pf-svc-income`; local OpenAPI/Postman coverage; expected local error contracts;
+dynamic employer, contract, template, and payroll mutations; PDF preview; JSON
+and spreadsheet imports; CSV/XLSX exports; reference data; database restore and
+cleanup; and JUnit report generation under `generated/postman-local/`.
+
+The dedicated dynamic mutation workflow also validates commit of two payroll
+periods, payroll lookup, individual deletion, batch deletion using
+`period_ids`, contract cleanup, and employer cleanup. The separate
+`pf-svc-income` `make check` gate validates repository tests, coverage, lint,
+type checks, dead-code, duplication, and security checks.
+
+This evidence is local and disposable. It supports the HIST-007 compatibility
+and contract gates, but does not prove the production identity cutover, GCP
+resource/secret/URL changes, Cloud Run traffic, scheduler identities, Neon
+production state, revision overlap, rollback, or production cutover. Those
+remain separate HIST-007 operational gates.
+
 ## 1. Status and gates
 
 **Authorization boundary:** HIST-007 entered implementation on 2026-10-15 after
