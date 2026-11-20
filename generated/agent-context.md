@@ -249,6 +249,6 @@ Query the Project before making planning decisions; this generated file stores n
 - Level: `L`; type: `security`
 - Owner: `pf-base`
 - Affected: `pf-svc-income`, `pf-rates`
-- Next action: Complete active-consumer inventory and obtain approval before deleting PF_PAYROLL_DATABASE_URL.
+- Next action: Closed: legacy secret deleted; active GCP resource names verified clean; historical Asset Inventory key records accepted as audit history.
 - Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-012-gcp-pf-payroll-identity-residue-cleanup/plan.md
 - Issue: pending coordination issue

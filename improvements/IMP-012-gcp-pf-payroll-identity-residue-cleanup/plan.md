@@ -1,11 +1,11 @@
 # Plan: remove residual `pf-payroll` GCP identity artifacts
 
 Date: 2026-11-20  
-Status: proposed  
+Status: closed
 Level: L  
 Scope: GCP resource-name, Secret Manager, IAM, and audit-residue cleanup.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md)
-Approved: investigation only; cleanup mutation pending  
+Approved: investigation and cleanup approved by owner on 2026-11-20
 Superseded-by: none
 
 ## 1. Gates
@@ -17,13 +17,13 @@ Superseded-by: none
 - [x] Search deployment workflows and active service revisions for `PF_PAYROLL_DATABASE_URL`; no active references found.
 - [x] Confirm no local repository/module/workflow consumer uses `PF_PAYROLL_DATABASE_URL`; external consumer proof remains limited to GCP metadata.
 - [x] Remove stale IAM member for the deleted `pf-payroll` principal.
-- [ ] Approve disabling and destroying old secret versions.
-- [ ] Disable/destroy old secret versions.
-- [ ] Approve deleting `PF_PAYROLL_DATABASE_URL`.
-- [ ] Delete `PF_PAYROLL_DATABASE_URL`.
-- [ ] Verify no active artifact name contains `pf-payroll` or `pf_payroll`.
-- [ ] Verify `pf-svc-income` health, protected smoke, and database connectivity.
-- [ ] Re-run Cloud Asset Inventory and document retained historical records.
+- [x] Approve disabling and destroying old secret versions.
+- [x] Disable/destroy old secret versions.
+- [x] Approve deleting `PF_PAYROLL_DATABASE_URL`.
+- [x] Delete `PF_PAYROLL_DATABASE_URL`.
+- [x] Verify no active artifact name contains `pf-payroll` or `pf_payroll`.
+- [x] Verify `pf-svc-income` health, protected smoke, and database connectivity.
+- [x] Re-run Cloud Asset Inventory and document retained historical records.
 
 ## 2. Execution order
 
@@ -71,3 +71,4 @@ Superseded-by: none
 |---|---|---|---|
 | 2026-11-20 | investigating | Found `PF_PAYROLL_DATABASE_URL` with four enabled versions and stale access for a deleted `pf-payroll` principal. Cloud Asset Inventory also retains historical keys for deleted legacy accounts. No mutation performed. | Read-only GCP inventory |
 | 2026-11-20 | validating | Confirmed no active GCP resource name or Cloud Run revision references `pf-payroll`, `pf_payroll`, or `PF_PAYROLL_DATABASE_URL`; active modules/workflows also contain no `PF_PAYROLL_DATABASE_URL` reference. Removed the deleted `pf-payroll` principal from the old secret's IAM policy. The secret and all four versions remain pending owner-approved destruction. | Targeted GCP inventory; repository scan; Secret Manager IAM removal |
+| 2026-11-20 | closed | Owner authorized and completed disable/destroy/delete of all four `PF_PAYROLL_DATABASE_URL` versions and the secret. Active secrets/resources/accounts contain no `pf-payroll` or `pf_payroll`; `pf-svc-income-00012-kdr` remained at 100% traffic and health returned HTTP 200. Cloud Asset Inventory still returns two historical deleted service-account-key records; these are retained audit history, not active artifacts. | GCP cleanup commands; absence checks; health smoke; Asset Inventory post-cleanup query |
