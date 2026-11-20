@@ -37,28 +37,27 @@ following targeted inventories:
 
 Active PF services are `pf-rates` and `pf-svc-income`.
 
-### Residual Secret Manager artifact
+### Pre-cleanup Secret Manager artifact
+
+Before cleanup, the inventory showed:
 
 ```text
 Secret: PF_PAYROLL_DATABASE_URL
 Versions: 1, 2, 3, 4 — enabled
 ```
 
-The secret IAM policy currently includes:
+The pre-cleanup IAM policy included `pf-svc-income`,
+`pf-svc-income-deployer`, and a deleted `pf-payroll` principal. The active
+`pf-svc-income` revision referenced `PF_DATABASE_URL`, not the old secret. Secret
+values were never read.
 
-```text
-serviceAccount:pf-svc-income@coreassistant-474022.iam.gserviceaccount.com
-serviceAccount:pf-svc-income-deployer@coreassistant-474022.iam.gserviceaccount.com
-deleted:serviceAccount:pf-payroll@coreassistant-474022.iam.gserviceaccount.com
-```
-
-The active `pf-svc-income` Cloud Run revision references `PF_DATABASE_URL`, not
-`PF_PAYROLL_DATABASE_URL`. The secret values were not read, so content equivalence
-has not been assumed.
+On 2026-11-20, the deleted-principal IAM binding was removed, all four old versions
+were disabled and destroyed, and `PF_PAYROLL_DATABASE_URL` was deleted.
 
 ### Historical Cloud Asset Inventory records
 
-Cloud Asset Inventory returned historical `ServiceAccountKey` records for:
+After cleanup, Cloud Asset Inventory still returns historical `ServiceAccountKey`
+records for:
 
 ```text
 pf-payroll@coreassistant-474022.iam.gserviceaccount.com

@@ -11,7 +11,7 @@ Superseded-by: none
 ## Current problem
 
 HIST-007 removed the legacy `pf-payroll` Cloud Run service, Artifact Registry
-repository, API key, and service accounts. A read-only GCP inventory still found:
+repository, API key, and service accounts. The pre-cleanup GCP inventory found:
 
 - Secret Manager secret `PF_PAYROLL_DATABASE_URL` with four enabled versions;
 - `PF_PAYROLL_DATABASE_URL` access granted to `pf-svc-income` and
@@ -19,8 +19,9 @@ repository, API key, and service accounts. A read-only GCP inventory still found
 - historical service-account-key assets for the deleted
   `pf-payroll@...` and `pf-payroll-deployer@...` identities in Cloud Asset Inventory.
 
-The target runtime contract is `PF_DATABASE_URL`; the active `pf-svc-income` service
-references that secret instead. No secret values were read.
+The target runtime contract was `PF_DATABASE_URL`; the active `pf-svc-income` service
+already referenced that secret. The old secret, versions, and deleted-principal IAM
+binding were removed on 2026-11-20. No secret values were read.
 
 ## Objective
 
