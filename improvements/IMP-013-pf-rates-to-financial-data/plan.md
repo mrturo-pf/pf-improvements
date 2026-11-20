@@ -1,22 +1,22 @@
 # Plan: migrate `pf-rates` to `pf-svc-financial-data`
 
 Date: 2026-11-20  
-Status: proposed  
+Status: approved for execution
 Level: L  
 Scope: Cross-repository service identity, GCP, consumers, Postman, and `RAT_* → FID_*` schema migration.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md)
-Approved: pending explicit execution authorization  
+Approved: 2026-11-20 by `a0a11b7`; execution authorized
 Superseded-by: none
 
 ## 1. Gates
 
-- [ ] Confirm canonical identity `pf-svc-financial-data`.
-- [ ] Confirm API key target `PF_FINANCIAL_DATA_API_KEY`.
-- [ ] Resolve database-secret contract (`PF_DATABASE_URL` versus separately named credential).
-- [ ] Approve final `RAT_* → FID_*` object map.
+- [x] Confirm canonical identity `pf-svc-financial-data`.
+- [x] Confirm API key target `PF_FINANCIAL_DATA_API_KEY`.
+- [x] Resolve database-secret contract: use separate `PF_FINANCIAL_DATA_DATABASE_URL`.
+- [x] Approve final `RAT_* → FID_*` object map.
 - [ ] Inventory every consumer and active reference before mutation.
 - [ ] Inventory GCP resources, IAM, secrets, revisions, and image digests read-only.
-- [ ] Approve code/package, schema, Postman, GCP, consumer, commit, push, and deploy scopes.
+- [x] Approve code/package, schema, Postman, GCP, consumer, commit, push, and deploy scopes.
 - [ ] Prepare and validate reversible `pf-db` migration locally.
 - [ ] Prepare backup/restore and pre-migration schema/count snapshot.
 - [ ] Prepare parallel GCP resources with least privilege and scale-to-zero.
@@ -92,4 +92,4 @@ Superseded-by: none
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-11-20 | proposed | Prepared the IMP-013 artifact set from the current `pf-rates` inventory and lessons from HIST-007/IMP-012. No mutation performed. | Repository/GCP/Postman read-only inventory |
+| 2026-11-20 | approved | Owner confirmed `pf-svc-financial-data`, `PF_FINANCIAL_DATA_API_KEY`, separate `PF_FINANCIAL_DATA_DATABASE_URL`, the complete `RAT_* → FID_*` map, preservation of Python package `rates`, and authorized migration/cutover/cleanup execution. No mutation performed. | Owner decision recorded in conversation; artifact set and read-only inventory |

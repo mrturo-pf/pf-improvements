@@ -94,11 +94,15 @@ schema rather than renamed with a blind string replacement.
 - Go/No-Go checklist and representative financial-data flow;
 - cost/compatibility impact for parallel Cloud Run and Artifact Registry resources.
 
-## 6. Open decisions
+## 6. Decisions recorded (2026-11-20)
 
-1. Confirm `pf-svc-financial-data` as the canonical identity.
-2. Confirm whether `PF_RATES_DATABASE_URL` should converge to `PF_DATABASE_URL` or
-   remain a separate database credential under a new name.
-3. Confirm the suffix map for `RAT_ECON_INDEX`, `RAT_TAX_BRCKT`, and `RAT_EXPORT_JOB`.
-4. Confirm whether internal Python package `rates` remains stable in phase one.
-5. Confirm migration window, rollback duration, and cleanup authority.
+1. Canonical identity: `pf-svc-financial-data`.
+2. API key target: `PF_FINANCIAL_DATA_API_KEY`.
+3. Database secret target: `PF_FINANCIAL_DATA_DATABASE_URL`, separate from
+   `PF_DATABASE_URL` used by `pf-svc-income`.
+4. Complete `RAT_* → FID_*` map approved as listed in the brief.
+5. Internal Python package `rates` remains unchanged in phase one.
+6. Migration, cutover, rollback, and cleanup execution authorized by `a0a11b7`.
+
+The execution plan must still capture the concrete maintenance window, backup
+metadata, Go/No-Go record, and final evidence before destructive cleanup.

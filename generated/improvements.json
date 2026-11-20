@@ -439,8 +439,8 @@
       "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
       "issue_url": null,
       "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-013-pf-rates-to-financial-data/plan.md",
-      "next_action": "Confirm the canonical identity, secret contract, and full RAT_* to FID_* object map before implementation.",
-      "metadata_status": "proposed; issue intake and operational status pending"
+      "next_action": "Inventory consumers and prepare the reversible RAT_* to FID_* migration before execution.",
+      "metadata_status": "approved for execution; issue intake and operational status pending"
     }
   ]
 }

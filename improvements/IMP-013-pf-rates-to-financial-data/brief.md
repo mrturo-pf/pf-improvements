@@ -1,11 +1,11 @@
 # Brief: rename `pf-rates` to `pf-svc-financial-data`
 
 Date: 2026-11-20  
-Status: proposed  
+Status: approved for execution
 Level: L  
 Scope: Cross-repository service identity rename, GCP migration, consumer migration, and `RAT_* → FID_*` database migration.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: pending explicit owner authorization  
+Approved: 2026-11-20 by `a0a11b7` (conversation)
 Superseded-by: none
 
 ## Objective
@@ -38,8 +38,8 @@ The approved explicit mappings are:
 | `RAT_EXPORT_JOB` | `FID_EXPORT_JOB` |
 
 The first two mappings are semantic renames supplied by the owner. The remaining
-objects preserve their suffix while adopting the `FID_` service prefix; this is a
-design decision to confirm before migration implementation.
+objects preserve their suffix while adopting the `FID_` service prefix. The complete
+map is approved for implementation.
 
 ## Ecosystem scope
 
@@ -58,6 +58,8 @@ design decision to confirm before migration implementation.
   `/monetary-units`, or other public routes unless separately approved.
 - No redesign of financial calculation behavior.
 - No direct database access by `pf-svc-income`; it continues to consume the HTTP API.
+- The financial-data service database secret target is `PF_FINANCIAL_DATA_DATABASE_URL`;
+  it remains separate from `PF_DATABASE_URL` used by `pf-svc-income`.
 - No secret-value copying into Git, Postman committed JSON, or generated artifacts.
 - No early rollback closure by default; the evidence window must be completed or
   explicitly waived by the owner before cleanup.

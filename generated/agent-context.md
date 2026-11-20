@@ -258,6 +258,6 @@ Query the Project before making planning decisions; this generated file stores n
 - Level: `L`; type: `data/schema`
 - Owner: `pf-base`
 - Affected: `pf-rates`, `pf-db`, `pf-common`, `pf-svc-income`, `pf-sheets`, `pf-postman`
-- Next action: Confirm the canonical identity, secret contract, and full RAT_* to FID_* object map before implementation.
+- Next action: Inventory consumers and prepare the reversible RAT_* to FID_* migration before execution.
 - Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-013-pf-rates-to-financial-data/plan.md
 - Issue: pending coordination issue

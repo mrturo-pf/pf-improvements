@@ -1,11 +1,11 @@
 # Recommendation: rename `pf-rates` to `pf-svc-financial-data`
 
 Date: 2026-11-20  
-Status: proposed  
+Status: approved for execution
 Level: L  
 Scope: Cross-repository financial-data service identity and database-prefix migration.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md)
-Approved: pending owner approval  
+Approved: 2026-11-20 by `a0a11b7` (conversation)
 Superseded-by: none
 
 ## 1. Executive recommendation
@@ -41,9 +41,9 @@ Execute the change as a phased identity and schema migration:
 | Postman `pf-rates-url` | `pf-financial-data-url` |
 | Postman `pf-rates-api-key` | `pf-financial-data-api-key` |
 
-The database URL decision remains open: converge to the approved generic
-`PF_DATABASE_URL` contract, or create a separately approved new database-secret
-identity. Do not create `PF_SVC_FINANCIAL_DATA_DATABASE_URL` by default.
+Use the separately named database secret `PF_FINANCIAL_DATA_DATABASE_URL` for
+`pf-svc-financial-data`; do not converge it to `PF_DATABASE_URL`, which remains the
+approved runtime contract for `pf-svc-income`.
 
 ## 3. Database decision
 
@@ -59,8 +59,7 @@ RAT_EXPORT_JOB -> FID_EXPORT_JOB
 
 The first two mappings are owner-specified semantic names. The remaining mappings
 apply the `FID_` prefix while preserving existing suffix vocabulary and minimizing
-unnecessary contract changes. The final map requires explicit approval before code
-or migration implementation.
+unnecessary contract changes. The final map is approved for code and migration implementation.
 
 The migration must preserve:
 
