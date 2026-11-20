@@ -61,9 +61,11 @@ remain separate HIST-007 operational gates.
 
 **Authorization boundary:** HIST-007 entered implementation on 2026-10-15 after
 explicit authorization of code, dependencies, schema migration, Postman, GCP/IAM/
-secrets, commits, pushes, deployment, cutover, and rollback. Production mutation
-remains staged: local code/dependency slices come first; schema migration, GCP,
-Postman cutover, deployment, and traffic cutover require their validation gates.
+secrets, commits, pushes, deployment, cutover, and rollback. The separate
+[execution authorization record](authorization-request.md) now records explicit
+approval for all six requested gates. Production mutation remains staged: local
+code/dependency slices come first; schema migration, GCP, Postman cutover,
+deployment, and traffic cutover still require their validation gates.
 
 - [x] User decisions recorded.
 - [x] Recommendation approved explicitly.
@@ -78,25 +80,24 @@ Postman cutover, deployment, and traffic cutover require their validation gates.
 - [x] `IMP-006` HTTP error baseline is released and available for release validation.
 - [x] `IMP-007` Cloud Run observability/capacity baseline is closed with a documented bounded-evidence limitation accepted for cutover planning.
 - [x] `IMP-008` identifier policy is validated; its release evidence is tracked separately and the policy applies to the physical migration.
-- [x] Cloud Run URL policy and Postman target choice approved for the current service; the identity rename cutover remains pending.
+- [x] Cloud Run URL policy and Postman target choice approved for the current service; identity rename cutover completed.
 - [x] Repository/code/schema implementation authorization received.
 - [x] Schema migration, ORM alignment, deployment hardening, and production smoke validation completed.
 - [x] Cross-repository commits/pushes and deployment execution authorized and validated for the compatibility slice.
-- [ ] Repository rename to `pf-svc-income` completed.
-- [ ] New service identity, GCP resources, secrets, URLs, and Postman consumers cut over.
-- [ ] Rollback window of 14 calendar days (or until one representative payroll flow
-  completes, whichever is longer) approved and evidenced for the identity cutover.
+- [x] Repository identity is `pf-svc-income`; legacy `pf-payroll` runtime resources were removed after early-closure acceptance.
+- [x] New service identity, GCP resources, secrets, URLs, and Postman consumers cut over.
+- [x] Rollback window closed early on 2026-11-20 by explicit owner acceptance; the 14-day observation period and representative monthly flow were waived.
 
-The lifecycle state is `in progress`: the schema/ORM compatibility slice is complete,
-while the approved service-identity rename remains active. External security, access,
-error-baseline, observability, and identifier-policy inputs are consumed as evidence,
-not treated as blockers.
+The lifecycle state is `closed`: the schema/ORM compatibility slice and service-identity
+rename are complete. Early cleanup was accepted with the documented evidence gap for
+the production pre-migration snapshot and representative monthly flow.
 
 ## 1.1 Latest evidence and blockers (2026-10-15)
 
-Inventory confirms that the current `pf-payroll` service remains active and the
-`pf-svc-income` target resources do not exist. Rename-specific blockers remain
-consumer inventory, URL cutover, schema migration validation, package-boundary
+The read-only inventory confirms that both `pf-payroll` and `pf-svc-income` Cloud Run
+services, Artifact Registry repositories, runtime service accounts, deployer accounts,
+and `PF_INCOME_API_KEY`/`PF_PAYROLL_API_KEY` secret names now exist. Rename-specific
+blockers remain consumer inventory, URL cutover, schema migration validation, package-boundary
 review, and explicit authorization.
 
 The following external outcomes are now available and must be reused rather than
@@ -246,12 +247,12 @@ owner.
 
 The following approvals must be captured separately before Phase 3:
 
-- [ ] authorize code/package changes in `pf-payroll`;
-- [ ] authorize the `pf-db` migration and maintenance boundary;
-- [ ] authorize Postman collection/environment changes;
-- [ ] authorize new GCP Artifact Registry, Cloud Run, service account, and secrets;
-- [ ] authorize consumer cutover and rollback window;
-- [ ] authorize commits/pushes and deployment approvals for each affected repo.
+- [x] authorize code/package changes in `pf-payroll` (recorded in `authorization-request.md`);
+- [x] authorize the `pf-db` migration and maintenance boundary (recorded in `authorization-request.md`);
+- [x] authorize Postman collection/environment changes (recorded in `authorization-request.md`);
+- [x] authorize new GCP Artifact Registry, Cloud Run, service account, and secrets (recorded in `authorization-request.md`);
+- [x] authorize consumer cutover and rollback window (recorded in `authorization-request.md`);
+- [x] authorize commits/pushes and deployment approvals for each affected repo (recorded in `authorization-request.md`).
 
 Until every applicable item is explicitly approved, this package remains design and
 investigation evidence only.
@@ -339,7 +340,7 @@ Status: pending `IMP-002` backup/restore readiness and operational approval.
 
 ### Rollback window
 
-**Proposal:** retain rollback capability for **14 calendar days and until one representative monthly payroll flow completes**, whichever is longer. Define the flow as import, review/summary, and export using synthetic or explicitly approved operational data.
+**Decision:** close rollback capability early on **2026-11-20** by explicit owner acceptance. The representative monthly payroll flow and 14-day observation period were waived; local synthetic validation was attempted and its bootstrap limitation is documented.
 
 During the window:
 
@@ -350,7 +351,7 @@ During the window:
 
 Rollback is not merely redirecting traffic: stop the new service, run the tested schema downgrade, verify the original `PAY_*` schema and `PAY_MV_SUMARY` columns, restore old-service access, and run the parity suite. New migrations during the window invalidate this downgrade path unless explicitly re-approved.
 
-Status: pending approval of observation period, flow definition, and freeze policy.
+Status: closed early by `a0a11b7` on 2026-11-20; the 14-day observation period and representative monthly flow were waived.
 
 ### Contract parity and release acceptance
 
@@ -415,7 +416,7 @@ or deploy a service.
 - [ ] Review all generated and explicit index/constraint names for uniqueness and a maximum of 63 bytes; no automatic truncation.
 - [x] No custom domain/DNS behavior is involved.
 - [x] API key migration is atomic: target `PF_INCOME_API_KEY`; no application fallback to `PF_PAYROLL_API_KEY`.
-- [ ] Rollback exit criteria and observation period are approved.
+- [x] Rollback exit criteria and observation period are approved; execution evidence remains pending.
 
 ## 3. Implementation slices
 
@@ -625,6 +626,22 @@ Commands are examples and must be run from the correct repository after reading 
 | 2026-10-15 | in progress | Started the first implementation slice: aligned SQLAlchemy constraints, fixed the async export-job read path, and introduced `income.domain` quantization/deflation with compatibility exports and tests. | `pf-common` sync passed; `pf-payroll` 571 tests passed; `pf-rates` targeted regression passed |
 | 2026-10-15 | in progress | Added the reversible `pf-db` migration `0017` for the `PAY_* → INC_*` rename. Local PostgreSQL upgrade, downgrade to `0016`, and re-upgrade passed; catalog checks confirmed `INC_PAYROLL`, `INC_PAY_ITEM`, `INC_MV_PAY_SUMMARY`, `payroll_id`, `accrual_year`, and `accrual_month`. | `pf-db` commit `7a5caa9`, branch `hist-007-schema-inc-migration` |
 | 2026-10-15 | in progress | Initial ORM rename probe was intentionally not published: 562 payroll tests passed but 9 compatibility tests exposed existing test/repository coupling to `PAY_*` and fake-session result shapes. The models were restored; ORM, repository, and test updates must land as one coordinated slice. | Local payroll test run; no additional working-tree changes retained |
+| 2026-11-20 | validating | Recorded explicit authorization for all six execution gates, then completed a read-only preflight. `pf-db` and `pf-svc-income` working trees were clean; Postman JSON parsed; `pf-db` checks passed; `pf-svc-income` checks passed with 574 tests and 100% coverage; no production or remote mutation was performed. | `authorization-request.md`; local `make check`; Postman `jq empty`; Git status/branch inspection |
+| 2026-11-20 | validating | Confirmed `pf-svc-income` as the successor checkout for `pf-payroll`. Read-only GCP inventory found project `coreassistant-474022`, region `us-central1`, both Cloud Run services, both Artifact Registry repositories, runtime/deployer service accounts, and both API-key secret names already present. No resource creation or secret-value access was performed. | `gcloud config list`; Cloud Run, Artifact Registry, IAM, and Secret Manager name-only inventory |
+| 2026-11-20 | blocked | IAM/configuration preflight found a release gate: `pf-svc-income` revision `00008` is serving 100% traffic and references `PF_DATABASE_URL`, but Secret Manager access for `PF_DATABASE_URL` is currently granted only to `pf-payroll`; `pf-svc-income` has access to `PF_PAYROLL_DATABASE_URL` instead. Both services are also publicly invokable. The service deployment guide explicitly uses `--allow-unauthenticated`, and application-level API-key middleware protects non-health routes; retain public Cloud Run ingress for this cutover unless a separate ingress-hardening change is approved. The database-secret contract was corrected separately; no ingress mutation was performed. | Read-only Cloud Run env/traffic, Secret Manager IAM, service IAM, and revision/image inspection |
+| 2026-11-20 | validating | Granted `roles/secretmanager.secretAccessor` on `PF_DATABASE_URL` to `pf-svc-income` and `pf-svc-income-deployer` after explicit approval. A fresh Cloud Run startup probe succeeded; no secret value was read. | `gcloud secrets add-iam-policy-binding`; Cloud Run logs for `pf-svc-income` |
+| 2026-11-20 | validating | Accepted public Cloud Run ingress for HIST-007 because the deployment guide explicitly uses `--allow-unauthenticated` and the service enforces application-level API-key authentication. Normalized the service documentation and deployment workflow references from `PF_SVC_INCOME_DATABASE_URL` to the approved `PF_DATABASE_URL`; committed and pushed as `pf-svc-income` commits `3694281` and merge-sync `9922a22` on `chore/complete-income-schema-cleanup`; PR [#18](https://github.com/mrturo-pf/pf-svc-income/pull/18) is open and mergeable, but currently blocked by repository protection. No deployment workflow was executed. | `pf-svc-income/docs/deployment.md`, `docs/database.md`, and `.github/workflows/*`; pre-commit/pre-push checks passed |
+| 2026-11-20 | validating | Confirmed no new `pf-db` migration or Postman target change is required for this cutover: `pf-db` `0017`–`0023` are present on `main`, `make check` passes, and the GCP Postman environment already targets `pf-svc-income-yqd4p7fzaa-uc.a.run.app` with an empty secret placeholder. Both repositories were clean before inspection. | `pf-db` migration inventory/log; `postman/pf-ecosystem.postman_environment.gcp.json`; read-only Git status |
+| 2026-11-20 | validating | Confirmed the latest `pf-db` main workflow completed successfully at run `42401006648` for commit `de58d1a`; migration validation and apply-migrations jobs passed. Do not rerun production migrations merely to repeat an already successful release. | GitHub Actions run `42401006648` |
+| 2026-11-20 | validating | The first `pf-svc-income` deployment run `44801711443` failed during revision `00009` creation because IAM propagation still reported `PF_DATABASE_URL` access denied. Revision `00010` subsequently became Ready with the expected immutable image, and traffic was moved to it; rerunning the failed workflow completed successfully, creating `00011` and placing 100% traffic on it. `/health` returned HTTP 200. | GitHub Actions run `44801711443` rerun; Cloud Run revisions `00010`/`00011`; health smoke |
+| 2026-11-20 | validating | Prepared the identity/API-key cutover: `PF_INCOME_API_KEY` version 1 is enabled and accessible only to the `pf-svc-income` runtime/deployer accounts; legacy `PF_PAYROLL_API_KEY` remains enabled only for the old service/runtime. Both Postman LOCAL/GCP environments use `pf-svc-income-url` and empty `pf-svc-income-api-key` placeholders, with no legacy variables. Final Cloud Run URLs for `pf-svc-income`, `pf-payroll`, and `pf-rates` were confirmed; no legacy identity references were found in `pf-rates`, `pf-sheets`, `pf-svc-income`, or Postman. | Secret metadata/IAM/version inventory; Postman JSON assertions; repository reference scan |
+| 2026-11-20 | validated | Verified the database cutover as already applied rather than rerunning it: successful `pf-db` release run `42401006648` applied the current migration head, migration `0017` contains reversible `PAY_* → INC_*` object/view logic, and `IMP-002` records a passed restore rehearsal and accepted backup-retention evidence. `INC_MV_PAY_SUMMARY` recreation and grants are represented by migrations `0017`, `0019`, `0021`, and `0022`; the active service passed health/protected smoke after deployment. No second production migration or data export was performed. | GitHub Actions run `42401006648`; `pf-db` migration source; `IMP-002` release record; Cloud Run smoke evidence |
+| 2026-11-20 | validating | Attempted to generate a sanitized post-migration catalog/count snapshot without reading business rows. The checked-out `pf-db/.env` points to `localhost:5432/pf_db`, and no local PostgreSQL instance is running; no production credentials are available in the workspace, so the snapshot was not generated and no data mutation occurred. A pre-migration snapshot cannot be reconstructed retrospectively. | Read-only connection attempt; sanitized host metadata; no output file created |
+| 2026-11-20 | validating | Started the local stack with `scripts/local/pf-services.sh start`: PostgreSQL, `pf-rates`, and `pf-svc-income` became healthy; schema bootstrap and base seeds passed. Generated sanitized local snapshot `/tmp/hist-007-local-post-migration-snapshot.json`: `INC_PAYROLL`, `INC_PAY_ITEM`, and `INC_MV_PAY_SUMMARY` present; all local counts are zero; summary view has 9 expected columns. This is local evidence only, not a production snapshot. | Local helper output; read-only asyncpg catalog/count queries |
+| 2026-11-20 | validating | Attempted the local synthetic monthly import/review/export flow. The helper's first fixture dates lacked seeded pension plans; after loading `make seed-test`, the import reached the application but exposed local bootstrap drift: `INC_FN_REFRESH_INC_SUMMARY()` is absent from the direct `schema.sql` stack. The synthetic employer/template/contract records were cleaned successfully; local payroll count remains zero. | `run-pf-svc-income-mutations.py`; local API logs; cleanup verification; no production data touched |
+| 2026-11-20 | closed | Owner accepted early rollback closure and cleanup despite the missing production pre-migration snapshot and incomplete representative monthly flow. Disabled/destroyed/deleted `PF_PAYROLL_API_KEY`; deleted legacy `pf-payroll` Cloud Run service, Artifact Registry repository, runtime/deployer service accounts; verified new service revision `00011` retained 100% traffic and `/health` returned HTTP 200. | GCP cleanup commands and absence checks; new-service health smoke; `authorization-request.md` early-closure decision |
+| 2026-11-20 | follow-up | Completed the local synthetic import → review → export flow after fixing a real contract drift: `pf-svc-income` called `INC_FN_REFRESH_INC_SUMMARY()` while Alembic 0022 defines `INC_FN_REFRESH_PAY_SUMMARY()`. Opened follow-up PRs [pf-svc-income #19](https://github.com/mrturo-pf/pf-svc-income/pull/19) and [pf-db #27](https://github.com/mrturo-pf/pf-db/pull/27); local synthetic records were cleaned. These PRs are outside the already-closed cleanup and require normal merge/deploy review. | Import HTTP 200; review HTTP 200; CSV export HTTP 200 (564 bytes); `make check`; PRs #19/#27 |
+| 2026-11-20 | released | Follow-up PR #19 merged as `3560ee6` and workflow `44816441092` completed successfully. The fix is deployed as Cloud Run revision `pf-svc-income-00012-kdr` with 100% traffic; public `/health` returned HTTP 200. | Merged PR #19; GitHub Actions run `44816441092`; Cloud Run revision and health smoke |
 
 
 ## 6. Release record — schema/ORM compatibility slice
