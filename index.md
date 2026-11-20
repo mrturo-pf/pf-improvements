@@ -36,6 +36,7 @@ This index intentionally does not duplicate those fields.
 | `HIST-021` | `spreadsheet-export` | [Issue](https://github.com/mrturo-pf/pf-base/issues/25) | [artifact](improvements/HIST-021-spreadsheet-export/recommendation.md) |
 | `IMP-011` | `api-endpoint-coverage-and-postman-automation` | [Issue](https://github.com/mrturo-pf/pf-base/issues/35) | [artifact](improvements/IMP-011-api-endpoint-coverage-and-postman-automation/recommendation.md) |
 | `IMP-012` | `gcp-pf-payroll-identity-residue-cleanup` | Issue pending intake | [artifact](improvements/IMP-012-gcp-pf-payroll-identity-residue-cleanup/recommendation.md) |
+| `IMP-013` | `pf-rates-to-financial-data` | Issue pending intake | [artifact](improvements/IMP-013-pf-rates-to-financial-data/recommendation.md) |
 
 ## Source-of-truth rules
 

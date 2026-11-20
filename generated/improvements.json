@@ -421,6 +421,26 @@
       "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-012-gcp-pf-payroll-identity-residue-cleanup/plan.md",
       "next_action": "Closed: legacy secret deleted; active GCP resource names verified clean; historical Asset Inventory key records accepted as audit history.",
       "metadata_status": "closed; no active pf-payroll or pf_payroll GCP artifact remains"
+    },
+    {
+      "id": "IMP-013",
+      "slug": "pf-rates-to-financial-data",
+      "level": "L",
+      "type": "data/schema",
+      "owner": "pf-base",
+      "affected": [
+        "pf-rates",
+        "pf-db",
+        "pf-common",
+        "pf-svc-income",
+        "pf-sheets",
+        "pf-postman"
+      ],
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "issue_url": null,
+      "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-013-pf-rates-to-financial-data/plan.md",
+      "next_action": "Confirm the canonical identity, secret contract, and full RAT_* to FID_* object map before implementation.",
+      "metadata_status": "proposed; issue intake and operational status pending"
     }
   ]
 }
