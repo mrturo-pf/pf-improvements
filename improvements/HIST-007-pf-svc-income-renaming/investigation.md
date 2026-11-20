@@ -1,16 +1,18 @@
 # Investigation: rename `pf-payroll` to `pf-svc-income`
 
 Date: 2026-10-05
-Status: investigating
+Status: closed (early owner-approved closure on 2026-11-20)
 Level: L
 Scope: Ecosystem-wide identity rename of the `pf-payroll` service/repository to `pf-svc-income`, including repository, source package, database ownership references, GCP resources, CI/CD, secrets, documentation, and compatibility.
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: design approved; implementation authorization pending
+Approved: design and execution authorized by `a0a11b7`; early closure accepted on 2026-11-20
 Superseded-by: none
 
-> **Current phase:** implementation has begun under explicit authorization. This
-> investigation still records evidence and gates; production schema, GCP, Postman,
-> deployment, cutover, and rollback actions remain staged behind validation.
+> **Current status (2026-11-20):** investigation and implementation are closed. The
+> production cutover, migration, deployment, consumer verification, and legacy cleanup
+> completed. The owner accepted closure before the proposed 14-day rollback period and
+> representative production flow; those historical evidence gaps are documented rather
+> than reconstructed.
 
 ## 1. Investigation question
 
@@ -20,7 +22,7 @@ The requested target name is `pf-svc-income`. The user has now decided that the 
 
 ## 2. Repositories and source-of-truth files inspected
 
-Inspected with clean working trees on `main`:
+Historical inspection baseline (the source repositories have since advanced):
 
 - root repository `pf-base` at `/Users/a0a11b7/Documents/reps-personal/pf`;
 - service repository `pf-payroll`, remote `https://github.com/mrturo-pf/pf-payroll`;
@@ -387,12 +389,14 @@ Remaining implementation design detail:
 - recommended `accrual_year`/`accrual_month` field rename for current `period_year`/`period_month` fields;
 - rollback exit checklist and observation period.
 
-## 9. Inventory and complementary validation
+## 9. Historical inventory and final validation
 
-Read-only inventory confirmed that the current `pf-payroll` service remains active
-and the target `pf-svc-income` resources do not exist. The rename-specific evidence
-covers consumer discovery, URL reconciliation, route/OpenAPI/Postman comparison,
-package-boundary decisions, and a local reversible schema-rename probe.
+The pre-cutover read-only inventory below is retained as historical evidence. The
+final validation confirmed that `pf-svc-income` is active at 100% traffic, Postman and
+consumer URLs target the new service, and the legacy `pf-payroll` service/resources
+and API key were removed after explicit early-closure acceptance. The implemented
+migration, deploy pipeline, ORM contract, summary refresh function, and local
+synthetic import/review/export flow passed their applicable validations.
 
 The local probe confirmed the approved rename shape for synthetic data:
 

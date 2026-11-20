@@ -1,14 +1,17 @@
 # Plan: rename `pf-payroll` to `pf-svc-income`
 
 Date: 2026-10-05
-Status: in progress
+Status: closed (early owner-approved closure on 2026-11-20)
 Level: L
 Scope: Cross-repository/service identity rename and GCP migration.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md)
 Approved: 2026-10-05 by a0a11b7 (conversation)
 Superseded-by: none
 
-> **Current phase: controlled implementation of the service-identity rename.** The physical `PAY_* → INC_*` schema migration and ORM compatibility slice are complete and validated in production. The service identity remains `pf-payroll`; repository/resource/consumer cutover work is now the active HIST-007 scope.
+> **Current status (2026-11-20): closed early.** The physical `PAY_* → INC_*` schema
+> migration, ORM compatibility, service identity cutover, deployment, consumer
+> verification, smoke validation, and legacy cleanup are complete. The proposed
+> rollback window was waived by the owner; no legacy rollback path remains.
 
 ### IMP-011 evidence reuse
 
@@ -381,26 +384,23 @@ API-key cutover behavior. Do not assume either currently advertised URL is stale
 reconcile it with consumers and Postman before cutover. Broader IAM and ingress
 standards are tracked through `IMP-005` and `IMP-007`.
 
-Status: pending URL evidence and approval.
+Status: completed; final URL evidence recorded in the deployment and cutover entries below.
 
 ### Related database security work
 
 The rename must not broaden database privileges or bypass the current `pf-db`
 identifier policy. Runtime-role hardening is tracked as `IMP-003`; Neon credential,
 backup, and restore hardening is tracked as `IMP-002`; and the identifier-length
-policy is tracked as `IMP-008`. The policy is validated and applies to the
-physical migration; only release evidence remains pending. Their detailed designs
+policy is tracked as `IMP-008`. The policy is validated and applies to the physical migration. Release evidence and
+accepted limitations are recorded in the closed entries below; detailed designs
 belong in their own proposals.
 
 ### Phase 2 gate
 
-Phase 3 remains blocked until the rename-specific decisions are approved and the
-still-open gates that affect the selected release stage are resolved or explicitly
-accepted. The released outcomes of `IMP-001`, `IMP-002`, and `IMP-005`, the
-supersession of `IMP-003`, and the validated `IMP-008` policy are already accepted
-inputs; they are not pending remediation. Preparing this package does not rotate
-credentials, change IAM, create GCP resources, alter the database, update Postman,
-or deploy a service.
+Phase 3 was authorized and completed. The owner explicitly accepted the early
+rollback closure and the documented evidence gaps. The released outcomes of
+`IMP-001`, `IMP-002`, and `IMP-005`, the supersession of `IMP-003`, and the validated
+`IMP-008` policy were consumed as inputs; none remains pending remediation.
 
 ## 2. Decisions to record before implementation
 
@@ -413,10 +413,10 @@ or deploy a service.
 - [x] Exact `INC_*` target map is approved, subject to migration implementation validation.
 - [x] `PAY_MV_SUMARY` target is explicitly `INC_MV_PAY_SUMMARY` (18 ASCII characters), correcting `SUMARY` to `SUMMARY` and making the payroll domain explicit.
 - [x] `IMP-008` identifier policy is validated; apply it to the physical migration and retain release evidence separately.
-- [ ] Review all generated and explicit index/constraint names for uniqueness and a maximum of 63 bytes; no automatic truncation.
+- [x] Review all generated and explicit index/constraint names for uniqueness and a maximum of 63 bytes; no automatic truncation.
 - [x] No custom domain/DNS behavior is involved.
 - [x] API key migration is atomic: target `PF_INCOME_API_KEY`; no application fallback to `PF_PAYROLL_API_KEY`.
-- [x] Rollback exit criteria and observation period are approved; execution evidence remains pending.
+- [x] Rollback exit criteria were approved; the observation period was closed early by explicit owner acceptance and legacy rollback resources were removed.
 
 ## 3. Implementation slices
 

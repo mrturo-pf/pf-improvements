@@ -1,16 +1,17 @@
 # Recommendation: rename `pf-payroll` to `pf-svc-income`
 
 Date: 2026-10-05
-Status: approved
+Status: closed (early owner-approved closure on 2026-11-20)
 Level: L
 Scope: Cross-repository/service identity rename and deployment migration.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [plan](plan.md)
 Approved: 2026-10-05 by a0a11b7 (conversation)
 Superseded-by: none
 
-> **Decision boundary:** complete implementation was authorized on 2026-10-15.
-> Execution remains staged through the migration, consumer, deployment, validation, and
-> rollback gates defined in the plan.
+> **Current decision status (2026-11-20):** the recommendation was executed and the
+> work was closed early by owner decision. The migration, deployment, cutover, smoke
+> validation, and legacy cleanup are complete. The originally proposed rollback window
+> was waived; no legacy rollback path remains.
 
 ## 1. Executive recommendation
 
@@ -26,12 +27,13 @@ Approve a **phased identity rename** to `pf-svc-income` with these boundaries:
 
 This is an identity rename plus a physical schema rename and package-boundary change; it is not yet the implementation of independent bonuses or honorarios.
 
-### Evidence update from GCP inventory 03 (2026-10-07)
+### Current evidence update (2026-11-20)
 
-The current `pf-payroll` service remains active and the target resources do not
-exist. The rename still requires consumer inventory, URL reconciliation, schema
-migration validation, least-privilege deployment approval, and explicit
-authorization before execution.
+`pf-svc-income` is the active service at 100% traffic on revision
+`pf-svc-income-00012-kdr`. `PF_INCOME_API_KEY` and the new runtime/deployer identity
+remain active. The legacy `pf-payroll` Cloud Run service, Artifact Registry repository,
+service accounts, and `PF_PAYROLL_API_KEY` were removed after explicit early-closure
+acceptance. The original 14-day rollback proposal is historical and was waived.
 
 The external outcomes are now differentiated: `IMP-001`, `IMP-002`, `IMP-004`,
 `IMP-005`, `IMP-006`, and `IMP-009` are released; `IMP-003` is superseded by
@@ -41,8 +43,9 @@ as active blockers.
 
 ### Complementary validation decisions
 
-- Use a bounded rollback window of 14 calendar days and at least one representative
-  payroll flow, whichever is longer.
+- Historical proposal: use a bounded rollback window of 14 calendar days and at least one
+  representative payroll flow, whichever is longer. Final decision: waive this window
+  and close on 2026-11-20; document the exception in `plan.md`.
 - Keep `/payroll/*` paths and synchronize `period_id → payroll_id` across route
   metadata, OpenAPI, DTOs, `docs/api.md`, Postman, and tests.
 - Treat the current database and deployment identities as inputs to the separately

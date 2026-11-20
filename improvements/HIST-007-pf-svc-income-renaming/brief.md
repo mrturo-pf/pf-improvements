@@ -1,19 +1,23 @@
 # Brief: rename `pf-payroll` to `pf-svc-income`
 
 Date: 2026-10-05
-Status: approved
+Status: closed (early owner-approved closure on 2026-11-20)
 Level: L
 Scope: Cross-repository/service identity rename from `pf-payroll` to `pf-svc-income`.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)
 Approved: 2026-10-05 by a0a11b7 (conversation)
 Superseded-by: none
 
-> **Phase boundary:** implementation was authorized on 2026-10-15. Execution is staged
-> through validation gates: local code/dependency work may proceed first; schema,
-> Postman, GCP, deployment, cutover, and rollback actions require their planned
-> evidence before mutation.
+> **Current status (2026-11-20):** HIST-007 is closed after the owner-approved early
+> rollback closure. `pf-svc-income` is deployed at 100% traffic; legacy `pf-payroll`
+> resources and `PF_PAYROLL_API_KEY` were removed. The 14-day rollback period and
+> representative production flow were explicitly waived. Historical evidence gaps are
+> documented in `plan.md` and are not reopenable retroactively.
 
-> Implementation update 2026-10-21: the physical `PAY_* → INC_*` schema/ORM compatibility slice is complete and production smoke validation passed. `pf-payroll` remains the active service identity; the authorized next phase is the repository/package/GCP/consumer identity cutover to `pf-svc-income`. The implementation exposed stale-image, mutable-tag, Cloud Run revision-readiness, WIF/IAM, and protected-smoke diagnostics issues; all are recorded in `plan.md` with their corrections.
+> Implementation update 2026-11-20: the physical `PAY_* → INC_*` schema/ORM compatibility
+> slice, identity cutover, Postman verification, GCP deployment, smoke validation,
+> and legacy cleanup are complete. The final service revision is `pf-svc-income-00012-kdr`.
+> The follow-up summary-refresh contract fix was merged and deployed successfully.
 
 ## Objective
 
@@ -42,24 +46,21 @@ The renamed service must be able to grow beyond monthly employment payroll towar
 | `pf-rates` | Consumer/deployment coordination check only; no expected code change |
 | `pf-sheets` | Consumer inventory check only; no expected code change unless evidence identifies a dependency |
 
-## Latest investigation findings
+## Historical findings and current outcome
 
-The 2026-10-07 inventory confirms:
+The 2026-10-07 inventory above is retained as historical evidence. It described the
+pre-cutover state; it is not the current operational state. The final outcome is:
 
-- `pf-payroll` remains the only deployed payroll service, at 100% traffic, with ready revision `pf-payroll-00056-lgk`;
-- the active image is pinned by digest in Artifact Registry repository `pf-payroll`;
-- Artifact Registry `pf-svc-income`, service account `pf-svc-income@coreassistant-474022.iam.gserviceaccount.com`, and secret `PF_INCOME_API_KEY` do not exist;
-- current runtime uses `PF_DATABASE_URL`, `PF_PAYROLL_API_KEY`, `PF_RATES_API_KEY`, and `PF_RATES_URL`;
-- observed consumers include Postman and curl, using both historical and current Cloud Run URLs;
-- no VPC connector, custom domain, forwarding rule, DNS zone, alert policy, dashboard, log-based metric, or uptime check was found in the collected artifacts;
-- the Scheduler credential remediation from `IMP-001` is complete;
-- Neon backup/restore, runtime-role, sensitive-artifact, and ownership work from `IMP-002` is complete, with the provider-managed role residual risk accepted;
-- `IMP-003` is superseded by `IMP-002`, so no duplicate runtime-role work is required;
-- WIF/deployer identity hardening from `IMP-005` is complete;
-- the `IMP-008` identifier policy is validated and applies to the pending physical migration;
-- `IMP-004`, `IMP-006`, `IMP-008`, and `IMP-009` are resolved inputs; `IMP-007` is closed with its bounded-evidence limitation explicitly accepted for planning. None is an active blocker for HIST-007.
-
-The new service, secret, account, repository, and consumer cutover remain pending identity-rename outcomes. The existing `pf-payroll` service and `INC_*` schema are the validated compatibility baseline.
+- `pf-svc-income` is deployed at 100% traffic on revision `pf-svc-income-00012-kdr`;
+- `PF_INCOME_API_KEY`, the new runtime/deployer identity, Artifact Registry repository,
+  Cloud Run service, Postman targets, and consumer URLs are active;
+- `PF_PAYROLL_API_KEY`, the legacy `pf-payroll` Cloud Run service, legacy Artifact
+  Registry repository, and legacy runtime/deployer accounts were removed;
+- `PAY_* → INC_*` migration, ORM compatibility, summary-view refresh contract,
+  deployment validation, and local synthetic import/review/export validation passed;
+- the proposed rollback window was closed early by explicit owner acceptance;
+- missing pre-migration and full-window evidence is an accepted historical exception,
+  not an open implementation task.
 
 ## Research validation update (2026-10-07)
 
