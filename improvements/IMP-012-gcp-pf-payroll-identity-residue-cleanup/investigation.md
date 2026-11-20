@@ -1,11 +1,11 @@
 # Investigation: residual `pf-payroll` GCP identity artifacts
 
 Date: 2026-11-20  
-Status: investigating  
+Status: validating
 Level: L  
 Scope: GCP resource names, Secret Manager, IAM, and Cloud Asset Inventory.
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: investigation authorized; cleanup mutation pending  
+Approved: investigation and low-risk IAM cleanup authorized; destructive secret cleanup pending
 Superseded-by: none
 
 ## 1. Question
@@ -37,28 +37,27 @@ following targeted inventories:
 
 Active PF services are `pf-rates` and `pf-svc-income`.
 
-### Residual Secret Manager artifact
+### Pre-cleanup Secret Manager artifact
+
+Before cleanup, the inventory showed:
 
 ```text
 Secret: PF_PAYROLL_DATABASE_URL
 Versions: 1, 2, 3, 4 — enabled
 ```
 
-The secret IAM policy currently includes:
+The pre-cleanup IAM policy included `pf-svc-income`,
+`pf-svc-income-deployer`, and a deleted `pf-payroll` principal. The active
+`pf-svc-income` revision referenced `PF_DATABASE_URL`, not the old secret. Secret
+values were never read.
 
-```text
-serviceAccount:pf-svc-income@coreassistant-474022.iam.gserviceaccount.com
-serviceAccount:pf-svc-income-deployer@coreassistant-474022.iam.gserviceaccount.com
-deleted:serviceAccount:pf-payroll@coreassistant-474022.iam.gserviceaccount.com
-```
-
-The active `pf-svc-income` Cloud Run revision references `PF_DATABASE_URL`, not
-`PF_PAYROLL_DATABASE_URL`. The secret values were not read, so content equivalence
-has not been assumed.
+On 2026-11-20, the deleted-principal IAM binding was removed, all four old versions
+were disabled and destroyed, and `PF_PAYROLL_DATABASE_URL` was deleted.
 
 ### Historical Cloud Asset Inventory records
 
-Cloud Asset Inventory returned historical `ServiceAccountKey` records for:
+After cleanup, Cloud Asset Inventory still returns historical `ServiceAccountKey`
+records for:
 
 ```text
 pf-payroll@coreassistant-474022.iam.gserviceaccount.com
@@ -69,29 +68,20 @@ The corresponding service accounts are absent from the active service-account li
 and were deleted by HIST-007. These records may be retained audit history and must
 not be treated as active identities without a current IAM/resource reference.
 
-## 3. Safety findings
+## 3. Final evidence and closure
 
-- Deleting `PF_PAYROLL_DATABASE_URL` is potentially destructive because its values
-  were not inspected and its historical consumers are not proven from secret content.
-- Removing the deleted-principal IAM member is low risk and should be idempotent.
-- Destroying secret versions before deleting the secret is irreversible; owner approval
-  and a final consumer inventory are required.
-- Cloud Asset Inventory history cannot necessarily be deleted by removing the original
-  service accounts or keys.
-
-## 4. Required follow-up evidence
-
-Before mutation:
-
-- search all active Cloud Run revisions and deployment workflows for the secret name;
-- inspect Secret Manager IAM without reading values;
-- confirm `PF_DATABASE_URL` is the only active runtime database secret;
-- confirm no Scheduler, CI, or external integration references the old secret;
-- record owner approval for removing the old secret and stale IAM member.
+Before mutation, active Cloud Run revisions, local modules/workflows, Secret Manager IAM,
+and resource names were checked without reading secret values. No active consumer of
+`PF_PAYROLL_DATABASE_URL` was found.
 
 After mutation:
 
-- verify old secret/resource names are absent from active inventories;
-- verify `pf-svc-income` health and protected smoke;
-- rerun Asset Inventory and classify any remaining historical key records;
-- record residual audit-history risk explicitly.
+- `PF_PAYROLL_DATABASE_URL` and all four versions were deleted;
+- active secrets, services, repositories, accounts, and Scheduler names contain no
+  `pf-payroll` or `pf_payroll` residue;
+- `pf-svc-income` remained healthy at 100% traffic and `/health` returned HTTP 200;
+- Cloud Asset Inventory still returns two historical deleted service-account-key
+  records. They are provider-retained audit history, not active artifacts, and are
+  documented as accepted residual history.
+
+IMP-012 is closed. No secret values were read or committed.
