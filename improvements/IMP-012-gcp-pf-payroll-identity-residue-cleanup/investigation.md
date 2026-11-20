@@ -1,11 +1,11 @@
 # Investigation: residual `pf-payroll` GCP identity artifacts
 
 Date: 2026-11-20  
-Status: investigating  
+Status: validating
 Level: L  
 Scope: GCP resource names, Secret Manager, IAM, and Cloud Asset Inventory.
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: investigation authorized; cleanup mutation pending  
+Approved: investigation and low-risk IAM cleanup authorized; destructive secret cleanup pending
 Superseded-by: none
 
 ## 1. Question

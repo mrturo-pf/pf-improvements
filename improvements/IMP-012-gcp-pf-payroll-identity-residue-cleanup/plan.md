@@ -14,9 +14,9 @@ Superseded-by: none
 - [x] Active Cloud Run, jobs, Artifact Registry, service-account, and Scheduler names checked.
 - [x] Secret Manager names, versions, and IAM checked without reading values.
 - [x] Historical Cloud Asset Inventory residue identified and classified as a separate concern.
-- [ ] Search deployment workflows and active service revisions for `PF_PAYROLL_DATABASE_URL`.
-- [ ] Confirm no external or CI consumer uses `PF_PAYROLL_DATABASE_URL`.
-- [ ] Remove stale IAM member for the deleted `pf-payroll` principal.
+- [x] Search deployment workflows and active service revisions for `PF_PAYROLL_DATABASE_URL`; no active references found.
+- [x] Confirm no local repository/module/workflow consumer uses `PF_PAYROLL_DATABASE_URL`; external consumer proof remains limited to GCP metadata.
+- [x] Remove stale IAM member for the deleted `pf-payroll` principal.
 - [ ] Approve disabling and destroying old secret versions.
 - [ ] Disable/destroy old secret versions.
 - [ ] Approve deleting `PF_PAYROLL_DATABASE_URL`.
@@ -70,3 +70,4 @@ Superseded-by: none
 | Date | Status | Change | Evidence |
 |---|---|---|---|
 | 2026-11-20 | investigating | Found `PF_PAYROLL_DATABASE_URL` with four enabled versions and stale access for a deleted `pf-payroll` principal. Cloud Asset Inventory also retains historical keys for deleted legacy accounts. No mutation performed. | Read-only GCP inventory |
+| 2026-11-20 | validating | Confirmed no active GCP resource name or Cloud Run revision references `pf-payroll`, `pf_payroll`, or `PF_PAYROLL_DATABASE_URL`; active modules/workflows also contain no `PF_PAYROLL_DATABASE_URL` reference. Removed the deleted `pf-payroll` principal from the old secret's IAM policy. The secret and all four versions remain pending owner-approved destruction. | Targeted GCP inventory; repository scan; Secret Manager IAM removal |

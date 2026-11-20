@@ -1,11 +1,11 @@
 # Brief: remove residual `pf-payroll` GCP identity artifacts
 
 Date: 2026-11-20  
-Status: proposed  
+Status: in progress
 Level: L  
 Scope: GCP-only cleanup of residual `pf-payroll`/`pf_payroll` names and access artifacts after HIST-007.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: pending explicit execution authorization  
+Approved: investigation and low-risk IAM cleanup authorized; destructive secret cleanup pending explicit approval
 Superseded-by: none
 
 ## Current problem
