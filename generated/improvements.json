@@ -405,6 +405,22 @@
       "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-011-api-endpoint-coverage-and-postman-automation/plan.md",
       "next_action": "Approve the layered coverage, assertion, Newman, fixture, and safety design before implementation",
       "metadata_status": "proposed; operational status and priority remain GitHub Project fields"
+    },
+    {
+      "id": "IMP-012",
+      "slug": "gcp-pf-payroll-identity-residue-cleanup",
+      "level": "L",
+      "type": "security",
+      "owner": "pf-base",
+      "affected": [
+        "pf-svc-income",
+        "pf-rates"
+      ],
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "issue_url": null,
+      "plan_url": "https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-012-gcp-pf-payroll-identity-residue-cleanup/plan.md",
+      "next_action": "Complete active-consumer inventory and obtain approval before deleting PF_PAYROLL_DATABASE_URL.",
+      "metadata_status": "proposed; issue intake and operational status pending"
     }
   ]
 }

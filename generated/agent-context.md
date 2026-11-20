@@ -3,7 +3,7 @@
 > Generated from `improvements.json`. Do not edit manually.
 
 - Schema version: `1`
-- Items: `26`
+- Items: `27`
 
 ## Improvement references
 
@@ -243,3 +243,12 @@ Query the Project before making planning decisions; this generated file stores n
 - Next action: Approve the layered coverage, assertion, Newman, fixture, and safety design before implementation
 - Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-011-api-endpoint-coverage-and-postman-automation/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/35
+
+### IMP-012 — gcp-pf-payroll-identity-residue-cleanup
+
+- Level: `L`; type: `security`
+- Owner: `pf-base`
+- Affected: `pf-svc-income`, `pf-rates`
+- Next action: Complete active-consumer inventory and obtain approval before deleting PF_PAYROLL_DATABASE_URL.
+- Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-012-gcp-pf-payroll-identity-residue-cleanup/plan.md
+- Issue: pending coordination issue
