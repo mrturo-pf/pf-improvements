@@ -253,11 +253,11 @@ Query the Project before making planning decisions; this generated file stores n
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-012-gcp-pf-payroll-identity-residue-cleanup/plan.md
 - Issue: pending coordination issue
 
-### IMP-013 — pf-rates-to-financial-data
+### IMP-013 — pf-rates-to-reference
 
 - Level: `L`; type: `data/schema`
 - Owner: `pf-base`
 - Affected: `pf-rates`, `pf-db`, `pf-common`, `pf-svc-income`, `pf-sheets`, `pf-postman`
-- Next action: Inventory consumers and prepare the reversible RAT_* to FID_* migration before execution.
-- Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-rates-to-financial-data/plan.md
+- Next action: Inventory consumers and prepare the reversible RAT_* to REF_* migration before execution.
+- Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-rates-to-reference/plan.md
 - Issue: pending coordination issue

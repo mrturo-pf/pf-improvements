@@ -1,19 +1,19 @@
-# Plan: migrate `pf-rates` to `pf-svc-financial-data`
+# Plan: migrate `pf-rates` to `pf-svc-reference`
 
 Date: 2026-11-20  
 Status: approved for execution
 Level: L  
-Scope: Cross-repository service identity, GCP, consumers, Postman, and `RAT_* → FID_*` schema migration.
+Scope: Cross-repository service identity, GCP, consumers, Postman, and `RAT_* → REF_*` schema migration.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md)
 Approved: 2026-11-20 by `mrturo`; execution authorized
 Superseded-by: none
 
 ## 1. Gates
 
-- [x] Confirm canonical identity `pf-svc-financial-data`.
-- [x] Confirm API key target `PF_FINANCIAL_DATA_API_KEY`.
-- [x] Resolve database-secret contract: use separate `PF_FINANCIAL_DATA_DATABASE_URL`.
-- [x] Approve final `RAT_* → FID_*` object map.
+- [x] Confirm canonical identity `pf-svc-reference`.
+- [x] Confirm API key target `PF_REFERENCE_API_KEY`.
+- [x] Resolve database-secret contract: use separate `PF_REFERENCE_DATABASE_URL`.
+- [x] Approve final `RAT_* → REF_*` object map.
 - [ ] Inventory every consumer and active reference before mutation.
 - [ ] Inventory GCP resources, IAM, secrets, revisions, and image digests read-only.
 - [x] Approve code/package, schema, Postman, GCP, consumer, commit, push, and deploy scopes.
@@ -23,7 +23,7 @@ Superseded-by: none
 - [ ] Update service, workflow, Postman, root, shared-tooling, and consumer identity references.
 - [ ] Validate all affected repositories and generated artifacts.
 - [ ] Execute migration in a bounded maintenance window with drain/abort evidence.
-- [ ] Deploy immutable `pf-svc-financial-data` revision and validate readiness.
+- [ ] Deploy immutable `pf-svc-reference` revision and validate readiness.
 - [ ] Run read-only and authenticated synthetic smoke tests.
 - [ ] Execute Go/No-Go and move consumers/traffic atomically.
 - [ ] Observe full rollback window and representative financial-data flow.
@@ -42,7 +42,7 @@ Superseded-by: none
 
 ### Phase 2 — Local implementation
 
-1. Add a hand-written reversible migration for the approved `FID_*` map.
+1. Add a hand-written reversible migration for the approved `REF_*` map.
 2. Update ORM/models, repository SQL, seeds, tests, docs, grants, indexes, and
    generated references in `pf-rates` and `pf-db`.
 3. Update shared workflow/deployment inputs and Postman environments without placing
@@ -52,7 +52,7 @@ Superseded-by: none
 
 ### Phase 3 — Parallel deployment
 
-1. Create `pf-svc-financial-data` Artifact Registry, runtime/deployer accounts,
+1. Create `pf-svc-reference` Artifact Registry, runtime/deployer accounts,
    Cloud Run service, and API-key secret only after approval.
 2. Build/push immutable digest and deploy at scale-to-zero.
 3. Validate dependency URL, secret references, IAM, `/health`, and protected routes.
@@ -62,7 +62,7 @@ Superseded-by: none
 
 1. Take sanitized backup metadata and pre-migration schema/count snapshot.
 2. Enter the approved maintenance window; drain or isolate active traffic.
-3. Apply reversible `RAT_* → FID_*` migration.
+3. Apply reversible `RAT_* → REF_*` migration.
 4. Validate catalog, FK/index/constraint names, row counts, aggregates, grants, and
    service ORM/API compatibility.
 5. Run Go/No-Go, update consumers/Postman, and move traffic to the new service.
@@ -92,4 +92,6 @@ Superseded-by: none
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
-| 2026-11-20 | approved | Owner confirmed `pf-svc-financial-data`, `PF_FINANCIAL_DATA_API_KEY`, separate `PF_FINANCIAL_DATA_DATABASE_URL`, the complete `RAT_* → FID_*` map, preservation of Python package `rates`, and authorized migration/cutover/cleanup execution. No mutation performed. | Owner decision recorded in conversation; artifact set and read-only inventory |
+| 2026-11-20 | approved | Owner confirmed `pf-svc-reference`, `PF_REFERENCE_API_KEY`, separate `PF_REFERENCE_DATABASE_URL`, the complete `RAT_* → REF_*` map, preservation of Python package `rates`, and authorized migration/cutover/cleanup execution. No mutation performed. | Owner decision recorded in conversation; artifact set and read-only inventory |
+| 2026-11-21 | renamed | Owner selected `pf-svc-reference` as the canonical service identity; all IMP-013 artifacts were synchronized before execution. | Owner decision recorded in conversation; no service, database, or consumer mutation performed |
+| 2026-11-21 | schema-renamed | Owner selected the `REF_` database prefix; all database mappings and execution references were synchronized before migration. | Owner decision recorded in conversation; no database mutation performed |

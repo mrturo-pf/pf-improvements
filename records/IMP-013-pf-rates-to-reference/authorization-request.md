@@ -1,6 +1,6 @@
 # IMP-013 Execution Authorization
 
-**Improvement:** `IMP-013 — pf-rates-to-pf-svc-financial-data`  
+**Improvement:** `IMP-013 — pf-rates-to-pf-svc-reference`
 **Status:** Approved for execution  
 **Approver:** `mrturo`  
 **Date:** 2026-11-20
@@ -13,10 +13,10 @@ plan's validation gates and evidence before cleanup.
 
 | Gate | Decision | Status |
 |---|---|---|
-| Canonical service identity | `pf-svc-financial-data` | Approved |
-| API key | `PF_FINANCIAL_DATA_API_KEY` | Approved |
-| Database secret | `PF_FINANCIAL_DATA_DATABASE_URL`, separate from `PF_DATABASE_URL` used by `pf-svc-income` | Approved |
-| Database map | `RAT_CURRENCY → FID_RATE_UNIT`; `RAT_EXCH_RATE → FID_RATE_VALUE`; `RAT_ECON_INDEX → FID_ECON_INDEX`; `RAT_TAX_BRCKT → FID_TAX_BRCKT`; `RAT_EXPORT_JOB → FID_EXPORT_JOB` | Approved |
+| Canonical service identity | `pf-svc-reference` | Approved |
+| API key | `PF_REFERENCE_API_KEY` | Approved |
+| Database secret | `PF_REFERENCE_DATABASE_URL`, separate from `PF_DATABASE_URL` used by `pf-svc-income` | Approved |
+| Database map | `RAT_CURRENCY → REF_RATE_UNIT`; `RAT_EXCH_RATE → REF_RATE_VALUE`; `RAT_ECON_INDEX → REF_ECON_INDEX`; `RAT_TAX_BRCKT → REF_TAX_BRCKT`; `RAT_EXPORT_JOB → REF_EXPORT_JOB` | Approved |
 | Python package | Preserve internal `rates` package in phase one | Approved |
 | Execution | Migration, cutover, rollback window, commits, pushes, deployments, and cleanup | Approved |
 

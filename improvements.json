@@ -424,7 +424,7 @@
     },
     {
       "id": "IMP-013",
-      "slug": "pf-rates-to-financial-data",
+      "slug": "pf-rates-to-reference",
       "level": "L",
       "type": "data/schema",
       "owner": "pf-base",
@@ -438,8 +438,8 @@
       ],
       "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
       "issue_url": null,
-      "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-rates-to-financial-data/plan.md",
-      "next_action": "Inventory consumers and prepare the reversible RAT_* to FID_* migration before execution.",
+      "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-rates-to-reference/plan.md",
+      "next_action": "Inventory consumers and prepare the reversible RAT_* to REF_* migration before execution.",
       "metadata_status": "approved for execution; issue intake and operational status pending"
     }
   ]

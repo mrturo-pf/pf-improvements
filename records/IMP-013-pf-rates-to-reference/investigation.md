@@ -1,9 +1,9 @@
-# Investigation: rename `pf-rates` to `pf-svc-financial-data`
+# Investigation: rename `pf-rates` to `pf-svc-reference`
 
 Date: 2026-11-20  
 Status: investigating  
 Level: L  
-Scope: Service identity, consumers, GCP resources, Postman, shared tooling, and `RAT_* → FID_*` schema ownership.
+Scope: Service identity, consumers, GCP resources, Postman, shared tooling, and `RAT_* → REF_*` schema ownership.
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)
 Approved: investigation preparation only  
 Superseded-by: none
@@ -55,16 +55,16 @@ RAT_EXPORT_JOB
 The proposed target map is:
 
 ```text
-RAT_CURRENCY  -> FID_RATE_UNIT
-RAT_EXCH_RATE -> FID_RATE_VALUE
-RAT_ECON_INDEX -> FID_ECON_INDEX
-RAT_TAX_BRCKT -> FID_TAX_BRCKT
-RAT_EXPORT_JOB -> FID_EXPORT_JOB
+RAT_CURRENCY  -> REF_RATE_UNIT
+RAT_EXCH_RATE -> REF_RATE_VALUE
+RAT_ECON_INDEX -> REF_ECON_INDEX
+RAT_TAX_BRCKT -> REF_TAX_BRCKT
+RAT_EXPORT_JOB -> REF_EXPORT_JOB
 ```
 
 `RAT_EXCH_RATE.currency_code` references `RAT_CURRENCY.code`; the migration must
-preserve this relationship as `FID_RATE_VALUE.currency_code` referencing
-`FID_RATE_UNIT.code`. Seeds, indexes, constraints, sequences, views, grants,
+preserve this relationship as `REF_RATE_VALUE.currency_code` referencing
+`REF_RATE_UNIT.code`. Seeds, indexes, constraints, sequences, views, grants,
 export-job code, tests, and documentation must be inventoried from the actual
 schema rather than renamed with a blind string replacement.
 
@@ -74,8 +74,8 @@ schema rather than renamed with a blind string replacement.
   Registry in place.
 - Use immutable image digests and verify the ready revision before moving traffic.
 - Use the approved generic database contract `PF_DATABASE_URL`; do not create a
-  service-specific database-secret alias such as `PF_SVC_FINANCIAL_DATA_DATABASE_URL`.
-- Use a new service API key, expected target name `PF_FINANCIAL_DATA_API_KEY`,
+  service-specific database-secret alias such as `PF_SVC_REFERENCE_DATABASE_URL`.
+- Use a new service API key, expected target name `PF_REFERENCE_API_KEY`,
   with an atomic consumer cutover.
 - Remove old IAM bindings before secret destruction, and verify active consumers first.
 - Treat Cloud Asset Inventory records for deleted service-account keys as retained
@@ -96,11 +96,11 @@ schema rather than renamed with a blind string replacement.
 
 ## 6. Decisions recorded (2026-11-20)
 
-1. Canonical identity: `pf-svc-financial-data`.
-2. API key target: `PF_FINANCIAL_DATA_API_KEY`.
-3. Database secret target: `PF_FINANCIAL_DATA_DATABASE_URL`, separate from
+1. Canonical identity: `pf-svc-reference`.
+2. API key target: `PF_REFERENCE_API_KEY`.
+3. Database secret target: `PF_REFERENCE_DATABASE_URL`, separate from
    `PF_DATABASE_URL` used by `pf-svc-income`.
-4. Complete `RAT_* → FID_*` map approved as listed in the brief.
+4. Complete `RAT_* → REF_*` map approved as listed in the brief.
 5. Internal Python package `rates` remains unchanged in phase one.
 6. Migration, cutover, rollback, and cleanup execution authorized by `mrturo`.
 
