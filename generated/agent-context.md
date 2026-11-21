@@ -3,7 +3,7 @@
 > Generated from `improvements.json`. Do not edit manually.
 
 - Schema version: `1`
-- Items: `27`
+- Items: `28`
 
 ## Improvement references
 
@@ -251,4 +251,13 @@ Query the Project before making planning decisions; this generated file stores n
 - Affected: `pf-svc-income`, `pf-rates`
 - Next action: Closed: legacy secret deleted; active GCP resource names verified clean; historical Asset Inventory key records accepted as audit history.
 - Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-012-gcp-pf-payroll-identity-residue-cleanup/plan.md
+- Issue: pending coordination issue
+
+### IMP-013 — pf-rates-to-financial-data
+
+- Level: `L`; type: `data/schema`
+- Owner: `pf-base`
+- Affected: `pf-rates`, `pf-db`, `pf-common`, `pf-svc-income`, `pf-sheets`, `pf-postman`
+- Next action: Inventory consumers and prepare the reversible RAT_* to FID_* migration before execution.
+- Plan: https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-013-pf-rates-to-financial-data/plan.md
 - Issue: pending coordination issue
