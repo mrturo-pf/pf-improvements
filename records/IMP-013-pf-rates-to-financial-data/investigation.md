@@ -102,7 +102,7 @@ schema rather than renamed with a blind string replacement.
    `PF_DATABASE_URL` used by `pf-svc-income`.
 4. Complete `RAT_* → FID_*` map approved as listed in the brief.
 5. Internal Python package `rates` remains unchanged in phase one.
-6. Migration, cutover, rollback, and cleanup execution authorized by `a0a11b7`.
+6. Migration, cutover, rollback, and cleanup execution authorized by `mrturo`.
 
 The execution plan must still capture the concrete maintenance window, backup
 metadata, Go/No-Go record, and final evidence before destructive cleanup.

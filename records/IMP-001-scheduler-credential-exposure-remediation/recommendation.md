@@ -5,7 +5,7 @@ Status: closed
 Level: L
 Scope: Immediate containment and remediation of the credential exposed in GCP Scheduler inventory 01.
 Related artifacts: [brief](brief.md) · [investigation](../HIST-008-gcp-scheduler-credential-exposure/investigation.md) · [register](../../index.md)
-Approved: 2026-10-10 by a0a11b7 (explicit operational authorization)
+Approved: 2026-10-10 by mrturo (explicit operational authorization)
 Superseded-by: none
 
 ## 1. Executive recommendation

@@ -6,7 +6,7 @@ Level: L
 Scope: Build a safe, repeatable validation path that inventories PF HTTP endpoints and executes appropriate Postman requests automatically.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)
 Related Issue: [#35](https://github.com/mrturo-pf/pf-base/issues/35)
-Approved: 2026-10-28 by a0a11b7 (explicit authorization)
+Approved: 2026-10-28 by mrturo (explicit authorization)
 Superseded-by: none
 
 ## Objective

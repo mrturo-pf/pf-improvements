@@ -5,7 +5,7 @@ Status: closed (early owner-approved closure on 2026-11-20)
 Level: L
 Scope: Ecosystem-wide identity rename of the `pf-payroll` service/repository to `pf-svc-income`, including repository, source package, database ownership references, GCP resources, CI/CD, secrets, documentation, and compatibility.
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: design and execution authorized by `a0a11b7`; early closure accepted on 2026-11-20
+Approved: design and execution authorized by `mrturo`; early closure accepted on 2026-11-20
 Superseded-by: none
 
 > **Current status (2026-11-20):** investigation and implementation are closed. The
@@ -24,7 +24,7 @@ The requested target name is `pf-svc-income`. The user has now decided that the 
 
 Historical inspection baseline (the source repositories have since advanced):
 
-- root repository `pf-base` at `/Users/a0a11b7/Documents/reps-personal/pf`;
+- root repository `pf-base` at `/Users/mrturo/Documents/reps-personal/pf`;
 - service repository `pf-payroll`, remote `https://github.com/mrturo-pf/pf-payroll`;
 - schema repository `pf-db`, remote `https://github.com/mrturo-pf/pf-db`;
 - shared tooling repository `pf-common`;

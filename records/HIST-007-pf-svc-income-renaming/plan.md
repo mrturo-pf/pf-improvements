@@ -5,7 +5,7 @@ Status: closed (early owner-approved closure on 2026-11-20)
 Level: L
 Scope: Cross-repository/service identity rename and GCP migration.
 Related artifacts: [investigation](investigation.md) · [brief](brief.md) · [recommendation](recommendation.md)
-Approved: 2026-10-05 by a0a11b7 (conversation)
+Approved: 2026-10-05 by mrturo (conversation)
 Superseded-by: none
 
 > **Current status (2026-11-20): closed early.** The physical `PAY_* → INC_*` schema
@@ -354,7 +354,7 @@ During the window:
 
 Rollback is not merely redirecting traffic: stop the new service, run the tested schema downgrade, verify the original `PAY_*` schema and `PAY_MV_SUMARY` columns, restore old-service access, and run the parity suite. New migrations during the window invalidate this downgrade path unless explicitly re-approved.
 
-Status: closed early by `a0a11b7` on 2026-11-20; the 14-day observation period and representative monthly flow were waived.
+Status: closed early by `mrturo` on 2026-11-20; the 14-day observation period and representative monthly flow were waived.
 
 ### Contract parity and release acceptance
 

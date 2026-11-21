@@ -142,7 +142,7 @@ close the exposure-window review or artifact cleanup.
 
 ## 8. Owner acceptance of residual log limitation
 
-On 2026-10-10, a0a11b7 accepted the residual historical log limitation:
+On 2026-10-10, mrturo accepted the residual historical log limitation:
 Cloud Logging metadata was reviewed, but 31 of the 62 records lacked an HTTP
 status and further attribution was blocked by VPC Service Controls.
 

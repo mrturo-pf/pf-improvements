@@ -5,7 +5,7 @@ Status: closed
 Level: L
 Scope: Controlled remediation of the exposed GCP Scheduler credential.
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [investigation](../HIST-008-gcp-scheduler-credential-exposure/investigation.md)
-Approved: 2026-10-10 by a0a11b7 (explicit operational authorization)
+Approved: 2026-10-10 by mrturo (explicit operational authorization)
 Superseded-by: none
 
 > Containment was authorized and executed on 2026-10-10. Artifact cleanup, exposure-window
@@ -111,7 +111,7 @@ pass.
 
 - Commit: pending
 - Workflow run: pending
-- Operator: a0a11b7
+- Operator: mrturo
 - Rotation/revocation timestamp: 2026-10-10
 - Scheduled execution result: manual dispatch accepted; log confirmation pending VPC Service Controls resolution
 - Incident closure: closed

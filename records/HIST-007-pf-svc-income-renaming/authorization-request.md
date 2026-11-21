@@ -14,19 +14,19 @@ this document until the applicable approver records approval below.
 
 | Gate | Scope | Approval required from | Decision |
 |---|---|---|---|
-| A | Code and package changes in `pf-payroll`, including the approved package-boundary and compatibility work | `a0a11b7` | Approved |
-| B | Reversible `pf-db` migration and the bounded maintenance window | `a0a11b7` | Approved |
-| C | Postman collection and environment target-variable changes | `a0a11b7` | Approved |
-| D | Creation or migration of Artifact Registry, Cloud Run, service account, and secret resources | `a0a11b7` | Approved |
-| E | Consumer cutover and rollback window, including the 14-day minimum retention rule | `a0a11b7` | Approved |
-| F | Commits, pushes, and deployment approvals for each affected repository | `a0a11b7` | Approved |
+| A | Code and package changes in `pf-payroll`, including the approved package-boundary and compatibility work | `mrturo` | Approved |
+| B | Reversible `pf-db` migration and the bounded maintenance window | `mrturo` | Approved |
+| C | Postman collection and environment target-variable changes | `mrturo` | Approved |
+| D | Creation or migration of Artifact Registry, Cloud Run, service account, and secret resources | `mrturo` | Approved |
+| E | Consumer cutover and rollback window, including the 14-day minimum retention rule | `mrturo` | Approved |
+| F | Commits, pushes, and deployment approvals for each affected repository | `mrturo` | Approved |
 
 ## Conditions that apply to every approval
 
 - Use synthetic or explicitly approved operational data for validation.
 - Do not expose credentials, tokens, connection strings, or secret values in this
   record, logs, commits, or test fixtures.
-- Early closure accepted by `a0a11b7` on 2026-11-20 despite the absence of a
+- Early closure accepted by `mrturo` on 2026-11-20 despite the absence of a
   production pre-migration snapshot and completed representative monthly flow.
   The old service, image, account, and API key are no longer retained for rollback
   after the cleanup recorded below.
@@ -41,7 +41,7 @@ this document until the applicable approver records approval below.
 ### Gate A — `pf-payroll` code and package changes
 
 - **Decision:** Approved
-- **Approver:** `a0a11b7`
+- **Approver:** `mrturo`
 - **Date/time:** 2026-11-20 (explicit approval in chat)
 - **Scope restrictions or conditions:** Conditions in this authorization request apply.
 - **Approval reference:** User approval recorded in session
@@ -49,7 +49,7 @@ this document until the applicable approver records approval below.
 ### Gate B — `pf-db` migration and maintenance window
 
 - **Decision:** Approved
-- **Approver:** `a0a11b7`
+- **Approver:** `mrturo`
 - **Date/time:** 2026-11-20 (explicit approval in chat)
 - **Approved maintenance window:** Must be scheduled and recorded before mutation.
 - **Backup/restore readiness reference:** Must be recorded before mutation.
@@ -59,7 +59,7 @@ this document until the applicable approver records approval below.
 ### Gate C — Postman changes
 
 - **Decision:** Approved
-- **Approver:** `a0a11b7`
+- **Approver:** `mrturo`
 - **Date/time:** 2026-11-20 (explicit approval in chat)
 - **Approved collection/environment scope:** HIST-007 target and environment changes only.
 - **Approval reference:** User approval recorded in session
@@ -67,7 +67,7 @@ this document until the applicable approver records approval below.
 ### Gate D — GCP resources and secrets
 
 - **Decision:** Approved
-- **Approver:** `a0a11b7`
+- **Approver:** `mrturo`
 - **Date/time:** 2026-11-20 (explicit approval in chat)
 - **Approved resource scope:** HIST-007 resources only, using least privilege.
 - **Secret-handling conditions:** Never print or commit secret values.
@@ -76,18 +76,18 @@ this document until the applicable approver records approval below.
 ### Gate E — Consumer cutover and rollback
 
 - **Decision:** Approved
-- **Approver:** `a0a11b7`
+- **Approver:** `mrturo`
 - **Date/time:** 2026-11-20 (explicit approval in chat)
 - **Approved cutover window:** Closed early on 2026-11-20 by explicit owner
   acceptance. The 14-day observation period and representative monthly flow were
   waived for this cleanup decision.
-- **Rollback owner:** `a0a11b7` or explicitly delegated operator.
+- **Rollback owner:** `mrturo` or explicitly delegated operator.
 - **Approval reference:** User approval recorded in session
 
 ### Gate F — Commits, pushes, and deployments
 
 - **Decision:** Approved
-- **Approver:** `a0a11b7`
+- **Approver:** `mrturo`
 - **Date/time:** 2026-11-20 (explicit approval in chat)
 - **Repositories and allowed branches:** Affected HIST-007 repositories and dedicated working branches.
 - **Deployment/run approval reference:** User approval recorded in session

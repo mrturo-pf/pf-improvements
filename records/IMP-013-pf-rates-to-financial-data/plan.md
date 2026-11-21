@@ -5,7 +5,7 @@ Status: approved for execution
 Level: L  
 Scope: Cross-repository service identity, GCP, consumers, Postman, and `RAT_* → FID_*` schema migration.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md)
-Approved: 2026-11-20 by `a0a11b7`; execution authorized
+Approved: 2026-11-20 by `mrturo`; execution authorized
 Superseded-by: none
 
 ## 1. Gates

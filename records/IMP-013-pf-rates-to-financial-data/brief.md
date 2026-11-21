@@ -5,7 +5,7 @@ Status: approved for execution
 Level: L  
 Scope: Cross-repository service identity rename, GCP migration, consumer migration, and `RAT_* → FID_*` database migration.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: 2026-11-20 by `a0a11b7` (conversation)
+Approved: 2026-11-20 by `mrturo` (conversation)
 Superseded-by: none
 
 ## Objective

@@ -5,7 +5,7 @@ Status: closed (early owner-approved closure on 2026-11-20)
 Level: L
 Scope: Cross-repository/service identity rename from `pf-payroll` to `pf-svc-income`.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)
-Approved: 2026-10-05 by a0a11b7 (conversation)
+Approved: 2026-10-05 by mrturo (conversation)
 Superseded-by: none
 
 > **Current status (2026-11-20):** HIST-007 is closed after the owner-approved early

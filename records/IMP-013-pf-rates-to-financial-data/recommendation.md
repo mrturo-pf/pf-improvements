@@ -5,7 +5,7 @@ Status: approved for execution
 Level: L  
 Scope: Cross-repository financial-data service identity and database-prefix migration.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md)
-Approved: 2026-11-20 by `a0a11b7` (conversation)
+Approved: 2026-11-20 by `mrturo` (conversation)
 Superseded-by: none
 
 ## 1. Executive recommendation
