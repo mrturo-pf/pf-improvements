@@ -72,16 +72,16 @@ transition.
 | Artifact | Path | Purpose | Lifecycle |
 | --- | --- | --- | --- |
 | Investigation | `modules/*/docs/investigations/<slug>.md` | Evidence and current-state analysis | Closed after findings are resolved; may receive factual corrections |
-| Brief | `modules/*/improvements/<ID>-<slug>/<slug>-brief.md` | Problem, constraints, acceptance criteria, and questions for design | Frozen after approval; supersede rather than silently rewrite |
-| Recommendation | `modules/*/improvements/<ID>-<slug>/<slug>-recommendation.md` | Design decision, alternatives, contracts, and acceptance criteria | Decision record; amend only when the decision changes |
-| Plan | `modules/*/improvements/<ID>-<slug>/<slug>-plan.md` | Ordered implementation slices and live progress | Living document through implementation and rollout |
+| Brief | `modules/*/records/<ID>-<slug>/<slug>-brief.md` | Problem, constraints, acceptance criteria, and questions for design | Frozen after approval; supersede rather than silently rewrite |
+| Recommendation | `modules/*/records/<ID>-<slug>/<slug>-recommendation.md` | Design decision, alternatives, contracts, and acceptance criteria | Decision record; amend only when the decision changes |
+| Plan | `modules/*/records/<ID>-<slug>/<slug>-plan.md` | Ordered implementation slices and live progress | Living document through implementation and rollout |
 
 For a cross-repository change, artifacts live in the repository/module that
 initiated the change and are linked from the other affected modules' docs or
 README files through `Related artifacts`. The initiating repository
 owns the coordination record; each affected repository still owns its code,
 tests, migrations, and release status. If the change is genuinely ecosystem-
-wide rather than initiated by one module, use the root `improvements/<ID>-<slug>/` area.
+wide rather than initiated by one module, use the root `records/<ID>-<slug>/` area.
 
 ## Operational tracking platform
 

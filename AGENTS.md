@@ -30,7 +30,7 @@ Do not add current task status, priority, or queue rank to repository metadata.
 Use one directory per improvement:
 
 ```text
-improvements/<ID>-<slug>/
+records/<ID>-<slug>/
 ├── investigation.md
 ├── brief.md
 ├── recommendation.md

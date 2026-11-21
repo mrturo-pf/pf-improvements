@@ -50,7 +50,7 @@ owner: pf-base
 next_action: Compare route, OpenAPI, API docs, and Postman before changing a contract.
 resolution: validated
 related_artifacts:
-  - https://github.com/mrturo-pf/pf-improvements/blob/main/improvements/IMP-006-ecosystem-http-error-baseline/evidence-template.md
+  - https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-006-ecosystem-http-error-baseline/evidence-template.md
 ```
 
 ### SYN-002 — Invalid client input

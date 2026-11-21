@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "improvements/**"
+      - "records/**"
       - "generated/**"
       - "improvements.json"
       - "scripts/validate-improvements.py"

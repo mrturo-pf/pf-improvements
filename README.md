@@ -19,10 +19,10 @@ rank as editable task state.
 
 ## Layout
 
-Each improvement has one directory under `improvements/`:
+Each improvement has one directory under `records/`:
 
 ```text
-improvements/<ID>-<slug>/
+records/<ID>-<slug>/
 ├── investigation.md
 ├── brief.md
 ├── recommendation.md
