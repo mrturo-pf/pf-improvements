@@ -14,7 +14,8 @@ Evaluate and, if approved by the implementation gates, introduce a single GCP-na
 entry point for the PF backend services while preserving scale-to-zero and keeping
 incremental cost at zero or as close to zero as the actual GCP pricing permits.
 
-The preferred candidate is Google Cloud API Gateway routing to:
+The selected architecture is Google Cloud API Gateway routing to a dedicated
+scale-to-zero `pf-gateway-proxy`, which forwards to:
 
 ```text
 pf-svc-reference
@@ -25,7 +26,8 @@ pf-svc-income
 
 - Generated `gateway.dev` hostname in the near-zero-cost phase and documented service
   path prefixes; custom domains are explicitly out of scope for this phase;
-- deterministic routing to existing backend paths;
+- deterministic routing to existing backend paths through prefix stripping in the
+  proxy;
 - preservation of `X-Request-ID` and `X-API-Key` during compatibility rollout;
 - gateway-to-Cloud-Run authentication through a least-privilege service account;
 - unchanged backend response bodies/statuses in the first phase;
@@ -45,7 +47,7 @@ egress. The implementation must document shared billing-account usage and expect
 monthly cost at current traffic.
 
 No new VM, NAT gateway, load balancer, Cloud SQL instance, or always-on proxy is in
-scope for the preferred design.
+scope. The selected proxy is Cloud Run with `min-instances=0` and bounded resources.
 
 ## Non-objectives
 
@@ -54,7 +56,8 @@ scope for the preferred design.
 - introducing Apigee or enterprise API-management features;
 - locking down direct Cloud Run URLs before a separate enforcement gate passes;
 - changing the `X-Request-ID` contract;
-- adding a database, queue, or permanent proxy service solely for routing.
+- adding a database, queue, or permanent always-on proxy solely for routing;
+  the selected scale-to-zero `pf-gateway-proxy` is explicitly in scope.
 
 ## Acceptance criteria
 

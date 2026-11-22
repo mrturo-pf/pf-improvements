@@ -10,8 +10,12 @@ Superseded-by: none
 
 ## 1. Executive recommendation
 
-Adopt **Google Cloud API Gateway** as the preferred gateway candidate and implement it
-only after the pricing, IAM, OpenAPI, and connectivity gates in the plan pass.
+Adopt **Google Cloud API Gateway** as the preferred gateway technology and implement it
+only after the pricing, IAM, OpenAPI, and connectivity gates in the plan pass. The live
+route test invalidated the assumption that one prefixed gateway can preserve all
+parameterized backend routes with `CONSTANT_ADDRESS`. The selected architecture is now
+option B: one API Gateway plus one scale-to-zero Cloud Run proxy that strips the public
+service prefix and forwards the original backend path.
 
 API Gateway is the best fit for this ecosystem because it is managed, has no
 user-managed always-on gateway compute, supports OpenAPI-based routing, can invoke
@@ -55,11 +59,14 @@ Alternatives rejected for the first phase:
 
 ## 3. Routing and security design
 
-Use a dedicated gateway OpenAPI document with explicit path prefixes and an explicit
-route map. Do not rely on a multi-segment wildcard until its rewrite behavior is proven;
-prefer explicit routes or a tested `CONSTANT_ADDRESS`/rewrite strategy. The gateway's
-backend integration must target the existing Cloud Run service URLs and use a dedicated
-least-privilege service account with only the required `run.invoker` permissions.
+Use one API Gateway with explicit prefixed routes targeting a dedicated
+`pf-gateway-proxy` Cloud Run service. The proxy strips `/reference` or `/income`,
+forwards the original path/query/body to the selected backend, preserves
+`X-Request-ID` and application headers, and returns the backend response unchanged.
+The proxy must remain `min-instances=0`, run in `us-central1`, use service-to-service
+identity tokens, and have bounded timeouts/retries. Each backend integration must use a
+dedicated least-privilege service account with only the required `run.invoker`
+permissions.
 
 Do not put secret API-key values in the gateway configuration, OpenAPI document, Git,
 or logs. During the facade phase, forward the existing `X-API-Key` header to retain
@@ -111,7 +118,11 @@ both services.
 
 ## 6. Go/No-Go recommendation
 
-**Go** for a read-only/facade proof of concept after price and IAM confirmation.
+**Go** for the health/read-only proof of concept, which is already validated.
+
+The route-preserving architecture decision is approved: implement one API Gateway plus
+one `pf-gateway-proxy` Cloud Run service. Full route expansion remains gated on the
+proxy contract, IAM, tests, cost validation, and rollback evidence.
 
 **No-Go** for direct-URL lock-down until:
 

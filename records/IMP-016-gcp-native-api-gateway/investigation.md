@@ -139,7 +139,43 @@ The gateway service account alone cannot preserve the existing internal call pat
   `request_id` logs as the authoritative correlation evidence.
 - Record the actual first-month gateway cost before considering a different architecture.
 
-## 6. Evidence required before implementation
+## 6. Current route inventory
+
+The live OpenAPI documents were inspected on 2026-11-22:
+
+- `pf-svc-reference`: 19 paths;
+- `pf-svc-income`: 18 paths;
+- the facade currently exposes four reviewed paths: two health routes and one
+  read-only route per service.
+
+The remaining 33 backend paths require an explicit route map before they are exposed
+through the gateway. No multi-segment wildcard is assumed safe by default.
+
+A live test showed that the single-gateway prefixed map cannot currently preserve
+parameterized backend routes with `CONSTANT_ADDRESS`: `GET /income/payroll/556` reached
+`pf-svc-income` as `/payroll/{period_id}` and returned `422`. API Gateway did not
+substitute the path parameter in the backend address.
+
+The viable options are:
+
+1. change backends or add a proxy to strip prefixes (more application/operations cost);
+2. use one API Gateway per service with the original backend paths and
+   `APPEND_PATH_TO_ADDRESS` (still managed and near-zero, but two hostnames); or
+3. keep the current four-route facade until a route-rewrite design is approved.
+
+A single prefixed gateway must not be expanded to all routes without choosing one of
+these options.
+
+## 7. Quota conclusion
+
+Official API Gateway documentation confirms custom metrics/quotas through
+`x-google-management` and `x-google-quota`, using units such as `1/min/{project}`.
+It does not confirm useful attribution of anonymous requests without Google consumer
+keys to a consumer project. Therefore the POC does not claim per-client or custom
+project quotas are available; Cloud Run max instances and budget/volume alerts remain
+the fallback controls until tested.
+
+## 8. Evidence required before implementation
 
 - Current API route/OpenAPI inventory for both services;
 - confirmed API Gateway pricing/free-tier/region data;
@@ -150,11 +186,12 @@ The gateway service account alone cannot preserve the existing internal call pat
 - facade and direct-URL rollback tests;
 - explicit decision on whether/when direct Cloud Run URLs may be locked down.
 
-## 7. Evidence sources
+## 9. Evidence sources
 
 Consulted: 2026-11-22.
 
 - [API Gateway pricing](https://cloud.google.com/api-gateway/pricing)
 - [API Gateway deployment model](https://docs.cloud.google.com/api-gateway/docs/deployment-model)
 - [API Gateway quotas](https://docs.cloud.google.com/api-gateway/docs/quotas)
+- [OpenAPI quota extensions](https://docs.cloud.google.com/api-gateway/docs/oasv2-extensions#x-google-management)
 - [API Gateway with load balancing](https://docs.cloud.google.com/api-gateway/docs/gateway-load-balancing)
