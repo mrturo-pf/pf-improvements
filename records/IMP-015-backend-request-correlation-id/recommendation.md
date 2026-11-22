@@ -19,7 +19,16 @@ The effective ID is generated when absent, returned in the response, and forward
 unchanged by every synchronous backend client. This gives callers a useful ID without
 forcing existing integrations to change before adoption.
 
-## 2. Why UUIDv4 instead of a numeric sequence
+## 2. Contract example
+
+```http
+X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
+```
+
+The same canonical lowercase UUIDv4 example should be used in API documentation and
+Postman examples.
+
+## 3. Why UUIDv4 instead of a numeric sequence
 
 A shared numeric counter would require coordination, persistence, and concurrency
 handling, while revealing request volume. UUIDv4 is globally unique enough for log
@@ -27,43 +36,54 @@ correlation, works across independently scaled Cloud Run instances, and introduc
 paid or always-on infrastructure. "Correlativo" should mean correlation, not a
 predictable public sequence.
 
-## 3. Validation policy
+## 4. Validation policy
 
-The implementation should accept canonical UUIDv4 values only. For a missing header,
-generate a new value. For malformed or oversized values, return `400 Bad Request`
-without logging or echoing the raw value. This makes the common format enforceable
-while preserving compatibility for clients that omit the header.
+The implementation should accept UUIDv4 values only and normalize valid uppercase
+input to canonical lowercase. For a missing header, generate a new value. For malformed
+or oversized values, return `400 Bad Request` without logging or echoing the raw value.
+Generate a separate valid request ID for that rejected request context, log only the ID
+and a reason code (`request_id_malformed` or `request_id_too_long`), and return the generated
+ID in the error response header. Duplicate headers and comma-separated values use
+`request_id_malformed`. The `400` body must use the service's existing error response
+schema with a stable message/code; it must not include the raw invalid value.
 
 The header should be capped at 64 characters and the value should be bound as the
 structured field `request_id`. Do not use the ID as an authorization or data-access
 credential.
 
-## 4. Request context design
+## 5. Request context design
 
 Use `structlog.contextvars` (or the service's equivalent context mechanism) in a small
-middleware component:
+middleware component applied to normal, health, and readiness endpoints by default:
 
 - clear stale context before binding;
 - bind `request_id` once;
-- log sanitized request completion metadata and status;
-- set the response header;
+- log a request-start event and sanitized request completion metadata/status, including
+  unhandled `500` paths;
+- set the response header, including generated IDs on rejected requests;
 - clear context in `finally`, including cancellation and exception paths.
 
-The middleware must be added consistently to both services and tested for context
-leakage when the same worker handles sequential requests.
+The middleware must be added consistently to both services, run before authentication
+and authorization so `401`/`403` responses carry an ID, and be tested for context leakage
+when the same worker handles sequential requests. A malformed correlation header takes
+precedence over API-key validation and returns `400`.
 
-## 5. Downstream propagation
+## 6. Downstream propagation
 
-Update the `pf-svc-income` HTTP client to read the request-scoped ID and add
-`X-Request-ID` to its existing `X-API-Key` headers. Retries reuse the same header.
+Update the `pf-svc-income` HTTP client so each outbound call constructs its headers
+from the current request context and adds `X-Request-ID` alongside `X-API-Key`.
+The header must be added per call, not stored as one process-wide fixed header set.
+Retries reuse the same header value for that call.
 `pf-svc-reference` applies the same inbound middleware, so its logs automatically join
 the originating request. Future backend clients must follow the same adapter contract.
 
 If a backend call can occur outside an inbound request, the client should generate a
 local ID at that boundary and bind/log it rather than sending an empty header. This
-case must be explicit and tested, not handled by a silent global fallback.
+case must be explicit and tested, not handled by a silent global fallback. Before rollout,
+verify that any gateway/proxy preserves the contract and does not overwrite the header;
+if a browser frontend consumes responses, expose it through CORS.
 
-## 6. Rejected alternatives
+## 7. Rejected alternatives
 
 - Numeric database-backed request sequence: unnecessary state, predictable, and not
   safe as a distributed correlation mechanism.
@@ -75,7 +95,7 @@ case must be explicit and tested, not handled by a silent global fallback.
 - Requiring all existing clients to add the header immediately: avoidable compatibility
   break because the backend can generate it.
 
-## 7. Compatibility impact
+## 8. Compatibility impact
 
 This is an additive HTTP behavior when the header is omitted and a generated ID is
 returned. A present malformed or oversized header introduces a documented `400` contract;

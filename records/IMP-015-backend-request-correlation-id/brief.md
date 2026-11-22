@@ -27,10 +27,15 @@ the complete request and propagated to downstream PF backend calls.
 
 ```text
 Request header:  X-Request-ID
-Format:         lowercase canonical UUIDv4
+Format:         canonical UUIDv4, normalized to lowercase
+Maximum length: 64 characters
 Log field:      request_id
 Response:       echo effective X-Request-ID
 Missing:        generate at first backend boundary
+Invalid:        400 Bad Request; raw value never logged or echoed
+Duplicate:      400 Bad Request for duplicate or comma-separated values;
+                reason code `request_id_malformed`
+Reason codes:   request_id_malformed, request_id_too_long
 ```
 
 Example:
@@ -46,18 +51,30 @@ X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
 - no change to API-key authentication;
 - no logging of request bodies, credentials, payroll data, or personal data;
 - no requirement for external callers to generate an ID before using the API;
-- no silent creation of a new ID during retries or downstream calls.
+- no silent creation of a new ID during retries or downstream calls;
+- a present malformed, oversized, duplicate, or comma-separated header is never
+  normalized into a valid ID; it receives `400 Bad Request`.
+- a backend operation with no inbound HTTP request context is an explicit exception:
+  it generates one local ID at its own boundary and uses it for that operation.
 
 ## Acceptance criteria
 
 1. Every request handled by either backend has exactly one effective `request_id`.
-2. Missing IDs are generated; valid IDs are preserved; malformed/oversized values are
-   handled by the approved validation policy and never injected into logs.
+2. Missing IDs are generated; valid UUIDv4 values are normalized to lowercase and
+   preserved; malformed or oversized values receive `400 Bad Request` and are never
+   logged or echoed.
 3. The effective ID is present in structured log events for request start, completion,
-   and handled error paths.
+   handled errors, and unhandled `500` responses; invalid-header events use only the
+   generated error-context ID plus `request_id_malformed` or `request_id_too_long`.
 4. `pf-svc-income` forwards the same ID to `pf-svc-reference`, including retries.
 5. Responses expose the effective ID in `X-Request-ID`.
 6. The same format and semantics are documented for future `pf-svc-*` services.
 7. Existing clients that omit the header remain compatible.
 8. Tests cover both services, propagation, retries, errors, and cleanup between requests.
 9. Documentation and Postman examples are synchronized without adding secrets.
+10. Correlation middleware runs before authentication/authorization, so `401` and `403`
+    responses carry the ID and invalid correlation headers take precedence with `400`.
+11. Any proxy/gateway contract and browser CORS exposure requirement is documented
+    before rollout.
+12. OpenAPI documents `X-Request-ID` as optional input and documents the new `400`
+    error response and stable reason codes.

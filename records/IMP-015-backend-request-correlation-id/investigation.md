@@ -41,9 +41,13 @@ Requests are not rejected merely because the header was absent.
 | Item | Decision |
 |---|---|
 | Request header | `X-Request-ID` |
-| Value format | Canonical lowercase UUID version 4, for example `550e8400-e29b-41d4-a716-446655440000` |
+| Value format | Canonical UUID version 4, normalized to lowercase; for example `550e8400-e29b-41d4-a716-446655440000` |
+| Maximum length | 64 characters |
 | Missing header | Generate a UUIDv4 at the first backend boundary |
-| Invalid header | Reject with `400 Bad Request`; never log or echo the unvalidated value |
+| Invalid/oversized header | Reject with `400 Bad Request`; never log or echo the raw value |
+| Invalid request ID | Generate a separate valid ID for the rejected request context, log only that ID and a reason code, and return it in the error response header |
+| Invalid reason codes | `request_id_malformed` or `request_id_too_long` |
+| Duplicate/multiple values | Reject duplicate headers and comma-separated values with `400 Bad Request` |
 | Response header | Echo the effective `X-Request-ID` so callers can report it |
 | Structured log field | `request_id` |
 | Propagation | Forward the exact effective value on every backend-to-backend HTTP request |
@@ -73,20 +77,30 @@ ID across retries and must not generate a new value for each outbound attempt.
 - Existing clients that send only `X-API-Key` remain compatible because the backend
   generates the missing ID.
 - A response header is needed for clients to discover a generated ID.
-- Header values must be length-limited and character-validated before binding to logs
-  or returning them, preventing log injection and response-header errors.
+- Header values must be length-limited and UUID-validated before binding to logs or
+  returning them. Uppercase UUID input is normalized to lowercase; malformed or oversized
+  input receives `400` and is never logged or echoed.
+- The middleware should cover health and readiness endpoints by default. Any probe
+  exception requires an explicit documented decision and tests.
+- The middleware runs before authentication and authorization, so `401` and `403`
+  responses carry the request ID; an invalid correlation header takes precedence and
+  returns `400`.
 - Never include API keys, authorization values, request bodies, payslips, RUTs, salaries,
   or health data in correlation logs.
-- Health and readiness endpoints should use the same middleware unless a documented
-  platform probe exception is approved; they must not silently create a separate
-  tracing model.
+- Unhandled `500` responses must retain the generated/validated request ID in the
+  response header and in the error log event.
 - Cloud Run request logs and application logs may have different transports, so the
   application field remains the source of truth for joining service events.
+- Before rollout, verify that any gateway/proxy does not overwrite `X-Request-ID` with
+  a non-conforming value. If a browser frontend reads the response, configure
+  `Access-Control-Expose-Headers: X-Request-ID`; backend-only consumers do not need it.
 
 ## 6. Evidence needed during implementation
 
 - Current route/middleware inventory for both services.
-- Contract tests for missing, valid, malformed, and oversized headers.
+- Contract tests for missing/valid headers, uppercase normalization, non-canonical UUID
+  forms (no hyphens, braces, `urn:uuid:`), non-v4 UUIDs, duplicate/comma-separated
+  values, malformed values, and oversized headers.
 - Outbound propagation test from income to a stubbed reference service.
 - Retry test proving one ID is preserved across attempts.
 - Error-path test proving the ID appears in logs and response headers.
