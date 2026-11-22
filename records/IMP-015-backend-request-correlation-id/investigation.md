@@ -5,7 +5,7 @@ Status: completed
 Level: M  
 Scope: `pf-svc-reference`, `pf-svc-income`, backend-to-backend HTTP calls, structured logs, and API documentation.  
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)  
-Approved: investigation and design preparation by `a0a11b7`  
+Approved: investigation and design preparation by `mrturo`
 Superseded-by: none
 
 ## 1. Current runtime shape

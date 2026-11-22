@@ -5,7 +5,7 @@ Status: observation
 Level: M  
 Scope: Common request identity for PF backend services and synchronous downstream calls.  
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)  
-Approved: design preparation by `a0a11b7`  
+Approved: design preparation by `mrturo`
 Superseded-by: none
 
 ## Objective

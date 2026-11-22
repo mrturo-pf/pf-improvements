@@ -5,7 +5,7 @@ Status: observation
 Level: M  
 Scope: FastAPI middleware, structured logging, backend HTTP propagation, and API contracts.  
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md)  
-Approved: design preparation by `a0a11b7`  
+Approved: design preparation by `mrturo`
 Superseded-by: none
 
 ## 1. Executive recommendation

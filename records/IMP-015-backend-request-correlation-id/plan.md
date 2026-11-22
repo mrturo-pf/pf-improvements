@@ -1,11 +1,11 @@
 # Plan: backend request correlation ID
 
 Date: 2026-11-22  
-Status: proposed  
+Status: implementation-in-progress
 Level: M  
 Scope: `pf-svc-reference`, `pf-svc-income`, shared HTTP conventions, and API evidence.  
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md)  
-Approved: design preparation only by `a0a11b7`; implementation requires a follow-up authorization  
+Approved: 2026-11-22 by `mrturo`; implementation started
 Superseded-by: none
 
 ## 1. Gates before implementation
@@ -17,64 +17,68 @@ Superseded-by: none
       for the rejected request context and return that ID in the error response header.
 - [x] Apply the same middleware to health/readiness endpoints by default; any exception
       requires an explicit documented decision.
-- [ ] Inventory all outbound HTTP paths in both services and identify any calls made
-      outside an inbound request context.
+- [x] Inventory current outbound HTTP paths: `pf-svc-income` calls
+      `pf-svc-reference` through `_http_client.py`; `pf-svc-reference` has external
+      provider calls only. No additional PF backend-to-backend client or inbound-free
+      operation was found; re-run this inventory when adding a new backend client.
 - [x] Confirm the log field name `request_id`; document structured-log search examples
       during implementation.
 
 ## 2. Shared contract and implementation
 
-- [ ] Add a small request-correlation utility with generation and validation rules.
-- [ ] Add request middleware to `pf-svc-reference`.
-- [ ] Add request middleware to `pf-svc-income`.
-- [ ] Bind the effective ID through `structlog.contextvars` for the full request.
-- [ ] Run correlation middleware outside authentication/authorization so `401` and
+- [x] Add a small request-correlation utility with generation and validation rules.
+- [x] Add request middleware to `pf-svc-reference`.
+- [x] Add request middleware to `pf-svc-income`.
+- [x] Bind the effective ID through `structlog.contextvars` for the full request.
+- [x] Run correlation middleware outside authentication/authorization so `401` and
       `403` responses also carry an ID; an invalid correlation header takes precedence
       and returns `400` before API-key validation.
-- [ ] Return the effective ID as `X-Request-ID` on successful, handled-error, and
+- [x] Return the effective ID as `X-Request-ID` on successful, handled-error, and
       unhandled-`500` responses, including generated IDs for rejected invalid-header
       requests.
-- [ ] Clear request context in `finally` paths to prevent worker leakage.
-- [ ] Update the `pf-svc-income` HTTP client to construct headers per outbound call,
+- [x] Clear request context in `finally` paths to prevent worker leakage.
+- [x] Update the `pf-svc-income` HTTP client to construct headers per outbound call,
       forward the same ID to `pf-svc-reference`, and preserve it across retries.
-- [ ] Implement and test outbound calls with no inbound request context: generate one
-      local ID at that operation boundary and do not silently create one per retry.
+- [x] Implement outbound calls with no inbound request context: generate one local ID
+      at that operation boundary and do not silently create one per retry; propagation
+      integration coverage remains pending.
 
 ## 3. Tests and acceptance evidence
 
-- [ ] Unit-test UUID generation and canonical validation, including rejection of
+- [x] Unit-test UUID generation and canonical validation, including rejection of
       no-hyphen UUIDs, braced UUIDs, `urn:uuid:` values, and non-v4 UUIDs; validate with
       the canonical 8-4-4-4-12 shape and UUID version 4.
-- [ ] Test missing and valid headers, uppercase normalization, duplicate headers, and
+- [x] Test missing and valid headers, uppercase normalization, duplicate headers, and
       comma-separated values, plus `400` responses for malformed and oversized headers
       without logging or echoing their raw values; assert a generated error-context ID
       and reason code are returned.
-- [ ] Test response-header echoing on success and handled errors.
+- [x] Test response-header echoing on success, handled errors, and authentication
+      failures.
 - [ ] Test that `401`/`403` responses carry `X-Request-ID`, and that an invalid
       correlation header with an invalid API key returns `400`.
-- [ ] Test request-context cleanup across sequential requests in one worker.
+- [x] Test request-context cleanup across sequential requests in one worker.
 - [ ] Test income-to-reference propagation with a stubbed HTTP server.
-- [ ] Test that retries reuse one ID rather than generating per attempt.
-- [ ] Test exception/cancellation paths for context cleanup, logging metadata, and
+- [x] Test that retries reuse one ID rather than generating per attempt.
+- [x] Test exception/cancellation paths for context cleanup, logging metadata, and
       request ID headers on unhandled `500` responses.
-- [ ] Test that request-start and request-completion events share the same
+- [x] Test that request-start and request-completion events share the same
       `request_id`.
 - [ ] Capture sanitized evidence showing identical `request_id` values in both services.
 
 ## 4. Contract and documentation synchronization
 
-- [ ] Update both services' `docs/api.md` and deployment/operations documentation.
-- [ ] Add the header to OpenAPI as optional input, document the new `400` response,
+- [x] Update both services' API and deployment documentation.
+- [x] Add the header to OpenAPI as optional input, document the new `400` response,
       and describe the stable error body/reason codes without making the header a hard
       client requirement when omission is intentionally supported.
-- [ ] Update the shared Postman collection with a generated/static example value,
+- [x] Update the shared Postman collection with a static canonical UUIDv4 example,
       never a secret.
-- [ ] Document Cloud Logging queries using `jsonPayload.request_id` or the actual
-      emitted structlog field shape.
+- [x] Document Cloud Logging queries using `jsonPayload.request_id` for the
+      structured application log field.
 - [ ] Add an adoption note for future `pf-svc-*` services.
-- [ ] Verify any API gateway/proxy preserves the contract or does not overwrite
-      `X-Request-ID`; if a browser frontend consumes the response, expose the header
-      through CORS with `Access-Control-Expose-Headers`.
+- [x] Verify the current repositories contain no API gateway or CORS middleware;
+      any future gateway must preserve `X-Request-ID`, and browser-facing responses
+      must expose it with `Access-Control-Expose-Headers`.
 
 ## 5. Rollout order
 
