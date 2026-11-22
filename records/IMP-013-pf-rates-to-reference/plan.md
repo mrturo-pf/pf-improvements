@@ -82,25 +82,27 @@ Superseded-by: none
 
 Implementation and cutover validation are complete. On 2026-11-22 the owner waived
 the remainder of the rollback window and authorized continuation to cleanup review.
-The improvement remains open because the read-only GCP inventory shows that the
-active Cloud Run and Artifact Registry resources are still named `pf-rates`, while
-`pf-svc-reference` is the canonical logical identity used by the application,
-secrets, workflows, and consumers.
+The improvement remains open while the physical cutover is observed. The parallel
+physical resources now exist and the new service is active:
 
 Sanitized active GCP inventory (2026-11-22):
 
-- Cloud Run: `pf-rates` at 100% traffic on `pf-rates-00081-57l`;
-- Artifact Registry: `pf-rates` repository;
-- runtime/deployer accounts: `pf-rates@...` and `pf-rates-deployer@...`;
+- legacy Cloud Run: `pf-rates` at 100% traffic on `pf-rates-00081-57l`;
+- new Cloud Run: `pf-svc-reference` at 100% traffic on
+  `pf-svc-reference-00001-9f2`;
+- new Cloud Run URL: `https://pf-svc-reference-646185261155.us-central1.run.app`;
+- legacy Artifact Registry: `pf-rates` repository;
+- new Artifact Registry: `pf-svc-reference` repository;
+- new runtime/deployer accounts: `pf-svc-reference@...` and
+  `pf-svc-reference-deployer@...`;
 - active reference secrets: `PF_REFERENCE_DATABASE_URL` and `PF_REFERENCE_API_KEY`;
-- legacy secrets still present for rollback/audit classification: `PF_RATES_DATABASE_URL`
-  and `PF_RATES_API_KEY`;
-- no active Cloud Run or Artifact Registry resource named `pf-svc-reference`.
+- legacy secrets retained for rollback/audit classification:
+  `PF_RATES_DATABASE_URL` and `PF_RATES_API_KEY`.
 
-Therefore cleanup is not performed blindly: deleting `pf-rates` resources would
-remove the active service. A separate owner decision is required to either retain
-these resources as the approved physical resource names or execute a parallel
-physical resource rename/cutover.
+`pf-svc-income` was updated to resolve the physical `pf-svc-reference` Cloud Run
+service through PR #21. The legacy `pf-rates` service remains available during the
+observation period; it must not be deleted until consumer traffic and rollback
+validation are complete.
 
 Remaining actions:
 
@@ -111,12 +113,11 @@ Remaining actions:
 3. Record any incident, error-rate change, latency regression, or consumer drift in
    this plan with sanitized evidence.
 4. Record the owner decision on the physical GCP resource names.
-5. If the physical names are retained, classify `pf-rates` as the approved active
-   resource identity and remove only demonstrably unused legacy aliases/secrets after
-   a final dependency check. If physical renaming is required, create a new parallel
-   service and execute a separate cutover plan.
-6. Remove only approved unused resources and classify provider-retained Cloud Asset
-   Inventory history separately from active resources.
+5. Observe traffic and validate `pf-svc-income`, Sheets, Postman, and representative
+   financial-data flows against the new physical service.
+6. Remove only approved unused legacy resources and secrets after the observation
+   window; classify provider-retained Cloud Asset Inventory history separately from
+   active resources.
 7. Mark this improvement closed only after cleanup and final inventory validation.
 
 ## 4. Safety and quality rules
@@ -140,4 +141,5 @@ Remaining actions:
 | 2026-11-22 | validated | Local migration `upgrade → downgrade 0024 → upgrade` passed; `pf-rates` full suite passed (280); `pf-svc-income` full suite passed (574); `pf-sheets` passed (100); Postman local smoke passed (23 requests, 124 assertions, 0 failures); local integration workflow passed with cleanup. | Local test runs; Postman smoke report; sanitized local integration output |
 | 2026-11-22 | deployed | `pf-svc-reference` deployment workflow 44939969150 passed tests, build/security, deployment, and health validation. Cloud Run traffic is at 100% on `pf-rates-00081-57l`. Secret Manager reference secrets and deployer/runtime IAM were configured through the approved Cloud Shell/GCP path. | https://github.com/mrturo-pf/pf-rates/actions/runs/44939969150; Cloud Run read-only inventory |
 | 2026-11-22 | postman-synced | Postman LOCAL/GCP environments synchronized successfully after updating `PF_REFERENCE_API_KEY_GCP` and `PF_SVC_INCOME_API_KEY_GCP` through Cloud Shell. | https://github.com/mrturo-pf/pf-postman/actions/runs/44964058801 |
-| 2026-11-22 | rollback-waived | Owner waived the remaining rollback window and authorized cleanup review. Read-only GCP inventory was captured; no active resource was deleted because the physical `pf-rates` Cloud Run/Artifact Registry names are still active. | Owner decision recorded in conversation; Cloud Run/Artifact Registry/Secret Manager inventory |
+| 2026-11-22 | rollback-waived | Owner waived the remaining rollback window and authorized cleanup review. | Owner decision recorded in conversation; Cloud Run/Artifact Registry/Secret Manager inventory |
+| 2026-11-22 | physical-cutover | Created `pf-svc-reference` Cloud Run/Artifact Registry resources, dedicated runtime/deployer identities, copied the active image digest, deployed the new revision, and moved 100% traffic to `pf-svc-reference-00001-9f2`. Updated `pf-svc-income` to resolve the new physical service through PR #21. | Cloud Run read-only inventory; PR #21; deployment command output |
