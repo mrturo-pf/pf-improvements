@@ -3,7 +3,7 @@
 > Generated from `improvements.json`. Do not edit manually.
 
 - Schema version: `1`
-- Items: `29`
+- Items: `30`
 
 ## Improvement references
 
@@ -269,4 +269,13 @@ Query the Project before making planning decisions; this generated file stores n
 - Affected: `pf-svc-reference`, `pf-svc-income`, `pf-postman`
 - Next action: Completed: both backend services deployed with request correlation and production log propagation validated.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-015-backend-request-correlation-id/plan.md
+- Issue: pending coordination issue
+
+### IMP-016 — gcp-native-api-gateway
+
+- Level: `L`; type: `architecture`
+- Owner: `pf-common`
+- Affected: `pf-common`, `pf-svc-reference`, `pf-svc-income`, `pf-postman`
+- Next action: Confirm API Gateway pricing, hostname, OpenAPI route map, and IAM model before a facade proof of concept.
+- Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-016-gcp-native-api-gateway/plan.md
 - Issue: pending coordination issue

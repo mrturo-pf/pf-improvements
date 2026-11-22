@@ -458,6 +458,24 @@
       "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-015-backend-request-correlation-id/plan.md",
       "next_action": "Completed: both backend services deployed with request correlation and production log propagation validated.",
       "metadata_status": "implementation completed; production evidence recorded in the plan"
+    },
+    {
+      "id": "IMP-016",
+      "slug": "gcp-native-api-gateway",
+      "level": "L",
+      "type": "architecture",
+      "owner": "pf-common",
+      "affected": [
+        "pf-common",
+        "pf-svc-reference",
+        "pf-svc-income",
+        "pf-postman"
+      ],
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "issue_url": null,
+      "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-016-gcp-native-api-gateway/plan.md",
+      "next_action": "Confirm API Gateway pricing, hostname, OpenAPI route map, and IAM model before a facade proof of concept.",
+      "metadata_status": "proposal artifacts prepared; implementation not authorized"
     }
   ]
 }

@@ -38,6 +38,7 @@ This index intentionally does not duplicate those fields.
 | `IMP-012` | `gcp-pf-payroll-identity-residue-cleanup` | Issue pending intake | [artifact](records/IMP-012-gcp-pf-payroll-identity-residue-cleanup/recommendation.md) |
 | `IMP-013` | `pf-rates-to-reference` | Issue pending intake | [artifact](records/IMP-013-pf-rates-to-reference/recommendation.md) |
 | `IMP-015` | `backend-request-correlation-id` | Issue pending intake | [artifact](records/IMP-015-backend-request-correlation-id/recommendation.md) |
+| `IMP-016` | `gcp-native-api-gateway` | Issue pending intake | [artifact](records/IMP-016-gcp-native-api-gateway/recommendation.md) |
 
 ## Source-of-truth rules
 
