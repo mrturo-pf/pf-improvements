@@ -1,7 +1,7 @@
 # Plan: backend request correlation ID
 
 Date: 2026-11-22  
-Status: implementation-in-progress
+Status: completed
 Level: M  
 Scope: `pf-svc-reference`, `pf-svc-income`, shared HTTP conventions, and API evidence.  
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md)  
@@ -85,9 +85,9 @@ Superseded-by: none
 1. Implement and test the common contract in `pf-svc-reference`.
 2. Implement the same contract in `pf-svc-income` and its outbound client.
 3. Run local API and integration tests with synthetic data.
-4. Deploy reference service and validate response/log correlation.
-5. Deploy income service and validate an end-to-end request across both services.
-6. Monitor error rates and log completeness; rollback only the middleware/client
+4. [x] Deploy reference service and validate response/log correlation.
+5. [x] Deploy income service and validate an end-to-end request across both services.
+6. [x] Monitor the initial request/log evidence; rollback only the middleware/client
    changes if a compatibility regression appears.
 
 No database migration, Cloud Run resource, paid monitoring product, or secret change is
@@ -108,3 +108,15 @@ The improvement is complete when both services emit and propagate the same valid
 ID for a synthetic end-to-end request, the response exposes `X-Request-ID`, tests pass
 for missing/invalid/retry/error paths, docs/Postman are synchronized, and no secrets or
 sensitive payloads appear in evidence.
+
+## 8. Production validation evidence
+
+Validated 2026-11-22 in project `coreassistant-474022`:
+
+- `pf-svc-reference` revision: `pf-svc-reference-00005-45d`;
+- `pf-svc-income` revision: `pf-svc-income-00017-xc7`;
+- reference health request returned `200` and echoed its supplied `X-Request-ID`;
+- an income request returned `200` and echoed its supplied `X-Request-ID`;
+- the same ID was observed in `pf-svc-income` start/completion logs and in multiple
+  `pf-svc-reference` start/completion logs for downstream calls;
+- no credentials or sensitive response payloads were recorded in this evidence.

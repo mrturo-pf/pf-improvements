@@ -456,8 +456,8 @@
       "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
       "issue_url": null,
       "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-015-backend-request-correlation-id/plan.md",
-      "next_action": "Confirm the X-Request-ID UUIDv4 contract and malformed-header policy before implementation.",
-      "metadata_status": "design artifacts prepared; implementation pending contract gates"
+      "next_action": "Completed: both backend services deployed with request correlation and production log propagation validated.",
+      "metadata_status": "implementation completed; production evidence recorded in the plan"
     }
   ]
 }

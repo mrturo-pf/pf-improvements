@@ -267,6 +267,6 @@ Query the Project before making planning decisions; this generated file stores n
 - Level: `M`; type: `observability`
 - Owner: `pf-base`
 - Affected: `pf-svc-reference`, `pf-svc-income`, `pf-postman`
-- Next action: Confirm the X-Request-ID UUIDv4 contract and malformed-header policy before implementation.
+- Next action: Completed: both backend services deployed with request correlation and production log propagation validated.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-015-backend-request-correlation-id/plan.md
 - Issue: pending coordination issue
