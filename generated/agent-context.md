@@ -3,7 +3,7 @@
 > Generated from `improvements.json`. Do not edit manually.
 
 - Schema version: `1`
-- Items: `28`
+- Items: `29`
 
 ## Improvement references
 
@@ -260,4 +260,13 @@ Query the Project before making planning decisions; this generated file stores n
 - Affected: `pf-rates`, `pf-db`, `pf-common`, `pf-svc-income`, `pf-sheets`, `pf-postman`
 - Next action: Inventory consumers and prepare the reversible RAT_* to REF_* migration before execution.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-rates-to-reference/plan.md
+- Issue: pending coordination issue
+
+### IMP-015 — backend-request-correlation-id
+
+- Level: `M`; type: `observability`
+- Owner: `pf-base`
+- Affected: `pf-svc-reference`, `pf-svc-income`, `pf-postman`
+- Next action: Confirm the X-Request-ID UUIDv4 contract and malformed-header policy before implementation.
+- Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-015-backend-request-correlation-id/plan.md
 - Issue: pending coordination issue

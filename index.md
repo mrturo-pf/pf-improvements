@@ -37,6 +37,7 @@ This index intentionally does not duplicate those fields.
 | `IMP-011` | `api-endpoint-coverage-and-postman-automation` | [Issue](https://github.com/mrturo-pf/pf-base/issues/35) | [artifact](records/IMP-011-api-endpoint-coverage-and-postman-automation/recommendation.md) |
 | `IMP-012` | `gcp-pf-payroll-identity-residue-cleanup` | Issue pending intake | [artifact](records/IMP-012-gcp-pf-payroll-identity-residue-cleanup/recommendation.md) |
 | `IMP-013` | `pf-rates-to-reference` | Issue pending intake | [artifact](records/IMP-013-pf-rates-to-reference/recommendation.md) |
+| `IMP-015` | `backend-request-correlation-id` | Issue pending intake | [artifact](records/IMP-015-backend-request-correlation-id/recommendation.md) |
 
 ## Source-of-truth rules
 
