@@ -1,7 +1,7 @@
 # Recommendation: GCP-native API gateway for `pf-svc-*`
 
 Date: 2026-11-22  
-Status: observation  
+Status: implementation-in-progress
 Level: L  
 Scope: API Gateway, Cloud Run backend invocation, routing, cost, security, and observability.  
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md)  
@@ -23,10 +23,10 @@ Cloud Run with a service account, and is operationally smaller than an additiona
 Cloud Run proxy or an external Application Load Balancer. Deploy it in `us-central1`,
 which is supported and matches the backend region.
 
-The first release should be a **facade phase** using the generated `gateway.dev`
-hostname. A custom domain is deliberately deferred: the documented path requires an
-external HTTP(S) Load Balancer integration with fixed forwarding-rule cost and a
-Preview dependency, which violates the near-zero-cost first phase.
+The rollout began as a **facade phase** using the generated `gateway.dev` hostname
+and has now transitioned to enforcement. A custom domain remains deferred because the
+documented path requires an external HTTP(S) Load Balancer integration with fixed
+forwarding-rule cost and a Preview dependency.
 
 In that phase:
 
@@ -36,8 +36,8 @@ In that phase:
 - keep the existing direct Cloud Run URLs available for rollback;
 - measure real traffic and cost.
 
-Only a later, separately approved enforcement phase may remove unauthenticated direct
-Cloud Run access.
+The separately approved enforcement phase has removed unauthenticated direct Cloud
+Run access while preserving the application API-key contract.
 
 ## 2. Cost rationale
 

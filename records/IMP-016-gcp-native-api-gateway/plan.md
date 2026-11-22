@@ -30,8 +30,8 @@ Superseded-by: none
 - [x] Confirm `X-Request-ID` is preserved through proxy/backend logs; gateway request
       logs omit the arbitrary header, so backend logs are authoritative and Cloud Trace
       remains the gateway-side fallback.
-- [ ] Decide whether the first release is facade-only (recommended) or includes direct
-      Cloud Run enforcement; enforcement requires a separate Go/No-Go.
+- [x] Decide the first release is facade plus enforcement; the Go/No-Go was recorded
+      after the reversible validation window.
 
 ## 2. Design and configuration
 
@@ -54,8 +54,8 @@ Superseded-by: none
       configuring it as a Google API consumer key during the facade phase.
 - [x] Define rollback to the existing direct Cloud Run URLs; the prior health/read config
       remains available for gateway rollback.
-- [ ] Add gateway route examples to API documentation and Postman only after the
-      route-preserving expansion design is reviewed.
+- [x] Add gateway route examples and prefixes to service deployment documentation and
+      Postman after the route-preserving proxy design was reviewed.
 
 ## 3. Read-only / facade proof of concept
 
@@ -73,15 +73,17 @@ Superseded-by: none
 
 ## 4. Direct URL enforcement gate
 
-- [ ] Decide whether direct Cloud Run URLs must be inaccessible to public callers.
-- [ ] If yes, test the selected Cloud Run IAM/ingress model in a reversible window.
-- [ ] Grant the gateway identity least-privilege `run.invoker` access on each service.
-- [ ] Grant the `pf-svc-income` runtime identity `run.invoker` on `pf-svc-reference`
-      and implement Google identity-token propagation before removing public invocation.
-- [ ] Remove public unauthenticated invocation only after gateway routing and rollback
-      pass; do not remove the application API-key contract in the same step.
-- [ ] Verify direct URL requests fail as intended while gateway requests continue to pass.
-- [ ] Record a Go/No-Go decision and rollback command.
+- [x] Decide direct Cloud Run URLs must be inaccessible to public callers after the
+      facade and identity-token gates pass.
+- [x] Test the selected Cloud Run IAM model in a reversible window.
+- [x] Grant the gateway identity least-privilege `run.invoker` access on each service.
+- [x] Grant the `pf-svc-income` runtime identity `run.invoker` on `pf-svc-reference`
+      and deploy Google identity-token propagation before removing public invocation.
+- [x] Remove public unauthenticated invocation after gateway routing and rollback passed;
+      the application API-key contract remains unchanged.
+- [x] Verify direct URL requests return `403` while gateway requests continue to return
+      `200`.
+- [x] Record a Go/No-Go decision and rollback command.
 
 ## 5. Tests and acceptance evidence
 
@@ -90,11 +92,12 @@ Superseded-by: none
 - [x] Add contract tests for proxy route mapping, headers, response statuses, and
       error behavior; local validation passed with 3 tests, Ruff, and bytecode checks.
       Identity-token integration remains covered by the deployed Cloud Run/Gateway path.
-- [x] Validate gateway → proxy → income route correlation and backend logs; the
-      gateway does not retain arbitrary headers, so backend logs remain authoritative.
-      A full income → reference business flow remains a future evidence case.
+- [x] Validate gateway → proxy → income → reference request correlation and backend
+      logs; the gateway does not retain arbitrary headers, so backend logs remain
+      authoritative. The synthetic business request reached reference and returned a
+      business-data `404`, not an IAM failure.
 - [x] Preserve and validate rollback by retaining the prior health/read gateway config
-      and the unchanged direct Cloud Run URLs; enforcement rollback remains pending.
+      and the direct Cloud Run URLs; enforcement rollback is a documented IAM restore.
 - [ ] Test the selected traffic control with bounded synthetic traffic: gateway quotas
       if usable without consumer keys, otherwise Cloud Run max instances plus budget/
       volume alert behavior.
@@ -130,10 +133,12 @@ Provisioned 2026-11-22 in `coreassistant-474022`:
 - parameterized route `/income/payroll/556` returned `200` through the gateway;
 - proxy and income backend logs shared the same `X-Request-ID` for that request;
 - response headers no longer duplicate `X-Request-ID` after proxy normalization;
+- the enforcement request returned business `404` only for missing future data, while
+  income and reference logs shared the request ID and no IAM failure occurred;
 - GitHub CI and deploy workflow passed for commit `21a534b` after WIF/deployer and
   build-service-account IAM were configured.
 
-## 8. Facade proof-of-concept evidence
+## 8. Facade and enforcement evidence
 
 Validated 2026-11-22 in `coreassistant-474022`:
 
@@ -146,7 +151,8 @@ Validated 2026-11-22 in `coreassistant-474022`:
 - backend logs for both services contained matching request start/completion events;
 - API Gateway request logs recorded method/URL/status metadata but did not expose the
   arbitrary `X-Request-ID` header in the inspected entries;
-- direct Cloud Run URLs and public invocation were not changed;
+- direct unauthenticated Cloud Run invocation was removed after enforcement; direct
+  requests returned `403` while gateway requests returned `200`;
 - the initial prefixed `CONSTANT_ADDRESS` map was rejected after `/income/payroll/556`
   returned `422`; the proxy-backed `APPEND_PATH_TO_ADDRESS` map corrected this;
 - authenticated facade routes returned `200` for both services and preserved application
@@ -157,3 +163,11 @@ Validated 2026-11-22 in `coreassistant-474022`:
   `400` with a generated error-context ID;
 - gateway request logs recorded successful method/URL/status metadata, while backend
   logs contained the detailed correlation events.
+
+## 9. Enforcement Go/No-Go
+
+**Decision: GO — 2026-11-22.**
+
+Enforcement was approved after validating the proxy, API Gateway, runtime IAM,
+identity-token propagation, direct URL failure behavior, gateway responses, rollback
+configuration, and backend log correlation. No application API-key contract was changed.

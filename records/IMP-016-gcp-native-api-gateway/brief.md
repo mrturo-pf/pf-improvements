@@ -1,7 +1,7 @@
 # Brief: GCP-native API gateway for `pf-svc-*`
 
 Date: 2026-11-22  
-Status: observation  
+Status: implementation-in-progress
 Level: L  
 Scope: Managed GCP gateway, Cloud Run backend routing, auth compatibility, request correlation, and cost.  
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)  
@@ -10,9 +10,9 @@ Superseded-by: none
 
 ## Objective
 
-Evaluate and, if approved by the implementation gates, introduce a single GCP-native
-entry point for the PF backend services while preserving scale-to-zero and keeping
-incremental cost at zero or as close to zero as the actual GCP pricing permits.
+Introduce and operate a single GCP-native entry point for the PF backend services
+while preserving scale-to-zero and keeping incremental cost at zero or as close to zero
+as the actual GCP pricing permits.
 
 The selected architecture is Google Cloud API Gateway routing to a dedicated
 scale-to-zero `pf-gateway-proxy`, which forwards to:
@@ -54,7 +54,7 @@ scope. The selected proxy is Cloud Run with `min-instances=0` and bounded resour
 - Replacing application-level API-key authentication in the first phase;
 - redesigning backend routes or request/response bodies;
 - introducing Apigee or enterprise API-management features;
-- locking down direct Cloud Run URLs before a separate enforcement gate passes;
+- redesigning or replacing the established enforcement model without a new decision;
 - changing the `X-Request-ID` contract;
 - adding a database, queue, or permanent always-on proxy solely for routing;
   the selected scale-to-zero `pf-gateway-proxy` is explicitly in scope.
@@ -76,5 +76,5 @@ scope. The selected proxy is Cloud Run with `min-instances=0` and bounded resour
 6. A synthetic request can be joined across backend logs by `X-Request-ID`; gateway log
    header retention is separately verified, with Cloud Trace as fallback evidence.
 7. Direct URL rollback is tested and documented.
-8. No direct-URL enforcement occurs without an explicit Go/No-Go decision.
-9. Actual gateway and Cloud Run costs are measured after rollout.
+8. Direct-URL enforcement is recorded with an explicit Go/No-Go decision and rollback.
+9. Actual gateway and Cloud Run costs remain the final operational measurement gate.

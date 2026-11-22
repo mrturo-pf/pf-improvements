@@ -17,13 +17,12 @@ The PF backend services are independently deployed Cloud Run services in
 - `pf-svc-income` exposes a Cloud Run URL and calls `pf-svc-reference` directly;
 - both services implement application-level `X-API-Key` authentication;
 - both services now implement the ecosystem `X-Request-ID` contract;
-- no API gateway, load balancer, API proxy, or shared public hostname is currently
-  present in the repository architecture or service deployment documentation.
+- API Gateway and `pf-gateway-proxy` are now deployed in `us-central1`;
+- direct unauthenticated Cloud Run invocation has been removed;
+- application API keys and `X-Request-ID` remain part of the backend contract.
 
-The current direct URLs are operationally simple and cheap, but every service is also
-an independently visible public edge. A gateway could provide one documented entry
-point, centralized routing, quotas, API documentation, and a controlled place for
-future auth policy without adding an always-on VM or proxy container.
+The gateway/proxy now provides the documented public entry point. Direct Cloud Run URLs
+remain useful only for rollback and authenticated operator diagnostics.
 
 ## 2. Candidate architectures
 
