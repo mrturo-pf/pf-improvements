@@ -1,7 +1,7 @@
 # Recommendation: rename `pf-rates` to `pf-svc-reference`
 
 Date: 2026-11-20  
-Status: approved for execution
+Status: observation
 Level: L  
 Scope: Cross-repository financial-data service identity and database-prefix migration.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md)

@@ -1,7 +1,7 @@
 # Investigation: rename `pf-rates` to `pf-svc-reference`
 
 Date: 2026-11-20  
-Status: investigating  
+Status: completed
 Level: L  
 Scope: Service identity, consumers, GCP resources, Postman, shared tooling, and `RAT_* → REF_*` schema ownership.
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)

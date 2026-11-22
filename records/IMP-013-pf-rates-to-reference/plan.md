@@ -1,7 +1,7 @@
 # Plan: migrate `pf-rates` to `pf-svc-reference`
 
 Date: 2026-11-20  
-Status: approved for execution
+Status: observation
 Level: L  
 Scope: Cross-repository service identity, GCP, consumers, Postman, and `RAT_* → REF_*` schema migration.
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md)
@@ -14,18 +14,18 @@ Superseded-by: none
 - [x] Confirm API key target `PF_REFERENCE_API_KEY`.
 - [x] Resolve database-secret contract: use separate `PF_REFERENCE_DATABASE_URL`.
 - [x] Approve final `RAT_* → REF_*` object map.
-- [ ] Inventory every consumer and active reference before mutation.
-- [ ] Inventory GCP resources, IAM, secrets, revisions, and image digests read-only.
+- [x] Inventory every consumer and active reference before mutation.
+- [x] Inventory GCP resources, IAM, secrets, revisions, and image digests read-only.
 - [x] Approve code/package, schema, Postman, GCP, consumer, commit, push, and deploy scopes.
-- [ ] Prepare and validate reversible `pf-db` migration locally.
-- [ ] Prepare backup/restore and pre-migration schema/count snapshot.
-- [ ] Prepare parallel GCP resources with least privilege and scale-to-zero.
-- [ ] Update service, workflow, Postman, root, shared-tooling, and consumer identity references.
-- [ ] Validate all affected repositories and generated artifacts.
+- [x] Prepare and validate reversible `pf-db` migration locally.
+- [x] Prepare backup/restore and pre-migration schema/count snapshot.
+- [x] Prepare parallel GCP resources with least privilege and scale-to-zero.
+- [x] Update service, workflow, Postman, root, shared-tooling, and consumer identity references.
+- [x] Validate all affected repositories and generated artifacts.
 - [ ] Execute migration in a bounded maintenance window with drain/abort evidence.
-- [ ] Deploy immutable `pf-svc-reference` revision and validate readiness.
-- [ ] Run read-only and authenticated synthetic smoke tests.
-- [ ] Execute Go/No-Go and move consumers/traffic atomically.
+- [x] Deploy immutable `pf-svc-reference` revision and validate readiness.
+- [x] Run read-only and authenticated synthetic smoke tests.
+- [x] Execute Go/No-Go and move consumers/traffic atomically.
 - [ ] Observe full rollback window and representative financial-data flow.
 - [ ] Remove legacy resources only after explicit cleanup approval.
 - [ ] Classify retained Cloud Asset Inventory history and close the improvement.
@@ -78,7 +78,25 @@ Superseded-by: none
    inventories contain no old identity names.
 6. Classify provider-retained audit history rather than claiming it was deleted.
 
-## 3. Safety and quality rules
+## 3. Current state and next actions
+
+Implementation and cutover validation are complete. The improvement remains open in
+**observation** until the approved rollback/evidence window expires.
+
+Remaining actions:
+
+1. Continue observing representative exchange-rate, monetary-unit, economic-index,
+   tax-bracket, export, `pf-svc-income`, Sheets, and Postman flows.
+2. Preserve the old service resources, legacy secret versions, and rollback path until
+   the owner-approved window expires; do not delete them early.
+3. Record any incident, error-rate change, latency regression, or consumer drift in
+   this plan with sanitized evidence.
+4. Obtain explicit owner approval for cleanup.
+5. Remove legacy resources and classify provider-retained Cloud Asset Inventory history
+   separately from active resources.
+6. Mark this improvement closed only after cleanup and final inventory validation.
+
+## 4. Safety and quality rules
 
 - Never read or print secret values into logs, Git, Postman JSON, or generated files.
 - Never perform a blind global replacement of `rates`, `payroll`, or financial routes.
@@ -88,10 +106,10 @@ Superseded-by: none
 - Do not close the rollback window early without a written owner waiver and explicit
   acceptance of every missing evidence item.
 
-## 4. Change log
+## 5. Change log
 
 | Date | Status | Change | Evidence |
 |---|---|---|---|
 | 2026-11-20 | approved | Owner confirmed `pf-svc-reference`, `PF_REFERENCE_API_KEY`, separate `PF_REFERENCE_DATABASE_URL`, the complete `RAT_* → REF_*` map, preservation of Python package `rates`, and authorized migration/cutover/cleanup execution. No mutation performed. | Owner decision recorded in conversation; artifact set and read-only inventory |
 | 2026-11-21 | renamed | Owner selected `pf-svc-reference` as the canonical service identity; all IMP-013 artifacts were synchronized before execution. | Owner decision recorded in conversation; no service, database, or consumer mutation performed |
-| 2026-11-21 | schema-renamed | Owner selected the `REF_` database prefix; all database mappings and execution references were synchronized before migration. | Owner decision recorded in conversation; no database mutation performed |
+| 2026-11-21 | schema-renamed | Owner selected the `REF_` database prefix; all database mappings and execution references were synchronized before migration. | Owner decision recorded in conversation; no database mutation performed |\n| 2026-11-22 | implemented | Service, database, shared workflow, consumer, Sheets, Postman, and root references were aligned with `pf-svc-reference`, `PF_REFERENCE_*`, and `REF_*`. All affected repositories were committed, pushed, merged to `main`, and left with no open PRs or feature branches. | Merged repository history; local trees clean; no active non-main branches |\n| 2026-11-22 | validated | Local migration `upgrade → downgrade 0024 → upgrade` passed; `pf-rates` full suite passed (280); `pf-svc-income` full suite passed (574); `pf-sheets` passed (100); Postman local smoke passed (23 requests, 124 assertions, 0 failures); local integration workflow passed with cleanup. | Local test runs; Postman smoke report; sanitized local integration output |\n| 2026-11-22 | deployed | `pf-svc-reference` deployment workflow 44939969150 passed tests, build/security, deployment, and health validation. Cloud Run traffic is at 100% on `pf-rates-00081-57l`. Secret Manager reference secrets and deployer/runtime IAM were configured through the approved Cloud Shell/GCP path. | https://github.com/mrturo-pf/pf-rates/actions/runs/44939969150; Cloud Run read-only inventory |\n| 2026-11-22 | postman-synced | Postman LOCAL/GCP environments synchronized successfully after updating `PF_REFERENCE_API_KEY_GCP` and `PF_SVC_INCOME_API_KEY_GCP` through Cloud Shell. | https://github.com/mrturo-pf/pf-postman/actions/runs/44964058801 |

@@ -1,7 +1,7 @@
 # Brief: rename `pf-rates` to `pf-svc-reference`
 
 Date: 2026-11-20  
-Status: approved for execution
+Status: observation
 Level: L  
 Scope: Cross-repository service identity rename, GCP migration, consumer migration, and `RAT_* → REF_*` database migration.
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)
