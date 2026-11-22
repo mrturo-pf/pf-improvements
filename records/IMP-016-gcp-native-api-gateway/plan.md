@@ -79,6 +79,9 @@ Superseded-by: none
 - [x] Grant the gateway identity least-privilege `run.invoker` access on each service.
 - [x] Grant the `pf-svc-income` runtime identity `run.invoker` on `pf-svc-reference`
       and deploy Google identity-token propagation before removing public invocation.
+- [x] Migrate the `pf-svc-income` backend client from direct reference URLs to the
+      gateway facade; income revision `pf-svc-income-00019-m77` is deployed with the
+      explicit gateway dependency URL and the direct runtime invoker was removed.
 - [x] Remove public unauthenticated invocation after gateway routing and rollback passed;
       the application API-key contract remains unchanged.
 - [x] Verify direct URL requests return `403` while gateway requests continue to return
