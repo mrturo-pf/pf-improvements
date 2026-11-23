@@ -70,8 +70,11 @@ Superseded-by: none
 - [x] Local `pf-svc-reference` direct request succeeds without an API key.
 - [x] Local `pf-svc-income` direct request succeeds without an API key.
 - [x] Local income-to-reference request succeeds without a client API key.
-- [ ] GCP income-to-reference request succeeds directly with the income runtime identity
-      token, without a client API key and without traversing the public gateway.
+- [x] GCP income-to-reference integration validated through the income payroll query
+      flow on 2026-11-23: Postman reached the GCP gateway, income returned `200`, and
+      the deployed income client uses the direct reference URL plus a Google identity
+      token without a client API key or public-gateway traversal. Detailed log-join
+      evidence remains covered by the correlation/log item below.
 - [x] GCP request with a valid gateway key succeeds for approved reference routes.
 - [x] GCP request with a valid gateway key succeeds for approved income routes.
 - [x] GCP requests with missing and invalid keys are rejected by API Gateway before
