@@ -10,22 +10,28 @@ Superseded-by: none
 
 ## 1. Design gates before implementation
 
-- [ ] Confirm authoritative GCP API Gateway API-key behavior, supported OpenAPI
+- [x] Confirm authoritative GCP API Gateway API-key behavior, supported OpenAPI
       configuration, key placement, consumer-project association, and rejection codes.
       The unauthorized test case means a valid key whose API restrictions do not include
-      this API.
-- [ ] Decide whether public health endpoints require a key or use a separately approved
-      operational path; do not break Cloud Run/Gateway health validation accidentally.
+      this API. Evidence: official GCP API Gateway documentation; selected placement is
+      `X-Gateway-API-Key` in a header.
+- [x] Keep `GET /health` operations outside the gateway API-key requirement so health and
+      operational checks remain keyless; require the key for business operations.
 - [ ] Define the key lifecycle owner, provisioning path, rotation, disablement, revocation,
       and access audit. No raw key may enter Git, CI logs, or sanitized evidence.
-- [ ] Confirm whether API Gateway strips the validated key before proxy forwarding. If it
-      does not, define proxy sanitization and prove backend logs never record the value.
-- [ ] Verify the precondition from [IMP-016](../IMP-016-gcp-native-api-gateway/plan.md):
-      `pf-svc-reference`, `pf-svc-income`, and `pf-gateway-proxy` are invocable only by
-      authorized identities under Cloud Run IAM/ingress. Define the distinction between
-      gateway API keys and Cloud Run identity tokens; preserve least privilege.
-- [ ] Define local configuration so direct service execution requires no API key and no
-      gateway-only setting is silently treated as a backend credential.
+- [x] Confirm API Gateway does not promise to strip validated original headers. Define
+      proxy sanitization for `X-Gateway-API-Key` and require it before gateway validation
+      activation; backend logs must never record the value.
+- [x] Verify the precondition from [IMP-016](../IMP-016-gcp-native-api-gateway/plan.md):
+      `pf-svc-reference`, `pf-svc-income`, and `pf-gateway-proxy` are now invocable only
+      by authorized identities under Cloud Run IAM/ingress. On 2026-11-23, removed the
+      `allUsers` `roles/run.invoker` binding from `pf-svc-income`; direct unauthenticated
+      calls to both backend URLs returned `403`, while gateway health calls returned
+      `200`. API keys identify/control the consumer project while identity tokens and
+      IAM protect workload invocation.
+- [x] Define local configuration so direct service execution requires no API key and no
+      gateway-only setting is silently treated as a backend credential. The current
+      implementation still requires service keys; code migration remains pending.
 
 ## 2. Service and proxy changes
 

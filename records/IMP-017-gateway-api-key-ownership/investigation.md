@@ -34,7 +34,46 @@ The gateway currently forwards application headers for compatibility. The backen
 services retain application API-key behavior. The gateway's service-to-service identity
 and Cloud Run IAM are separate from any client API key.
 
-## 3. Questions to resolve
+## 3. Design-gate findings (2026-11-23)
+
+The first design gate is resolved from the deployed configuration and current official
+Google Cloud documentation:
+
+- API Gateway OpenAPI 2.0 API-key security uses `securityDefinitions` with `type: apiKey`,
+  a configured `name`, and `in: header` or `in: query`, plus a `security` requirement.
+- The selected placement is a dedicated `X-Gateway-API-Key` header. It deliberately does
+  not reuse `X-API-Key`, which remains the legacy application header during the staged
+  migration and would otherwise create a value collision.
+- API Gateway forwards original headers after validation; the official architecture
+  documentation does not promise removal of a valid key. The proxy must therefore remove
+  `X-Gateway-API-Key` before forwarding to either backend, and this sanitization must be
+  deployed before gateway validation is activated.
+- `GET /health` operations remain outside the API-key security requirement so gateway and
+  operational health checks do not need a consumer key. All business operations require
+  the native gateway key.
+- The current active config `full-proxy-headers-20261122` has no native API-key security
+  definition. The current route map still declares the legacy `X-API-Key` header as an
+  optional forwarded header.
+- API keys identify and control the consumer project; they do not authenticate an end
+  user. Cloud Run IAM and Google identity tokens remain the workload boundary.
+
+Authoritative references:
+
+- [Use API Keys](https://cloud.google.com/api-gateway/docs/authenticate-api-keys)
+- [API Gateway architecture](https://cloud.google.com/api-gateway/docs/architecture-overview)
+- [OpenAPI 2.0 extensions](https://cloud.google.com/api-gateway/docs/oasv2-extensions)
+
+The key resource and rotation owner still require an explicit GCP provisioning decision;
+no key has been created or stored by this investigation.
+
+The IAM/ingress precondition was remediated on 2026-11-23 by removing the
+`roles/run.invoker` binding for `allUsers` from `pf-svc-income`. The three services now
+have only the expected service-account invokers. Validation returned `403` for direct
+unauthenticated calls to both backend URLs and `200` for gateway health calls. The IAM
+change is reversible from the captured pre-change policy, but service API-key removal
+still requires the staged proxy and backend changes below.
+
+## 4. Questions to resolve
 
 - Which API Gateway OpenAPI security definition and extension should enforce the key?
 - Should the gateway consume `X-API-Key` or the conventional `key` query/header
@@ -54,7 +93,7 @@ and Cloud Run IAM are separate from any client API key.
   through the gateway? They must not require a client API key merely because the public
   gateway does.
 
-## 4. Security boundaries
+## 5. Security boundaries
 
 - API Gateway API-key validation identifies and controls the public consumer contract;
   it does not authenticate an end user or replace Cloud Run IAM, identity tokens,
@@ -67,7 +106,7 @@ and Cloud Run IAM are separate from any client API key.
   client-controlled header.
 - Local no-key behavior is intentional and must not weaken the GCP deployment policy.
 
-## 5. Compatibility inventory
+## 6. Compatibility inventory
 
 Affected contract surfaces include:
 
@@ -81,7 +120,7 @@ Affected contract surfaces include:
 
 No database migration is expected.
 
-## 6. Evidence required before implementation approval
+## 7. Evidence required before implementation approval
 
 - Official GCP documentation for API Gateway API-key authentication and quota behavior.
 - A sanitized OpenAPI design showing the security definition and affected operations.
