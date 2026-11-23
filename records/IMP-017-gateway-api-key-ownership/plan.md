@@ -176,8 +176,11 @@ intercepting the gateway hostname through Cisco Umbrella/OpenDNS. The API Gatewa
 configuration and Postman synchronization both completed successfully.
 
 The `400` for an invalid key is the observed API Gateway behavior and is accepted as the
-invalid-key rejection for this implementation. Disabled-key, restricted-key,
-service-to-service identity, raw-key log absence, correlation, and rollback evidence
+invalid-key rejection for this implementation. Additional boundary tests on 2026-11-23
+found that a revoked test key remained accepted after the configured propagation window
+and a test key restricted to `storage.googleapis.com` returned `200` against the PF gateway. Both tests are therefore failed/inconclusive and require investigation before
+closure; the temporary test keys were deleted and no raw values were retained.
+Service-to-service identity, raw-key log absence, correlation, and rollback evidence
 remain separate acceptance items.
 
 ## 9. Decision record
