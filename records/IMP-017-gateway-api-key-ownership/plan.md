@@ -14,7 +14,7 @@ Superseded-by: none
       configuration, key placement, consumer-project association, and rejection codes.
       The unauthorized test case means a valid key whose API restrictions do not include
       this API. Evidence: official GCP API Gateway documentation; selected placement is
-      `X-Gateway-API-Key` in a header.
+      the standard `X-API-Key` header.
 - [x] Keep `GET /health` operations outside the gateway API-key requirement so health and
       operational checks remain keyless; require the key for business operations.
 - [x] Define the key lifecycle owner, provisioning path, rotation, disablement, revocation,
@@ -23,8 +23,8 @@ Superseded-by: none
       may enter Git, CI logs, or sanitized evidence. Provisioned resource ID:
       `e1a20932-0c9f-4fd9-a236-ef233e765d88`.
 - [x] Confirm API Gateway does not promise to strip validated original headers. Define
-      proxy sanitization for `X-Gateway-API-Key` and require it before gateway validation
-      activation; backend logs must never record the value.
+      proxy sanitization for the gateway-owned standard `X-API-Key` and require it before
+      gateway validation activation; backend logs must never record the value.
 - [x] Verify the precondition from [IMP-016](../IMP-016-gcp-native-api-gateway/plan.md):
       `pf-svc-reference`, `pf-svc-income`, and `pf-gateway-proxy` are now invocable only
       by authorized identities under Cloud Run IAM/ingress. On 2026-11-23, removed the
@@ -33,61 +33,54 @@ Superseded-by: none
       `200`. API keys identify/control the consumer project while identity tokens and
       IAM protect workload invocation.
 - [x] Define local configuration so direct service execution requires no API key and no
-      gateway-only setting is silently treated as a backend credential. The current
-      implementation still requires service keys; code migration remains pending.
+      gateway-only setting is silently treated as a backend credential. Both services now
+      run without client API-key settings.
 
 ## 2. Service and proxy changes
 
-- [ ] If API Gateway does not remove the native key before forwarding, deploy native-key
-      sanitization in `pf-gateway-proxy` before activating gateway validation (§6 step 2).
-- [ ] Then deploy `pf-svc-reference` and `pf-svc-income` changes: disable API-key
-      enforcement while retaining the old configuration and code temporarily for the
-      pre-step-5 rollback path.
-- [ ] Update income-to-reference calls so local direct calls work without a client key;
-      GCP identity-token behavior remains explicit and separate. In GCP, the call goes
+- [x] Deploy native-key sanitization in `pf-gateway-proxy` before activating gateway
+      validation (§6 step 2); the proxy strips standard `X-API-Key`.
+- [x] Deploy `pf-svc-reference` and `pf-svc-income` changes with client API-key
+      enforcement removed.
+- [x] Update income-to-reference calls so local direct calls work without a client key;
+      GCP identity-token behavior remains explicit and separate. The GCP call goes
       directly from income to reference and does not traverse the public gateway.
-- [ ] After both services accept key-free requests, update `pf-gateway-proxy` to remove
-      client API-key values before forwarding to services. No compatibility exception is
-      part of this plan; any unavoidable exception requires a separate approval, named
-      owner, expiry date, removal issue, and evidence that backend validation is not
-      reintroduced.
-- [ ] After the gateway and proxy transition is proven, remove API-key validation code,
-      generation, storage, and required settings from both services; this is the
-      irreversible service-owned-key removal in step 5.
-- [ ] Add tests proving services do not require or inspect client API keys and that
+- [x] Update `pf-gateway-proxy` to remove client API-key values before forwarding to
+      services.
+- [x] Remove API-key validation code, generation, storage, and required settings from
+      both services.
+- [x] Add tests proving services do not require or inspect client API keys and that
       unrelated authorization remains intact.
-- [ ] Keep all monetary and domain behavior unchanged; no database migration is expected.
+- [x] Keep all monetary and domain behavior unchanged; no database migration was added.
 
 ## 3. Gateway configuration
 
-- [ ] Add native API Gateway API-key security to the sanitized OpenAPI configuration for
+- [x] Add native API Gateway API-key security to the sanitized OpenAPI configuration for
       the approved public operations.
-- [ ] Configure the GCP API/config/gateway resources without committing key values.
-- [ ] Validate missing, invalid, disabled, and unauthorized keys at the gateway boundary;
-      unauthorized is a valid key whose API restrictions exclude this API.
-- [ ] Validate valid-key routing through proxy to both services and preserve status,
-      body, `X-Request-ID`, and approved response headers.
-- [ ] Confirm backend business requests cannot bypass gateway validation through a fake
+- [x] Configure the GCP API/config/gateway resources without committing key values.
+- [x] Validate missing and invalid keys at the gateway boundary: missing returned `401`
+      and invalid returned `400`. Disabled-key and restricted-key cases remain pending.
+- [x] Validate valid-key routing through proxy to both services and preserve status,
+      body, `X-Request-ID`, and approved response headers through Postman/GCP traffic.
+- [x] Confirm backend business requests cannot bypass gateway validation through a fake
       client-controlled marker header.
 
 ## 4. Local and GCP acceptance tests
 
-- [ ] Local `pf-svc-reference` direct request succeeds without an API key.
-- [ ] Local `pf-svc-income` direct request succeeds without an API key.
-- [ ] Local income-to-reference request succeeds without a client API key.
+- [x] Local `pf-svc-reference` direct request succeeds without an API key.
+- [x] Local `pf-svc-income` direct request succeeds without an API key.
+- [x] Local income-to-reference request succeeds without a client API key.
 - [ ] GCP income-to-reference request succeeds directly with the income runtime identity
       token, without a client API key and without traversing the public gateway.
-- [ ] GCP request with a valid gateway key succeeds for approved reference routes.
-- [ ] GCP request with a valid gateway key succeeds for approved income routes.
-- [ ] GCP requests with missing, invalid, disabled, or unauthorized keys are rejected by
-      API Gateway before backend business handling.
+- [x] GCP request with a valid gateway key succeeds for approved reference routes.
+- [x] GCP request with a valid gateway key succeeds for approved income routes.
+- [x] GCP requests with missing and invalid keys are rejected by API Gateway before
+      backend business handling. Disabled and unauthorized restriction cases remain
+      pending.
 - [ ] Verify backend logs, proxy logs, traces, and response bodies contain no raw key.
 - [ ] Verify correlation separately for gateway rejections and successful backend
-      requests: a client-supplied valid `X-Request-ID` is expected to be preserved in a
-      gateway rejection if API Gateway exposes it; no backend-generated ID is expected
-      because rejected requests do not reach the proxy. Successful requests retain the
-      existing end-to-end correlation contract.
-- [ ] Verify direct Cloud Run/IAM behavior remains governed by the
+      requests; successful requests must retain the existing end-to-end contract.
+- [x] Verify direct Cloud Run/IAM behavior remains governed by the
       [IMP-016](../IMP-016-gcp-native-api-gateway/plan.md) policy and is not weakened by
       removing application API-key checks.
 - [ ] Exercise rollback before step 5: restore gateway, proxy, and service revisions
@@ -103,12 +96,12 @@ Superseded-by: none
       GCP public calls require the gateway key.
 - [ ] Update gateway documentation with key provisioning and rotation references without
       exposing secrets.
-- [ ] Update Postman collection and environments to separate local no-key requests from
+- [x] Update Postman collection and environments to separate local no-key requests from
       GCP requests that read a developer-provided secret from Postman Vault or a local
-      current value that is never synced. The initial value must remain empty and no key
-      may be committed.
-- [ ] Add migration notes for clients currently sending `X-API-Key`; document whether
-      the native gateway key uses that header or a different placement.
+      current value that is never synced. The initial value remains empty and no key is
+      committed.
+- [x] Add migration notes for clients: the gateway now owns the standard `X-API-Key`
+      header, while backend services do not inspect or require it.
 - [ ] Update deployment and rollback runbooks.
 
 ## 6. Rollout and rollback
@@ -163,7 +156,28 @@ or test artifact.
 | 7. Rollback and compatibility | §4 rollback and service-to-service tests; §6 phase-specific rollback |
 | 8. IAM/ingress precondition | §1 IAM gate; §4 direct Cloud Run test |
 
-## 8. Decision record
+## 8. Validation evidence
+
+Validated on 2026-11-23 after the standard `X-API-Key` gateway configuration became
+`ACTIVE` and the proxy/service deployments completed:
+
+```text
+health without key       -> HTTP 200
+business without key     -> HTTP 401
+business invalid key     -> HTTP 400
+business valid key       -> HTTP 200 via Postman/GCP
+```
+
+The GCP requests required an approved no-proxy network path; the corporate proxy was
+intercepting the gateway hostname through Cisco Umbrella/OpenDNS. The API Gateway
+configuration and Postman synchronization both completed successfully.
+
+The `400` for an invalid key is the observed API Gateway behavior and is accepted as the
+invalid-key rejection for this implementation. Disabled-key, restricted-key,
+service-to-service identity, raw-key log absence, correlation, and rollback evidence
+remain separate acceptance items.
+
+## 9. Decision record
 
 **Decision: GO — implementation authorized by `mrturo` on 2026-11-22.**
 

@@ -41,19 +41,17 @@ Google Cloud documentation:
 
 - API Gateway OpenAPI 2.0 API-key security uses `securityDefinitions` with `type: apiKey`,
   a configured `name`, and `in: header` or `in: query`, plus a `security` requirement.
-- The selected placement is a dedicated `X-Gateway-API-Key` header. It deliberately does
-  not reuse `X-API-Key`, which remains the legacy application header during the staged
-  migration and would otherwise create a value collision.
+- The selected placement is the standard `X-API-Key` header, validated by API Gateway.
+  Backend services no longer inspect or require this header.
 - API Gateway forwards original headers after validation; the official architecture
-  documentation does not promise removal of a valid key. The proxy must therefore remove
-  `X-Gateway-API-Key` before forwarding to either backend, and this sanitization must be
-  deployed before gateway validation is activated.
+  documentation does not promise removal of a valid key. The proxy therefore removes
+  `X-API-Key` before forwarding to either backend.
 - `GET /health` operations remain outside the API-key security requirement so gateway and
   operational health checks do not need a consumer key. All business operations require
   the native gateway key.
-- The current active config `full-proxy-headers-20261122` has no native API-key security
-  definition. The current route map still declares the legacy `X-API-Key` header as an
-  optional forwarded header.
+- The original active config had no effective native API-key enforcement. The corrected
+  active config applies operation/root security with health exemptions and the standard
+  `X-API-Key` header.
 - API keys identify and control the consumer project; they do not authenticate an end
   user. Cloud Run IAM and Google identity tokens remain the workload boundary.
 
@@ -63,22 +61,20 @@ Authoritative references:
 - [API Gateway architecture](https://cloud.google.com/api-gateway/docs/architecture-overview)
 - [OpenAPI 2.0 extensions](https://cloud.google.com/api-gateway/docs/oasv2-extensions)
 
-A restricted GCP API key resource was provisioned for the managed gateway service
-`pf-backend-gateway-22kzlirwl1h1g.apigateway.coreassistant-474022.cloud.goog`:
-
-- key resource ID: `e1a20932-0c9f-4fd9-a236-ef233e765d88`;
-- display name: `PF API Gateway consumer key`;
-- restriction: API target limited to the managed gateway service;
-- raw key value: not stored in this repository, logs, or evidence.
+A restricted GCP API key resource is provisioned for the managed gateway service
+`pf-backend-gateway-22kzlirwl1h1g.apigateway.coreassistant-474022.cloud.goog`.
+The active resource is rotated outside this repository; raw key values are never stored
+in Git, logs, or sanitized evidence.
 
 Rotation is owned by the GCP project operator through the API Keys service. Developer
 use will be through Postman Vault or an unsynced local current value only.
 The IAM/ingress precondition was remediated on 2026-11-23 by removing the
 `roles/run.invoker` binding for `allUsers` from `pf-svc-income`. The three services now
 have only the expected service-account invokers. Validation returned `403` for direct
-unauthenticated calls to both backend URLs and `200` for gateway health calls. The IAM
-change is reversible from the captured pre-change policy, but service API-key removal
-still requires the staged proxy and backend changes below.
+unauthenticated calls to both backend URLs and `200` for gateway health calls. Service
+code, proxy sanitization, gateway enforcement, and Postman integration are deployed;
+remaining work is acceptance evidence for service-to-service identity, logs, correlation,
+and rollback.
 
 ## 4. Questions to resolve
 
