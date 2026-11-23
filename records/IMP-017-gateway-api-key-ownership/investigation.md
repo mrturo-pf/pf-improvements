@@ -1,0 +1,93 @@
+# Investigation: gateway-owned API-key enforcement
+
+Date: 2026-11-22  
+Status: approved  
+Level: L  
+Scope: GCP API Gateway, `pf-gateway-proxy`, `pf-svc-reference`, `pf-svc-income`, and client documentation.  
+Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)  
+Approved: implementation authorized by `mrturo` on 2026-11-22  
+Superseded-by: none
+
+## 1. Problem statement
+
+The current gateway rollout preserves the application `X-API-Key` contract through the
+proxy and backend services. That leaves API-key policy in the services, which creates
+an environment mismatch: local execution requires the same client credential as GCP,
+and every service must know how to validate or manage the key. The desired boundary is
+simpler: API Gateway owns the client credential policy; services receive only traffic
+that has passed the gateway policy in GCP, while local direct development remains
+credential-free.
+
+This is a contract and security-boundary change, not merely a header rename.
+
+## 2. Current known architecture
+
+[IMP-016](../IMP-016-gcp-native-api-gateway/plan.md) established the following deployed path:
+
+```text
+API Gateway
+  -> pf-gateway-proxy (Cloud Run, identity-token protected)
+    -> pf-svc-reference / pf-svc-income (Cloud Run)
+```
+
+The gateway currently forwards application headers for compatibility. The backend
+services retain application API-key behavior. The gateway's service-to-service identity
+and Cloud Run IAM are separate from any client API key.
+
+## 3. Questions to resolve
+
+- Which API Gateway OpenAPI security definition and extension should enforce the key?
+- Should the gateway consume `X-API-Key` or the conventional `key` query/header
+  placement, and can the chosen placement be kept out of backend business contracts?
+- Does API Gateway strip the validated key before proxy forwarding, or must the proxy
+  explicitly remove it? The final design must prevent backend code from depending on it.
+- Which Google Cloud project owns the API consumer/key resources, and how are keys
+  provisioned, rotated, disabled, and revoked without storing values in repositories?
+- Which gateway response/status/body is returned for missing, invalid, and disabled keys?
+  For this task, unauthorized means a valid key whose API restrictions do not include
+  this API; that case must be tested separately.
+- Does the gateway enforce the key on every public operation, including health, and is
+  that compatible with readiness probes and operational monitoring?
+- How do Postman and local clients select a gateway key without embedding one in the
+  collection or environment committed to Git?
+- How are backend-to-backend calls handled when income calls reference locally or
+  through the gateway? They must not require a client API key merely because the public
+  gateway does.
+
+## 4. Security boundaries
+
+- API Gateway API-key validation identifies and controls the public consumer contract;
+  it does not authenticate an end user or replace Cloud Run IAM, identity tokens,
+  application authorization, or data access controls.
+- Cloud Run services must remain protected according to the approved ingress/IAM model.
+- API-key values are secrets. Evidence may contain only names, fingerprints approved for
+  sanitization, or result categories; never raw values.
+- A backend must not silently accept a fake gateway marker header as proof of validation.
+  Trust must come from the existing authenticated gateway-to-backend path, not from a
+  client-controlled header.
+- Local no-key behavior is intentional and must not weaken the GCP deployment policy.
+
+## 5. Compatibility inventory
+
+Affected contract surfaces include:
+
+- API Gateway OpenAPI configuration and deployed API config;
+- `pf-gateway-proxy` header forwarding and sanitization;
+- `pf-svc-reference` and `pf-svc-income` middleware, settings, tests, and docs;
+- income-to-reference HTTP client behavior in local and GCP modes;
+- Postman collection and environments;
+- service deployment documentation and generated API documentation;
+- gateway, backend, and correlation-log evidence.
+
+No database migration is expected.
+
+## 6. Evidence required before implementation approval
+
+- Official GCP documentation for API Gateway API-key authentication and quota behavior.
+- A sanitized OpenAPI design showing the security definition and affected operations.
+- A local test proving direct service calls do not require a key.
+- A controlled GCP test proving valid and invalid gateway key outcomes.
+- Evidence that backend logs and responses do not expose the key.
+- A phased rollback design: before service key removal, restore the prior gateway, proxy,
+  and service revisions together; after service key removal, roll back only gateway
+  validation while services remain key-free and protected by Cloud Run IAM/ingress.

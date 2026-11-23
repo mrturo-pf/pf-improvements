@@ -39,6 +39,7 @@ This index intentionally does not duplicate those fields.
 | `IMP-013` | `pf-rates-to-reference` | Issue pending intake | [artifact](records/IMP-013-pf-rates-to-reference/recommendation.md) |
 | `IMP-015` | `backend-request-correlation-id` | Issue pending intake | [artifact](records/IMP-015-backend-request-correlation-id/recommendation.md) |
 | `IMP-016` | `gcp-native-api-gateway` | Issue pending intake | [artifact](records/IMP-016-gcp-native-api-gateway/recommendation.md) |
+| `IMP-017` | `gateway-api-key-ownership` | Issue pending intake | [artifact](records/IMP-017-gateway-api-key-ownership/recommendation.md) |
 
 ## Source-of-truth rules
 

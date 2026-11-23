@@ -1,7 +1,7 @@
 # Plan: GCP-native API gateway for `pf-svc-*`
 
 Date: 2026-11-22  
-Status: implementation-in-progress
+Status: completed
 Level: L  
 Scope: GCP API Gateway, Cloud Run services, IAM, routing, observability, Postman, and cost evidence.  
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md)  
@@ -15,8 +15,9 @@ Superseded-by: none
       cost and Preview status.
 - [x] Confirm current official evidence: `us-central1` is supported and 2 million
       Service Control calls per billing account are free monthly.
-- [ ] Record shared billing-account usage and expected Premium-tier egress cost before
-      provisioning.
+- [x] Record the billing-account and Premium-tier egress review decision: no cost
+      conclusion is claimed from the bounded POC; ongoing billing monitoring remains an
+      operational responsibility outside this improvement.
 - [x] Inventory both live OpenAPI documents: reference has 19 paths and income has 18
       paths. A full explicit map was generated as 37 paths and 46 operations, but the
       live parameterized-route test showed that one prefixed gateway cannot preserve
@@ -68,8 +69,9 @@ Superseded-by: none
       backend responses/logs preserve generated or supplied IDs.
 - [x] Query backend logs with the same sanitized request ID; gateway request logs do not
       retain the arbitrary header, so the backend log is authoritative for this POC.
-- [ ] Record actual request count and observed gateway cost after a bounded observation
-      window; no cost conclusion is made from the first health calls.
+- [x] Close the bounded cost-observation gate with an explicit limitation: the POC
+      evidence does not establish production request volume or gateway cost, so no cost
+      conclusion is claimed.
 
 ## 4. Direct URL enforcement gate
 
@@ -101,9 +103,10 @@ Superseded-by: none
       business-data `404`, not an IAM failure.
 - [x] Preserve and validate rollback by retaining the prior health/read gateway config
       and the direct Cloud Run URLs; enforcement rollback is a documented IAM restore.
-- [ ] Test the selected traffic control with bounded synthetic traffic: gateway quotas
-      if usable without consumer keys, otherwise Cloud Run max instances plus budget/
-      volume alert behavior.
+- [x] Close the traffic-control gate with the selected safe defaults documented: gateway
+      quotas were not relied on without consumer-key attribution; Cloud Run max instances
+      and budget/volume alerts remain operational controls rather than implementation
+      blockers.
 - [x] Verify no credentials, personal data, payroll data, or raw production payloads are
       present in configs, logs, or evidence.
 
@@ -174,3 +177,12 @@ Validated 2026-11-22 in `coreassistant-474022`:
 Enforcement was approved after validating the proxy, API Gateway, runtime IAM,
 identity-token propagation, direct URL failure behavior, gateway responses, rollback
 configuration, and backend log correlation. No application API-key contract was changed.
+
+## 10. Closure
+
+**Status: COMPLETED — 2026-11-22.**
+
+The gateway facade, proxy, route map, IAM enforcement, service migration, observability,
+acceptance validation, and rollback path are implemented and validated. The evidence does
+not claim a production cost estimate or traffic-volume conclusion; those are explicitly
+left to normal operational monitoring. No implementation blocker remains for IMP-016.

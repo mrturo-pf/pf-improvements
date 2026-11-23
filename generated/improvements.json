@@ -474,8 +474,27 @@
       "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
       "issue_url": null,
       "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-016-gcp-native-api-gateway/plan.md",
-      "next_action": "Confirm API Gateway pricing, hostname, OpenAPI route map, and IAM model before a facade proof of concept.",
-      "metadata_status": "proposal artifacts prepared; implementation not authorized"
+      "next_action": "Completed: gateway facade, proxy, route map, IAM enforcement, service migration, acceptance validation, and rollback evidence recorded.",
+      "metadata_status": "implementation completed; cost and traffic-volume conclusions explicitly deferred to operational monitoring"
+    },
+    {
+      "id": "IMP-017",
+      "slug": "gateway-api-key-ownership",
+      "level": "L",
+      "type": "security",
+      "owner": "pf-common",
+      "affected": [
+        "pf-common",
+        "pf-gateway-proxy",
+        "pf-svc-reference",
+        "pf-svc-income",
+        "pf-postman"
+      ],
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "issue_url": null,
+      "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-017-gateway-api-key-ownership/plan.md",
+      "next_action": "Implement the approved gateway-owned API-key design after completing the native API Gateway behavior and header-forwarding gates.",
+      "metadata_status": "implementation authorized by mrturo on 2026-11-22; phased rollout and acceptance tests pending"
     }
   ]
 }

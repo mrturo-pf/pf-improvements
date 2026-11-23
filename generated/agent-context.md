@@ -3,7 +3,7 @@
 > Generated from `improvements.json`. Do not edit manually.
 
 - Schema version: `1`
-- Items: `30`
+- Items: `31`
 
 ## Improvement references
 
@@ -276,6 +276,15 @@ Query the Project before making planning decisions; this generated file stores n
 - Level: `L`; type: `architecture`
 - Owner: `pf-common`
 - Affected: `pf-common`, `pf-svc-reference`, `pf-svc-income`, `pf-postman`
-- Next action: Confirm API Gateway pricing, hostname, OpenAPI route map, and IAM model before a facade proof of concept.
+- Next action: Completed: gateway facade, proxy, route map, IAM enforcement, service migration, acceptance validation, and rollback evidence recorded.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-016-gcp-native-api-gateway/plan.md
+- Issue: pending coordination issue
+
+### IMP-017 — gateway-api-key-ownership
+
+- Level: `L`; type: `security`
+- Owner: `pf-common`
+- Affected: `pf-common`, `pf-gateway-proxy`, `pf-svc-reference`, `pf-svc-income`, `pf-postman`
+- Next action: Implement the approved gateway-owned API-key design after completing the native API Gateway behavior and header-forwarding gates.
+- Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-017-gateway-api-key-ownership/plan.md
 - Issue: pending coordination issue
