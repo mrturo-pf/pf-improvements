@@ -70,12 +70,12 @@ Superseded-by: none
 - [x] Local `pf-svc-reference` direct request succeeds without an API key.
 - [x] Local `pf-svc-income` direct request succeeds without an API key.
 - [x] Local income-to-reference request succeeds without a client API key.
-- [ ] GCP income-to-reference integration is not yet evidenced against the approved
-      final boundary. PR #28 is merged and revision `pf-svc-income-00021-kj5` now has the
-      direct reference URL; `pf-svc-income` was granted `roles/run.invoker` on reference
-      and public reference invocation was removed. A fresh runtime log join is still
-      required to prove the identity-token call without a client API key or public
-      gateway traversal.
+- [x] GCP income-to-reference integration validated after PR #28 deployment. Revision
+      `pf-svc-income-00021-kj5` uses the direct reference Cloud Run URL, reference grants
+      `roles/run.invoker` to the income service account, and public reference invocation
+      is removed. The GCP Postman smoke run succeeded; Cloud Logging joined income and
+      reference events on `X-Request-ID` while proxy logs showed only the public income
+      requests, not an internal `/reference` gateway hop.
 - [x] GCP request with a valid gateway key succeeds for approved reference routes.
 - [x] GCP request with a valid gateway key succeeds for approved income routes.
 - [x] GCP requests with missing and invalid keys are rejected by API Gateway before
@@ -84,9 +84,9 @@ Superseded-by: none
 - [x] Inspect backend and proxy logs for the successful GCP request: no raw API-key
       value appeared in the inspected entries or response evidence. Gateway rejection
       log coverage remains pending.
-- [ ] Verify correlation separately for gateway rejections and successful backend
-      requests. Successful income/proxy/reference events shared the supplied
-      `X-Request-ID`; rejection behavior still needs a dedicated check.
+- [x] Verify correlation for the successful GCP smoke run: income and reference events
+      shared `X-Request-ID: 550e8400-e29b-41d4-a716-446655440000`, and the proxy logged
+      the public income requests. Gateway-rejection correlation remains pending.
 - [x] Verify direct Cloud Run/IAM behavior remains governed by the
       [IMP-016](../IMP-016-gcp-native-api-gateway/plan.md) policy and is not weakened by
       removing application API-key checks.
