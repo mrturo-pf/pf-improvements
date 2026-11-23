@@ -70,19 +70,23 @@ Superseded-by: none
 - [x] Local `pf-svc-reference` direct request succeeds without an API key.
 - [x] Local `pf-svc-income` direct request succeeds without an API key.
 - [x] Local income-to-reference request succeeds without a client API key.
-- [x] GCP income-to-reference integration validated through the income payroll query
-      flow on 2026-11-23: Postman reached the GCP gateway, income returned `200`, and
-      the deployed income client uses the direct reference URL plus a Google identity
-      token without a client API key or public-gateway traversal. Detailed log-join
-      evidence remains covered by the correlation/log item below.
+- [ ] GCP income-to-reference integration is not yet compliant with the approved final
+      boundary. The 2026-11-23 log join proved income reached reference successfully and
+      preserved `X-Request-ID`, but the deployed income revision still has
+      `PF_REFERENCE_URL` pointing to the public gateway facade. It must be changed to the
+      direct reference Cloud Run URL, redeployed, and revalidated with a Google identity
+      token and no client API key.
 - [x] GCP request with a valid gateway key succeeds for approved reference routes.
 - [x] GCP request with a valid gateway key succeeds for approved income routes.
 - [x] GCP requests with missing and invalid keys are rejected by API Gateway before
       backend business handling. Disabled and unauthorized restriction cases remain
       pending.
-- [ ] Verify backend logs, proxy logs, traces, and response bodies contain no raw key.
+- [x] Inspect backend and proxy logs for the successful GCP request: no raw API-key
+      value appeared in the inspected entries or response evidence. Gateway rejection
+      log coverage remains pending.
 - [ ] Verify correlation separately for gateway rejections and successful backend
-      requests; successful requests must retain the existing end-to-end contract.
+      requests. Successful income/proxy/reference events shared the supplied
+      `X-Request-ID`; rejection behavior still needs a dedicated check.
 - [x] Verify direct Cloud Run/IAM behavior remains governed by the
       [IMP-016](../IMP-016-gcp-native-api-gateway/plan.md) policy and is not weakened by
       removing application API-key checks.
@@ -173,7 +177,9 @@ business valid key       -> HTTP 200 via Postman/GCP
 
 The GCP requests required an approved no-proxy network path; the corporate proxy was
 intercepting the gateway hostname through Cisco Umbrella/OpenDNS. The API Gateway
-configuration and Postman synchronization both completed successfully.
+configuration and Postman synchronization both completed successfully. Cloud Logging
+also joined income, proxy, and reference events by the supplied request ID, with no raw
+API-key value present in the inspected backend/proxy entries.
 
 The `400` for an invalid key is the observed API Gateway behavior and is accepted as the
 invalid-key rejection for this implementation. Additional boundary tests on 2026-11-23
