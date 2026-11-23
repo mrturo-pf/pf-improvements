@@ -1,7 +1,7 @@
 # Brief: gateway-owned API-key enforcement
 
 Date: 2026-11-22  
-Status: approved  
+Status: completed
 Level: L  
 Scope: API Gateway API-key validation, `pf-gateway-proxy`, `pf-svc-*` local/runtime behavior, documentation, and client contracts.  
 Related artifacts: [investigation](investigation.md) · [recommendation](recommendation.md) · [plan](plan.md)  

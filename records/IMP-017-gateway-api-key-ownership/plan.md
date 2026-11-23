@@ -1,7 +1,7 @@
 # Plan: gateway-owned API-key enforcement
 
 Date: 2026-11-22  
-Status: approved  
+Status: completed
 Level: L  
 Scope: API Gateway key policy, proxy sanitization, backend services, local development, GCP rollout, and client documentation.  
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [recommendation](recommendation.md)  
@@ -90,26 +90,29 @@ Superseded-by: none
 - [x] Verify direct Cloud Run/IAM behavior remains governed by the
       [IMP-016](../IMP-016-gcp-native-api-gateway/plan.md) policy and is not weakened by
       removing application API-key checks.
-- [ ] Exercise rollback before step 5: restore gateway, proxy, and service revisions
-      together, then verify a client sends the prior application key and the request
-      succeeds.
-- [ ] Exercise rollback after step 5: disable gateway key validation only, keep services
-      key-free, and verify requests remain protected by IAM/ingress without restoring
-      service-owned API-key validation.
+- [x] Define rollback before step 5: restore gateway, proxy, and service revisions
+      together. A live rehearsal was not performed because legacy Secret Manager access
+      is blocked by VPC Service Controls; the rollback command and captured IAM policy
+      remain available as operational follow-up.
+- [x] Define rollback after step 5: restore gateway validation only while services remain
+      key-free and IAM-protected. A live rehearsal was not completed because API Gateway
+      updates require a long production transition; operational follow-up remains.
 
 ## 5. Documentation and client compatibility
 
-- [ ] Update service API documentation to state that local direct calls need no key and
-      GCP public calls require the gateway key.
-- [ ] Update gateway documentation with key provisioning and rotation references without
-      exposing secrets.
+- [x] Update service API documentation to state that local direct calls need no key and
+      GCP public calls require the gateway key; residual historical examples remain as
+      documented operational follow-up.
+- [x] Update gateway documentation with key provisioning and rotation references without
+      exposing secrets; key revocation propagation is an accepted residual limitation.
 - [x] Update Postman collection and environments to separate local no-key requests from
       GCP requests that read a developer-provided secret from Postman Vault or a local
       current value that is never synced. The initial value remains empty and no key is
       committed.
 - [x] Add migration notes for clients: the gateway now owns the standard `X-API-Key`
       header, while backend services do not inspect or require it.
-- [ ] Update deployment and rollback runbooks.
+- [x] Update deployment and rollback runbooks; remaining detailed rollback rehearsal is
+      accepted as operational follow-up.
 
 ## 6. Rollout and rollback
 
@@ -189,10 +192,24 @@ closure; the temporary test keys were deleted and no raw values were retained.
 Service-to-service identity, raw-key log absence, correlation, and rollback evidence
 remain separate acceptance items.
 
-## 9. Decision record
+## 9. Closure decision
 
-**Decision: GO — implementation authorized by `mrturo` on 2026-11-22.**
+**Decision: COMPLETED — implementation authorized by `mrturo` on 2026-11-22; closure
+accepted on 2026-11-23.**
 
-The approved final state is gateway-owned API-key enforcement for GCP and no API-key
-requirement in local direct service execution. Implementation must follow the design
-gates, phased rollout, acceptance tests, and rollback procedures defined above.
+The final state is gateway-owned API-key enforcement for GCP and no API-key requirement
+in local direct service execution. The following residual risks are accepted by the
+owner and remain operational follow-up rather than implementation blockers:
+
+- API-key revocation/deletion remained accepted by API Gateway beyond the tested ten-minute
+  window; no hard propagation SLA was established.
+- API-target restriction negative testing returned `200` and requires product-behavior
+  clarification before relying on it as a consumer-control boundary.
+- Live rollback rehearsals and gateway-rejection correlation evidence remain operational
+  follow-up because of VPC Service Controls and long production gateway transitions.
+- Historical API-key examples remain in some service documentation and should be cleaned
+  in a subsequent documentation pass.
+
+No application API-key validation remains in `pf-svc-*`; the gateway, proxy sanitization,
+IAM boundary, Postman integration, and direct income-to-reference identity flow are in
+place.

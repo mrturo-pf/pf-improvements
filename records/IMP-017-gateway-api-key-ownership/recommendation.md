@@ -1,7 +1,7 @@
 # Recommendation: gateway-owned API-key enforcement
 
 Date: 2026-11-22  
-Status: approved  
+Status: completed
 Level: L  
 Scope: API Gateway authentication policy, proxy boundary, backend services, local development, and client tooling.  
 Related artifacts: [brief](brief.md) · [investigation](investigation.md) · [plan](plan.md)  

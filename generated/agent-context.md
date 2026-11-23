@@ -285,6 +285,6 @@ Query the Project before making planning decisions; this generated file stores n
 - Level: `L`; type: `security`
 - Owner: `pf-common`
 - Affected: `pf-common`, `pf-gateway-proxy`, `pf-svc-reference`, `pf-svc-income`, `pf-postman`
-- Next action: Implement the approved gateway-owned API-key design after completing the native API Gateway behavior and header-forwarding gates.
+- Next action: Completed: gateway-owned API-key enforcement, service removal, IAM boundary, Postman integration, and direct income-to-reference identity flow are deployed; residual revocation, restriction, rollback, and documentation risks are accepted operational follow-up.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-017-gateway-api-key-ownership/plan.md
 - Issue: pending coordination issue

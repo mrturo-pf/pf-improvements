@@ -1,7 +1,7 @@
 # Investigation: gateway-owned API-key enforcement
 
 Date: 2026-11-22  
-Status: approved  
+Status: completed
 Level: L  
 Scope: GCP API Gateway, `pf-gateway-proxy`, `pf-svc-reference`, `pf-svc-income`, and client documentation.  
 Related artifacts: [brief](brief.md) · [recommendation](recommendation.md) · [plan](plan.md)  

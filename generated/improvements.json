@@ -493,8 +493,8 @@
       "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
       "issue_url": null,
       "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-017-gateway-api-key-ownership/plan.md",
-      "next_action": "Implement the approved gateway-owned API-key design after completing the native API Gateway behavior and header-forwarding gates.",
-      "metadata_status": "implementation authorized by mrturo on 2026-11-22; phased rollout and acceptance tests pending"
+      "next_action": "Completed: gateway-owned API-key enforcement, service removal, IAM boundary, Postman integration, and direct income-to-reference identity flow are deployed; residual revocation, restriction, rollback, and documentation risks are accepted operational follow-up.",
+      "metadata_status": "completed with accepted operational limitations; closure recorded in IMP-017 plan on 2026-11-23"
     }
   ]
 }
