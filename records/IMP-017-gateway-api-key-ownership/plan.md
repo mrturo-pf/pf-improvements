@@ -17,8 +17,11 @@ Superseded-by: none
       `X-Gateway-API-Key` in a header.
 - [x] Keep `GET /health` operations outside the gateway API-key requirement so health and
       operational checks remain keyless; require the key for business operations.
-- [ ] Define the key lifecycle owner, provisioning path, rotation, disablement, revocation,
-      and access audit. No raw key may enter Git, CI logs, or sanitized evidence.
+- [x] Define the key lifecycle owner, provisioning path, rotation, disablement, revocation,
+      and access audit. The GCP project operator owns the restricted API Key resource;
+      developer values use Postman Vault or an unsynced local current value. No raw key
+      may enter Git, CI logs, or sanitized evidence. Provisioned resource ID:
+      `e1a20932-0c9f-4fd9-a236-ef233e765d88`.
 - [x] Confirm API Gateway does not promise to strip validated original headers. Define
       proxy sanitization for `X-Gateway-API-Key` and require it before gateway validation
       activation; backend logs must never record the value.

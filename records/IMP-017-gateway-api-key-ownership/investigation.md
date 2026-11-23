@@ -63,9 +63,16 @@ Authoritative references:
 - [API Gateway architecture](https://cloud.google.com/api-gateway/docs/architecture-overview)
 - [OpenAPI 2.0 extensions](https://cloud.google.com/api-gateway/docs/oasv2-extensions)
 
-The key resource and rotation owner still require an explicit GCP provisioning decision;
-no key has been created or stored by this investigation.
+A restricted GCP API key resource was provisioned for the managed gateway service
+`pf-backend-gateway-22kzlirwl1h1g.apigateway.coreassistant-474022.cloud.goog`:
 
+- key resource ID: `e1a20932-0c9f-4fd9-a236-ef233e765d88`;
+- display name: `PF API Gateway consumer key`;
+- restriction: API target limited to the managed gateway service;
+- raw key value: not stored in this repository, logs, or evidence.
+
+Rotation is owned by the GCP project operator through the API Keys service. Developer
+use will be through Postman Vault or an unsynced local current value only.
 The IAM/ingress precondition was remediated on 2026-11-23 by removing the
 `roles/run.invoker` binding for `allUsers` from `pf-svc-income`. The three services now
 have only the expected service-account invokers. Validation returned `403` for direct
