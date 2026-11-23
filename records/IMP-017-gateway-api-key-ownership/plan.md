@@ -70,12 +70,12 @@ Superseded-by: none
 - [x] Local `pf-svc-reference` direct request succeeds without an API key.
 - [x] Local `pf-svc-income` direct request succeeds without an API key.
 - [x] Local income-to-reference request succeeds without a client API key.
-- [ ] GCP income-to-reference integration is not yet compliant with the approved final
-      boundary. The 2026-11-23 log join proved income reached reference successfully and
-      preserved `X-Request-ID`, but the deployed income revision still has
-      `PF_REFERENCE_URL` pointing to the public gateway facade. It must be changed to the
-      direct reference Cloud Run URL, redeployed, and revalidated with a Google identity
-      token and no client API key.
+- [ ] GCP income-to-reference integration is not yet evidenced against the approved
+      final boundary. PR #28 is merged and revision `pf-svc-income-00021-kj5` now has the
+      direct reference URL; `pf-svc-income` was granted `roles/run.invoker` on reference
+      and public reference invocation was removed. A fresh runtime log join is still
+      required to prove the identity-token call without a client API key or public
+      gateway traversal.
 - [x] GCP request with a valid gateway key succeeds for approved reference routes.
 - [x] GCP request with a valid gateway key succeeds for approved income routes.
 - [x] GCP requests with missing and invalid keys are rejected by API Gateway before
