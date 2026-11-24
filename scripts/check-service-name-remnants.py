@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Find legacy PF service-name aliases in paths and file contents.
 
-The check is intentionally strict: any matching path or content is reported and
-causes a non-zero exit status. Historical records can be reviewed separately or
-excluded by selecting a narrower root; this tool does not silently bless them.
+The check supports one or more roots. Any matching path or content causes a non-zero
+exit status. Historical records can be reviewed separately or excluded by selecting a
+narrower root; this tool does not silently bless them.
 """
 
 from __future__ import annotations
@@ -43,15 +43,30 @@ class Finding:
 
 def is_inventory_output(path: Path, root: Path) -> bool:
     relative = path.relative_to(root)
+    evidence_parts = tuple(INVENTORY_EVIDENCE_DIR.parts)
     return (
-        relative.parent == INVENTORY_EVIDENCE_DIR
+        tuple(relative.parent.parts[-len(evidence_parts) :]) == evidence_parts
         and relative.name.startswith("remnants-")
         and relative.suffix == ".txt"
     )
 
 
 def iter_files(root: Path, excluded: set[Path]) -> list[Path]:
-    ignored_directories = {".git", "__pycache__"}
+    ignored_directories = {
+        ".git",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".tox",
+        "__pycache__",
+        "build",
+        "coverage",
+        "dist",
+        "htmlcov",
+        "node_modules",
+        "venv",
+        ".venv",
+    }
     ignored_files = {".DS_Store"}
     return sorted(
         path
@@ -124,11 +139,18 @@ def parse_args() -> argparse.Namespace:
         description="Find legacy PF service-name aliases in paths and file contents."
     )
     parser.add_argument(
-        "root",
-        nargs="?",
+        "roots",
+        nargs="*",
         type=Path,
-        default=Path(__file__).resolve().parents[1],
-        help="Directory to scan (default: the improvements repository)",
+        help="Directories to scan (default: the improvements repository)",
+    )
+    parser.add_argument(
+        "--root",
+        dest="option_roots",
+        action="append",
+        default=[],
+        type=Path,
+        help="Additional directory to scan; may be repeated",
     )
     parser.add_argument(
         "--exclude-path",
@@ -142,25 +164,46 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    root = args.root.resolve()
-    if not root.is_dir():
-        print(f"error: scan root is not a directory: {root}", file=sys.stderr)
-        return 2
-
-    excluded: set[Path] = set()
-    for excluded_path in args.exclude_path:
-        candidate = (root / excluded_path).resolve()
-        if candidate != root and root not in candidate.parents:
-            print(
-                f"error: excluded path is outside scan root: {excluded_path}",
-                file=sys.stderr,
-            )
-            return 2
-        excluded.add(candidate)
+    roots = [*args.roots, *args.option_roots]
+    if not roots:
+        roots = [Path(__file__).resolve().parents[1]]
 
     pattern = compile_alias_pattern()
-    findings = scan_paths(root, pattern, excluded) + scan_contents(root, pattern, excluded)
-    skipped = [finding for finding in findings if finding.kind == "skipped"]
+    all_findings: list[Finding] = []
+    resolved_roots: list[Path] = []
+    multiple_roots = len(roots) > 1
+    for root_argument in roots:
+        root = root_argument.resolve()
+        if not root.is_dir():
+            print(f"error: scan root is not a directory: {root}", file=sys.stderr)
+            return 2
+        resolved_roots.append(root)
+
+        excluded: set[Path] = set()
+        for excluded_path in args.exclude_path:
+            candidate = (root / excluded_path).resolve()
+            if candidate != root and root not in candidate.parents:
+                print(
+                    f"error: excluded path is outside scan root: {excluded_path}",
+                    file=sys.stderr,
+                )
+                return 2
+            excluded.add(candidate)
+        root_findings = scan_paths(root, pattern, excluded)
+        root_findings.extend(scan_contents(root, pattern, excluded))
+        if multiple_roots:
+            root_findings = [
+                Finding(
+                    finding.kind,
+                    Path(root.name) / finding.path,
+                    finding.line,
+                    finding.text,
+                )
+                for finding in root_findings
+            ]
+        all_findings.extend(root_findings)
+
+    skipped = [finding for finding in all_findings if finding.kind == "skipped"]
     if skipped:
         for finding in skipped:
             print(f"{finding.kind}: {finding.path}: {finding.text}", file=sys.stderr)
@@ -169,16 +212,20 @@ def main() -> int:
             file=sys.stderr,
         )
         return 2
-    if not findings:
-        print(f"No legacy service-name remnants found under {root}")
+    if not all_findings:
+        scanned = ", ".join(str(root) for root in resolved_roots)
+        print(f"No legacy service-name remnants found under {scanned}")
         return 0
 
-    for finding in findings:
+    for finding in all_findings:
         location = str(finding.path)
         if finding.line is not None:
             location += f":{finding.line}"
         print(f"{finding.kind}: {location}: {finding.text or ''}")
-    print(f"Found {len(findings)} legacy service-name remnant(s)", file=sys.stderr)
+    print(
+        f"Found {len(all_findings)} legacy service-name remnant(s)",
+        file=sys.stderr,
+    )
     return 1
 
 
