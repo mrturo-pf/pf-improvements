@@ -19,6 +19,10 @@ workflow guidance. Current service identities must be used consistently. The com
 | `pf-rates` | `pf-svc-reference` |
 | `pf_rates` | `pf_svc_reference` |
 | `pfrates` | `pfsvcreference` |
+| `pf-reference` | `pf-svc-reference` |
+| `pf_reference` | `pf_svc_reference` |
+| `pf-income` | `pf-svc-income` |
+| `pf_income` | `pf_svc_income` |
 
 These are aliases used in active documentation or metadata; they are not a request to
 rename real repositories or infrastructure resources.

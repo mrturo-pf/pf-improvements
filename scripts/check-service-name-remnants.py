@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Find legacy PF service-name aliases in paths and file contents.
-
-The check supports one or more roots. Any matching path or content causes a non-zero
-exit status. Historical records can be reviewed separately or excluded by selecting a
-narrower root; this tool does not silently bless them.
-"""
+"""Find legacy PF service aliases in file paths and UTF-8 text."""
 
 from __future__ import annotations
 
@@ -14,33 +9,23 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-
-INVENTORY_EVIDENCE_DIR = Path(
-    "records/IMP-018-active-service-name-normalization/evidence"
-)
-
-
-def legacy_aliases() -> tuple[str, ...]:
-    """Build aliases without placing a complete alias in this source file."""
-
-    return (
-        "pf" + "_income",
-        "pf" + "-income",
-        "pf" + "_payroll",
-        "pf" + "_payrolls",
-        "pf" + "-payroll",
-        "pf" + "-payrolls",
-        "pf" + "payroll",
-        "pf" + "payrolls",
-        "pf" + "_rate",
-        "pf" + "_rates",
-        "pf" + "-rate",
-        "pf" + "-rates",
-        "pf" + "rate",
-        "pf" + "rates",
-        "pf" + "_reference",
-        "pf" + "-reference",
-    )
+EVIDENCE_DIR = Path("records/IMP-018-active-service-name-normalization/evidence")
+IGNORED_DIRECTORIES = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tox",
+    "__pycache__",
+    "build",
+    "coverage",
+    "dist",
+    "htmlcov",
+    "node_modules",
+    ".venv",
+    "venv",
+}
+IGNORED_FILES = {".DS_Store", ".coverage"}
 
 
 @dataclass(frozen=True)
@@ -48,12 +33,40 @@ class Finding:
     kind: str
     path: Path
     line: int | None = None
-    text: str | None = None
+    detail: str = ""
+
+
+def legacy_aliases() -> tuple[str, ...]:
+    """Build aliases in fragments so this script does not report itself."""
+
+    return (
+        "pf" + "_income",
+        "pf" + "-income",
+        "pf" + "_payrolls",
+        "pf" + "-payrolls",
+        "pf" + "_payroll",
+        "pf" + "-payroll",
+        "pf" + "payrolls",
+        "pf" + "payroll",
+        "pf" + "_reference",
+        "pf" + "-reference",
+        "pf" + "_rates",
+        "pf" + "-rates",
+        "pf" + "_rate",
+        "pf" + "-rate",
+        "pf" + "rates",
+        "pf" + "rate",
+    )
+
+
+def alias_pattern() -> re.Pattern[str]:
+    aliases = sorted(legacy_aliases(), key=len, reverse=True)
+    return re.compile("|".join(re.escape(alias) for alias in aliases), re.IGNORECASE)
 
 
 def is_inventory_output(path: Path, root: Path) -> bool:
     relative = path.relative_to(root)
-    evidence_parts = tuple(INVENTORY_EVIDENCE_DIR.parts)
+    evidence_parts = EVIDENCE_DIR.parts
     return (
         tuple(relative.parent.parts[-len(evidence_parts) :]) == evidence_parts
         and relative.name.startswith("remnants-")
@@ -62,41 +75,26 @@ def is_inventory_output(path: Path, root: Path) -> bool:
 
 
 def iter_files(root: Path, excluded: set[Path]) -> list[Path]:
-    ignored_directories = {
-        ".git",
-        ".mypy_cache",
-        ".pytest_cache",
-        ".ruff_cache",
-        ".tox",
-        "__pycache__",
-        "build",
-        "coverage",
-        "dist",
-        "htmlcov",
-        "node_modules",
-        "venv",
-        ".venv",
-    }
-    ignored_files = {".DS_Store"}
-    return sorted(
-        path
-        for path in root.rglob("*")
-        if path.is_file()
-        and path.name not in ignored_files
-        and not is_inventory_output(path, root)
-        and not ignored_directories.intersection(path.relative_to(root).parts)
-        and not any(
-            path == excluded_path or excluded_path in path.parents
-            for excluded_path in excluded
-        )
-    )
-
-
-def compile_alias_pattern() -> re.Pattern[str]:
-    aliases = "|".join(
-        re.escape(alias) for alias in sorted(legacy_aliases(), key=len, reverse=True)
-    )
-    return re.compile(aliases, re.IGNORECASE)
+    files: list[Path] = []
+    for directory, directories, filenames in __import__("os").walk(root):
+        directory_path = Path(directory).resolve()
+        if any(directory_path == path or path in directory_path.parents for path in excluded):
+            directories[:] = []
+            continue
+        directories[:] = [
+            name
+            for name in directories
+            if name not in IGNORED_DIRECTORIES
+            and (directory_path / name).resolve() not in excluded
+        ]
+        for filename in filenames:
+            path = directory_path / filename
+            if filename in IGNORED_FILES or is_inventory_output(path, root):
+                continue
+            if any(path == excluded_path or excluded_path in path.parents for excluded_path in excluded):
+                continue
+            files.append(path)
+    return sorted(files)
 
 
 def scan_paths(
@@ -109,7 +107,7 @@ def scan_paths(
             matches = pattern.findall(component)
             if matches:
                 findings.append(
-                    Finding("path", relative, text=f"aliases={','.join(matches)}")
+                    Finding("path", relative, detail=f"aliases={','.join(matches)}")
                 )
                 break
     return findings
@@ -122,17 +120,17 @@ def scan_contents(
     for path in iter_files(root, excluded):
         relative = path.relative_to(root)
         try:
-            text = path.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, OSError) as exc:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeDecodeError) as exc:
             findings.append(
                 Finding(
                     "skipped",
                     relative,
-                    text=f"{exc.__class__.__name__}; inventory incomplete for this file",
+                    detail=f"{exc.__class__.__name__}; inventory incomplete",
                 )
             )
             continue
-        for line_number, line in enumerate(text.splitlines(), start=1):
+        for line_number, line in enumerate(lines, start=1):
             matches = pattern.findall(line)
             if matches:
                 findings.append(
@@ -140,7 +138,7 @@ def scan_contents(
                         "content",
                         relative,
                         line_number,
-                        text=f"aliases={','.join(matches)}",
+                        f"aliases={','.join(matches)}",
                     )
                 )
     return findings
@@ -148,13 +146,13 @@ def scan_contents(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Find legacy PF service-name aliases in paths and file contents."
+        description="Find legacy PF aliases in paths and UTF-8 file content."
     )
     parser.add_argument(
         "roots",
         nargs="*",
         type=Path,
-        help="Directories to scan (default: the improvements repository)",
+        help="Directories to scan; defaults to the improvements repository",
     )
     parser.add_argument(
         "--root",
@@ -169,7 +167,7 @@ def parse_args() -> argparse.Namespace:
         action="append",
         default=[],
         type=Path,
-        help="Path relative to root to exclude; may be repeated",
+        help="Path relative to every root to exclude; may be repeated",
     )
     return parser.parse_args()
 
@@ -180,50 +178,50 @@ def main() -> int:
     if not roots:
         roots = [Path(__file__).resolve().parents[1]]
 
-    pattern = compile_alias_pattern()
+    pattern = alias_pattern()
     all_findings: list[Finding] = []
-    resolved_roots: list[Path] = []
     multiple_roots = len(roots) > 1
+    resolved_roots: list[Path] = []
+
     for root_argument in roots:
         root = root_argument.resolve()
         if not root.is_dir():
             print(f"error: scan root is not a directory: {root}", file=sys.stderr)
             return 2
         resolved_roots.append(root)
-
-        excluded: set[Path] = set()
-        for excluded_path in args.exclude_path:
-            candidate = (root / excluded_path).resolve()
-            if candidate != root and root not in candidate.parents:
+        excluded = set()
+        for excluded_argument in args.exclude_path:
+            excluded_path = (root / excluded_argument).resolve()
+            if excluded_path != root and root not in excluded_path.parents:
                 print(
-                    f"error: excluded path is outside scan root: {excluded_path}",
+                    f"error: excluded path is outside scan root: {excluded_argument}",
                     file=sys.stderr,
                 )
                 return 2
-            excluded.add(candidate)
-        root_findings = scan_paths(root, pattern, excluded)
-        root_findings.extend(scan_contents(root, pattern, excluded))
+            excluded.add(excluded_path)
+
+        findings = scan_paths(root, pattern, excluded) + scan_contents(
+            root, pattern, excluded
+        )
         if multiple_roots:
-            root_findings = [
+            findings = [
                 Finding(
                     finding.kind,
                     Path(root.name) / finding.path,
                     finding.line,
-                    finding.text,
+                    finding.detail,
                 )
-                for finding in root_findings
+                for finding in findings
             ]
-        all_findings.extend(root_findings)
+        all_findings.extend(findings)
 
     skipped = [finding for finding in all_findings if finding.kind == "skipped"]
     if skipped:
         for finding in skipped:
-            print(f"{finding.kind}: {finding.path}: {finding.text}", file=sys.stderr)
-        print(
-            f"Skipped {len(skipped)} file(s); inventory is incomplete",
-            file=sys.stderr,
-        )
+            print(f"{finding.kind}: {finding.path}: {finding.detail}", file=sys.stderr)
+        print(f"Skipped {len(skipped)} file(s); inventory is incomplete", file=sys.stderr)
         return 2
+
     if not all_findings:
         scanned = ", ".join(str(root) for root in resolved_roots)
         print(f"No legacy service-name remnants found under {scanned}")
@@ -233,11 +231,8 @@ def main() -> int:
         location = str(finding.path)
         if finding.line is not None:
             location += f":{finding.line}"
-        print(f"{finding.kind}: {location}: {finding.text or ''}")
-    print(
-        f"Found {len(all_findings)} legacy service-name remnant(s)",
-        file=sys.stderr,
-    )
+        print(f"{finding.kind}: {location}: {finding.detail}")
+    print(f"Found {len(all_findings)} legacy service-name remnant(s)", file=sys.stderr)
     return 1
 
 
