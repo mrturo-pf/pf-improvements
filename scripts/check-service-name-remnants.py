@@ -24,12 +24,22 @@ def legacy_aliases() -> tuple[str, ...]:
     """Build aliases without placing a complete alias in this source file."""
 
     return (
-        "pf" + "-payroll",
+        "pf" + "_income",
+        "pf" + "-income",
         "pf" + "_payroll",
+        "pf" + "_payrolls",
+        "pf" + "-payroll",
+        "pf" + "-payrolls",
         "pf" + "payroll",
-        "pf" + "-rates",
+        "pf" + "payrolls",
+        "pf" + "_rate",
         "pf" + "_rates",
+        "pf" + "-rate",
+        "pf" + "-rates",
+        "pf" + "rate",
         "pf" + "rates",
+        "pf" + "_reference",
+        "pf" + "-reference",
     )
 
 
@@ -83,7 +93,9 @@ def iter_files(root: Path, excluded: set[Path]) -> list[Path]:
 
 
 def compile_alias_pattern() -> re.Pattern[str]:
-    aliases = "|".join(re.escape(alias) for alias in legacy_aliases())
+    aliases = "|".join(
+        re.escape(alias) for alias in sorted(legacy_aliases(), key=len, reverse=True)
+    )
     return re.compile(aliases, re.IGNORECASE)
 
 
