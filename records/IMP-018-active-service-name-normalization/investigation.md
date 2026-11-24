@@ -7,10 +7,18 @@ Scope: `pf/improvements` active metadata and workflow guidance.
 
 ## Finding
 
-The IMP-017 artifact directory contains the requested legacy aliases only where this
+The IMP-018 artifact directory contains the requested legacy aliases only where this
 IMP-018 brief defines and explains the equivalence table; those are task self-references,
 not service metadata or operational guidance. The broader improvements repository
-contains three classes of occurrences:
+contains occurrences that must be classified using the same six categories throughout
+this task:
+
+- historical evidence;
+- stable identifier or historical path;
+- generated output;
+- active metadata;
+- current workflow guidance;
+- task-definition and evidence self-reference.
 
 ### Historical and permitted
 
@@ -23,9 +31,10 @@ them would break links and artifact history.
 
 ### Task-definition self-reference and permitted
 
-The equivalence table in this task's brief, plus text explaining that table, must retain
-legacy spellings so the mapping is auditable. This is a dedicated classification and
-must not be confused with historical evidence or active metadata.
+The equivalence table in this task's brief, plus task-definition and evidence files that
+record its scan output or classifications, may retain legacy spellings so the mapping is
+auditable. This is a dedicated classification and must not be confused with historical
+evidence or active metadata.
 
 ### Active and requiring normalization
 

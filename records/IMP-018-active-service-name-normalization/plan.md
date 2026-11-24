@@ -10,10 +10,12 @@ Approved: pending owner authorization
 
 - [ ] Run `python3 scripts/check-service-name-remnants.py` from the improvements
       repository root. The check is case-insensitive and scans both paths and content.
-- [ ] Classify each match as historical evidence, stable identifier, generated output,
-      active metadata, current workflow guidance, or task-definition self-reference.
-- [ ] Confirm IMP-017 contains aliases only in the auditable equivalence-table
-      self-reference; it must not contain unrelated active remnants.
+- [ ] Classify each match as historical evidence, stable identifier or historical path,
+      generated output, active metadata, current workflow guidance, or task-definition
+      and evidence self-reference.
+- [ ] Confirm IMP-018 contains aliases only in the auditable equivalence-table or
+      task-definition/evidence self-reference; it must not contain unrelated active
+      remnants.
 - [ ] Review filenames and directory names independently from file contents; a clean
       document with an obsolete filename is still a remaining alias.
 
@@ -40,15 +42,23 @@ Approved: pending owner authorization
 
 ## 4. Validation
 
-- [ ] Run `python3 scripts/check-service-name-remnants.py` after implementation.
+- [ ] Run `python3 scripts/check-service-name-remnants.py` after implementation, excluding
+      the versioned `evidence/` output directory so the checker does not read prior
+      inventories as new source findings.
+- [ ] Preserve the checker exit code in each inventory output. Accept only `0` (clean)
+      or `1` (aliases found); treat `2` or an exception as an incomplete validation.
 - [ ] Treat a non-zero full-tree result as an inventory requiring manual
       classification; do not ignore or auto-allow historical findings.
 - [ ] Run `python3 scripts/validate-improvements.py --write-generated`.
 - [ ] Run `python3 scripts/validate-improvements.py`.
 - [ ] Inspect the complete diff, including renames and deletions, not only content edits.
-- [ ] Verify that remaining legacy occurrences are historical or stable identifiers.
+- [ ] Verify that remaining legacy occurrences are historical, stable identifiers,
+      generated output, or task-definition/evidence self-references; all active metadata
+      and current workflow findings must be normalized.
 - [ ] Save the pre-change and post-change checker output as versioned evidence under
-      this IMP-018 record, then summarize the classification in this plan.
+      this IMP-018 record using a temporary file outside the repository, then move it
+      into `evidence/` only after the checker exits. Summarize the classification in
+      this plan.
 - [ ] Do not execute implementation or rename paths while this plan remains
       `Approved: pending owner authorization`. Owner authorization is a prerequisite.
 
