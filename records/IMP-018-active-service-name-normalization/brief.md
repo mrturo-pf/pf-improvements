@@ -31,12 +31,13 @@ IDs, slugs, links, and historical filenames are also not renamed by this task.
 
 1. Active workflow guidance contains only current service identities.
 2. Active improvement metadata uses current service identities for owners, affected
-   repositories, and next actions.
+   repositories, and next actions. The `affected` field means current repository
+   identities; historical infrastructure names are not rewritten by this task.
 3. Historical records retain their original terminology where it is historical evidence.
 4. No secrets, credentials, or production data are introduced.
 5. Validation passes without manually editing generated outputs.
-6. A before/after inventory records every retained historical occurrence and every
-   normalized active occurrence.
+6. A versioned before/after inventory records every retained historical occurrence,
+   task-definition self-reference, and normalized active occurrence.
 
 ## Non-objectives
 
