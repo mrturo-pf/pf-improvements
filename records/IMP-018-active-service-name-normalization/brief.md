@@ -9,13 +9,19 @@ Related artifacts: investigation.md · recommendation.md · plan.md
 ## Objective
 
 Remove obsolete service-name aliases from active, non-historical improvement metadata and
-workflow guidance. Current service identities must be used consistently:
+workflow guidance. Current service identities must be used consistently. The complete approved mapping is:
 
-- income service: `pf-svc-income`
-- reference service: `pf-svc-reference`
-- Compact income identity: `pfsvcincome`
-- Python-style reference identity: `pf_svc_reference`
-- Compact reference identity: `pfsvcreference`
+| Legacy alias | Current identity |
+|---|---|
+| `pf-payroll` | `pf-svc-income` |
+| `pf_payroll` | `pf_svc_income` |
+| `pfpayroll` | `pfsvcincome` |
+| `pf-rates` | `pf-svc-reference` |
+| `pf_rates` | `pf_svc_reference` |
+| `pfrates` | `pfsvcreference` |
+
+These are aliases used in active documentation or metadata; they are not a request to
+rename real repositories or infrastructure resources.
 
 Historical investigations, plans, recommendations, and evidence must remain unchanged
 when the old names describe the state or systems that existed at the time. Stable record

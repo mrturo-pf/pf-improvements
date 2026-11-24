@@ -30,9 +30,9 @@ it must not be hand-edited if the validator regenerates it from another source.
 
 ## Replacement policy
 
-Apply the requested case-preserving replacements only to active, non-historical text.
-The compact aliases are not identity operations: income and reference compact forms must
-be replaced with their approved current identities.
+Apply the complete mapping in the brief, preserving the destination spelling exactly,
+only to active, non-historical text. The compact forms are legacy aliases, not current
+identities; the destination spelling is defined explicitly in the mapping table.
 
 Before changing any file, classify each match as active metadata, current guidance,
 stable identifier, or historical evidence. Preserve stable identifiers and historical
@@ -43,6 +43,8 @@ evidence even when they contain a former alias.
 - Rewriting a historical record would damage auditability.
 - Editing generated JSON directly could be overwritten or create drift.
 - Renaming slugs or paths would break durable links.
+- Treating a full-tree non-zero result as a failure without classifying historical
+  findings would conflict with the explicit historical-evidence exception.
 
 ## Evidence required
 

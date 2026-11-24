@@ -21,7 +21,8 @@ Approved: pending owner authorization
 - [ ] Identify the source and generator for `improvements/improvements.json`.
 - [ ] Identify whether current workflow aliases are referenced by any validation or CI
       contract.
-- [ ] Confirm that record directory names and stable links are excluded from renaming.
+- [ ] Confirm that historical record directory names and stable links are excluded from
+      renaming, while any active filename/path rename is checked for inbound references.
 
 ## 3. Implementation
 
@@ -33,8 +34,8 @@ Approved: pending owner authorization
 ## 4. Validation
 
 - [ ] Run `python3 scripts/check-service-name-remnants.py` after implementation.
-- [ ] Require exit code `0` for a strict scan once all permitted historical aliases have
-      been migrated or explicitly removed from the selected validation scope.
+- [ ] Treat a non-zero full-tree result as an inventory requiring manual
+      classification; do not ignore or auto-allow historical findings.
 - [ ] Run `python3 scripts/validate-improvements.py --write-generated`.
 - [ ] Run `python3 scripts/validate-improvements.py`.
 - [ ] Inspect the complete diff, including renames and deletions, not only content edits.
@@ -48,5 +49,8 @@ by rerunning the repository generator, not by hand-editing generated output.
 
 ## 6. Closure criteria
 
-The task may close when active guidance and metadata use current identities, all retained
-legacy occurrences have a documented historical/stable reason, and validation passes.
+The task may close when active guidance and metadata use current identities, every
+retained legacy occurrence has a documented historical/stable reason, active filenames
+and paths have been reviewed, and both validation commands pass. A full-tree non-zero
+remnant scan is acceptable only when every reported historical/stable finding is
+classified in the final inventory.

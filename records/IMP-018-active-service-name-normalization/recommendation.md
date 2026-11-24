@@ -26,15 +26,18 @@ neat. History is messy; that is why it is called history.
 ## Decision gate
 
 Implementation is safe only after identifying the generator/source for the active JSON
-catalog. If no source exists, document that fact and make the smallest validated change
+catalog. If the JSON is generated, edit its source and regenerate it. If it is not
+generated, document that fact and edit it directly as the smallest validated change
 permitted by the repository workflow.
 
 ## Validation tool
 
-Use `scripts/check-service-name-remnants.py` for the final case-insensitive scan. It
+Use `scripts/check-service-name-remnants.py` for the final case-insensitive inventory. It
 checks every readable file's content and every path component, and exits non-zero when
-it finds a legacy alias. This prevents a content-only cleanup from leaving an obsolete
-filename behind.
+it finds a legacy alias. A full-tree non-zero result is expected while permitted
+historical evidence remains; the validator is an inventory and escalation tool, not an
+automatic historical exception list. Each finding must be classified manually before
+closure so a filename cannot escape review merely because its contents are clean.
 
 ## Rollback
 
