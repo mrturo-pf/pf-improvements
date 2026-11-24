@@ -40,6 +40,7 @@ This index intentionally does not duplicate those fields.
 | `IMP-015` | `backend-request-correlation-id` | Issue pending intake | [artifact](records/IMP-015-backend-request-correlation-id/recommendation.md) |
 | `IMP-016` | `gcp-native-api-gateway` | Issue pending intake | [artifact](records/IMP-016-gcp-native-api-gateway/recommendation.md) |
 | `IMP-017` | `gateway-api-key-ownership` | Issue pending intake | [artifact](records/IMP-017-gateway-api-key-ownership/recommendation.md) |
+| `IMP-018` | `active-service-name-normalization` | Issue pending intake | [artifact](records/IMP-018-active-service-name-normalization/recommendation.md) |
 
 ## Source-of-truth rules
 
