@@ -12,33 +12,39 @@ not silently treated as active remnants.
 ## Before
 
 Not captured yet. Run from the `improvements` repository root before implementation.
-The temporary file must be outside the repository so the redirect cannot be scanned:
+The temporary file must be outside the repository so the redirect cannot be scanned.
+Run this as a shell script or source the function; it returns rather than closing an
+interactive shell:
 
 ```bash
-tmp=$(mktemp)
-python3 scripts/check-service-name-remnants.py \
-  --exclude-path records/IMP-018-active-service-name-normalization/evidence \
-  > "$tmp" 2>&1
-status=$?
-printf 'exit=%s\\n' "$status" >> "$tmp"
-case "$status" in 0|1) ;; *) cat "$tmp"; rm -f "$tmp"; exit "$status" ;; esac
-mv "$tmp" records/IMP-018-active-service-name-normalization/evidence/remnants-before.txt
+capture_inventory() {
+  destination=$1
+  tmp=$(mktemp) || return 2
+  python3 scripts/check-service-name-remnants.py \
+    --exclude-path records/IMP-018-active-service-name-normalization/evidence \
+    > "$tmp" 2>&1
+  status=$?
+  printf 'exit=%s\n' "$status" >> "$tmp"
+  case "$status" in
+    0|1) ;;
+    *) cat "$tmp"; rm -f "$tmp"; return "$status" ;;
+  esac
+  mv "$tmp" "$destination" || { rm -f "$tmp"; return 2; }
+}
+
+capture_inventory \
+  records/IMP-018-active-service-name-normalization/evidence/remnants-before.txt
 ```
 
 ## After
 
-Not captured yet. Run the same temporary-file workflow after active content and path
-normalization, changing the destination to `remnants-after.txt`:
+Run the required regeneration and validation commands first. Then run the same function
+after active content and path normalization, changing the destination to
+`remnants-after.txt`:
 
 ```bash
-tmp=$(mktemp)
-python3 scripts/check-service-name-remnants.py \
-  --exclude-path records/IMP-018-active-service-name-normalization/evidence \
-  > "$tmp" 2>&1
-status=$?
-printf 'exit=%s\\n' "$status" >> "$tmp"
-case "$status" in 0|1) ;; *) cat "$tmp"; rm -f "$tmp"; exit "$status" ;; esac
-mv "$tmp" records/IMP-018-active-service-name-normalization/evidence/remnants-after.txt
+capture_inventory \
+  records/IMP-018-active-service-name-normalization/evidence/remnants-after.txt
 ```
 
 ## Classification

@@ -55,11 +55,12 @@ Apply the complete mapping in the brief, preserving the destination spelling exa
 only to active, non-historical text. The compact forms are legacy aliases, not current
 identities; the destination spelling is defined explicitly in the mapping table.
 
-Before changing any file, classify each match as active metadata, current guidance,
-stable identifier, historical evidence, or task-definition self-reference. Preserve
-stable identifiers and historical evidence even when they contain a former alias. Treat
-aliases as case-insensitive substrings for discovery, including compound names and URLs;
-review each compound occurrence before replacing it.
+Before changing any file, classify each match as historical evidence, stable identifier
+or historical path, generated output, active metadata, current workflow guidance, or
+task-definition and evidence self-reference. Preserve stable identifiers and historical
+evidence even when they contain a former alias. Treat aliases as case-insensitive
+substrings for discovery, including compound names and URLs; review each compound
+occurrence before replacing it.
 
 ## Risks
 

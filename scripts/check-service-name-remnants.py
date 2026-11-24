@@ -37,12 +37,14 @@ class Finding:
 
 
 def iter_files(root: Path, excluded: set[Path]) -> list[Path]:
-    ignored = {".git", "__pycache__"}
+    ignored_directories = {".git", "__pycache__"}
+    ignored_files = {".DS_Store"}
     return sorted(
         path
         for path in root.rglob("*")
         if path.is_file()
-        and not ignored.intersection(path.relative_to(root).parts)
+        and path.name not in ignored_files
+        and not ignored_directories.intersection(path.relative_to(root).parts)
         and not any(
             path == excluded_path or excluded_path in path.parents
             for excluded_path in excluded
@@ -62,8 +64,11 @@ def scan_paths(
     for path in iter_files(root, excluded):
         relative = path.relative_to(root)
         for component in relative.parts:
-            if pattern.search(component):
-                findings.append(Finding("path", relative, text=component))
+            matches = pattern.findall(component)
+            if matches:
+                findings.append(
+                    Finding("path", relative, text=f"aliases={','.join(matches)}")
+                )
                 break
     return findings
 
@@ -76,11 +81,26 @@ def scan_contents(
         relative = path.relative_to(root)
         try:
             text = path.read_text(encoding="utf-8")
-        except (UnicodeDecodeError, OSError):
+        except (UnicodeDecodeError, OSError) as exc:
+            findings.append(
+                Finding(
+                    "skipped",
+                    relative,
+                    text=f"{exc.__class__.__name__}; inventory incomplete for this file",
+                )
+            )
             continue
         for line_number, line in enumerate(text.splitlines(), start=1):
-            if pattern.search(line):
-                findings.append(Finding("content", relative, line_number, line))
+            matches = pattern.findall(line)
+            if matches:
+                findings.append(
+                    Finding(
+                        "content",
+                        relative,
+                        line_number,
+                        text=f"aliases={','.join(matches)}",
+                    )
+                )
     return findings
 
 
@@ -125,6 +145,15 @@ def main() -> int:
 
     pattern = compile_alias_pattern()
     findings = scan_paths(root, pattern, excluded) + scan_contents(root, pattern, excluded)
+    skipped = [finding for finding in findings if finding.kind == "skipped"]
+    if skipped:
+        for finding in skipped:
+            print(f"{finding.kind}: {finding.path}: {finding.text}", file=sys.stderr)
+        print(
+            f"Skipped {len(skipped)} file(s); inventory is incomplete",
+            file=sys.stderr,
+        )
+        return 2
     if not findings:
         print(f"No legacy service-name remnants found under {root}")
         return 0
@@ -139,4 +168,10 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except Exception:
+        import traceback
+
+        traceback.print_exc()
+        raise SystemExit(2)

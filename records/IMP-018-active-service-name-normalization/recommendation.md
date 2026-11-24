@@ -33,11 +33,14 @@ permitted by the repository workflow.
 ## Validation tool
 
 Use `scripts/check-service-name-remnants.py` for the final case-insensitive inventory. It
-checks every readable file's content and every path component, and exits non-zero when
-it finds a legacy alias. A full-tree non-zero result is expected while permitted
-historical evidence remains; the validator is an inventory and escalation tool, not an
-automatic historical exception list. Each finding must be classified manually before
-closure so a filename cannot escape review merely because its contents are clean.
+checks every readable file's content and every path component, and exits `1` when it
+finds a legacy alias, `2` when its inventory is incomplete or execution fails, and `0`
+when it finds none. A full-tree non-zero result is expected while permitted historical
+evidence remains; the validator is an inventory and escalation tool, not an automatic
+historical exception list. Each finding must be classified manually before closure so a
+filename cannot escape review merely because its contents are clean. Matched output is
+limited to alias names and locations, not complete source lines, to avoid copying
+secrets into evidence.
 
 ## Rollback
 

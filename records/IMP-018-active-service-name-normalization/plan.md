@@ -9,7 +9,8 @@ Approved: pending owner authorization
 ## 1. Inventory
 
 - [ ] Run `python3 scripts/check-service-name-remnants.py` from the improvements
-      repository root. The check is case-insensitive and scans both paths and content.
+      repository root with `--exclude-path records/IMP-018-active-service-name-normalization/evidence`.
+      The check is case-insensitive and scans both paths and content.
 - [ ] Classify each match as historical evidence, stable identifier or historical path,
       generated output, active metadata, current workflow guidance, or task-definition
       and evidence self-reference.
@@ -42,19 +43,21 @@ Approved: pending owner authorization
 
 ## 4. Validation
 
-- [ ] Run `python3 scripts/check-service-name-remnants.py` after implementation, excluding
-      the versioned `evidence/` output directory so the checker does not read prior
-      inventories as new source findings.
+- [ ] Run `python3 scripts/validate-improvements.py --write-generated` first so generated
+      metadata reflects the normalized source.
+- [ ] Run `python3 scripts/validate-improvements.py` before the after-scan.
+- [ ] Run `python3 scripts/check-service-name-remnants.py` after those regeneration and
+      validation commands, excluding the versioned `evidence/` output directory so the
+      checker does not read prior inventories as new source findings.
 - [ ] Preserve the checker exit code in each inventory output. Accept only `0` (clean)
       or `1` (aliases found); treat `2` or an exception as an incomplete validation.
 - [ ] Treat a non-zero full-tree result as an inventory requiring manual
       classification; do not ignore or auto-allow historical findings.
-- [ ] Run `python3 scripts/validate-improvements.py --write-generated`.
-- [ ] Run `python3 scripts/validate-improvements.py`.
 - [ ] Inspect the complete diff, including renames and deletions, not only content edits.
 - [ ] Verify that remaining legacy occurrences are historical, stable identifiers,
-      generated output, or task-definition/evidence self-references; all active metadata
-      and current workflow findings must be normalized.
+      generated output whose source is historical/permitted, or task-definition/evidence
+      self-references; all active metadata and current workflow findings must be
+      normalized.
 - [ ] Save the pre-change and post-change checker output as versioned evidence under
       this IMP-018 record using a temporary file outside the repository, then move it
       into `evidence/` only after the checker exits. Summarize the classification in
@@ -73,4 +76,5 @@ The task may close when owner authorization exists, active guidance and metadata
 current identities, every retained legacy occurrence has a documented historical/stable
 or task-definition reason, active filenames and paths have been reviewed, and both
 validation commands pass. A full-tree non-zero remnant scan is acceptable only when
-every reported finding is classified in the final before/after inventory.
+every reported finding is classified in the final before/after inventory, and generated
+output is accepted only when its source is historical/permitted rather than active.
