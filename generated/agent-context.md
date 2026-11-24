@@ -194,7 +194,7 @@ Query the Project before making planning decisions; this generated file stores n
 
 - Level: `M`; type: `observability`
 - Owner: `pf-base`
-- Affected: `pf-rates`, `pf-payroll`, `pf-sheets`
+- Affected: `pf-svc-reference`, `pf-svc-income`, `pf-sheets`
 - Next action: Define error categories, evidence requirements, and monitoring outputs.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-006-ecosystem-http-error-baseline/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/1
@@ -203,8 +203,8 @@ Query the Project before making planning decisions; this generated file stores n
 
 - Level: `M`; type: `reliability`
 - Owner: `pf-common`
-- Affected: `pf-db`, `pf-rates`, `pf-payroll`
-- Next action: Closed with bounded-evidence limitation: pf-payroll scale-out was observed, while pf-rates scale-out was not observed under the approved bounded load; no Cloud Run defect was confirmed.
+- Affected: `pf-db`, `pf-svc-reference`, `pf-svc-income`
+- Next action: Closed with bounded-evidence limitation: pf-svc-income scale-out was observed, while pf-svc-reference scale-out was not observed under the approved bounded load; no Cloud Run defect was confirmed.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-007-cloud-run-observability-and-capacity/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/2
 
@@ -220,7 +220,7 @@ Query the Project before making planning decisions; this generated file stores n
 ### IMP-009 — scheduler-oidc-hardening
 
 - Level: `M`; type: `security`
-- Owner: `pf-payroll`
+- Owner: `pf-svc-income`
 - Affected: `pf-base`, `gcp-scheduler-runner`
 - Next action: Create a separate OIDC design only when explicitly authorized.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-009-scheduler-oidc-hardening/plan.md
@@ -230,7 +230,7 @@ Query the Project before making planning decisions; this generated file stores n
 
 - Level: `L`; type: `process`
 - Owner: `pf-base`
-- Affected: `pf-base`, `pf-db`, `pf-rates`, `pf-payroll`, `pf-sheets`, `pf-common`
+- Affected: `pf-base`, `pf-db`, `pf-svc-reference`, `pf-svc-income`, `pf-sheets`, `pf-common`
 - Next action: Validate generated context and repository automation before historical migration.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-010-ecosystem-improvement-tracking-migration/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/4
@@ -239,7 +239,7 @@ Query the Project before making planning decisions; this generated file stores n
 
 - Level: `L`; type: `testing`
 - Owner: `pf-postman`
-- Affected: `pf-postman`, `pf-rates`, `pf-svc-income`, `pf-sheets`
+- Affected: `pf-postman`, `pf-svc-reference`, `pf-svc-income`, `pf-sheets`
 - Next action: Approve the layered coverage, assertion, Newman, fixture, and safety design before implementation
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-011-api-endpoint-coverage-and-postman-automation/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/35
@@ -253,13 +253,13 @@ Query the Project before making planning decisions; this generated file stores n
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-012-gcp-pf-payroll-identity-residue-cleanup/plan.md
 - Issue: pending coordination issue
 
-### IMP-013 — pf-rates-to-reference
+### IMP-013 — pf-svc-reference-to-reference
 
 - Level: `L`; type: `data/schema`
 - Owner: `pf-base`
-- Affected: `pf-rates`, `pf-db`, `pf-common`, `pf-svc-income`, `pf-sheets`, `pf-postman`
+- Affected: `pf-svc-reference`, `pf-db`, `pf-common`, `pf-svc-income`, `pf-sheets`, `pf-postman`
 - Next action: Inventory consumers and prepare the reversible RAT_* to REF_* migration before execution.
-- Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-rates-to-reference/plan.md
+- Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-svc-reference-to-reference/plan.md
 - Issue: pending coordination issue
 
 ### IMP-015 — backend-request-correlation-id

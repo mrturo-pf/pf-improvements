@@ -3,70 +3,70 @@
   "source": "transition manifest; GitHub Project is operational status authority",
   "improvements": [
     {
-      "id": "IMP-006",
-      "slug": "ecosystem-http-error-baseline",
-      "level": "M",
-      "type": "observability",
-      "owner": "pf-base",
       "affected": [
-        "pf-rates",
-        "pf-payroll",
+        "pf-svc-reference",
+        "pf-svc-income",
         "pf-sheets"
       ],
-      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "id": "IMP-006",
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/1",
+      "level": "M",
+      "next_action": "Define error categories, evidence requirements, and monitoring outputs.",
+      "owner": "pf-base",
       "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-006-ecosystem-http-error-baseline/plan.md",
-      "next_action": "Define error categories, evidence requirements, and monitoring outputs."
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "slug": "ecosystem-http-error-baseline",
+      "type": "observability"
     },
     {
-      "id": "IMP-007",
-      "slug": "cloud-run-observability-and-capacity",
-      "level": "M",
-      "type": "reliability",
-      "owner": "pf-common",
       "affected": [
         "pf-db",
-        "pf-rates",
-        "pf-payroll"
+        "pf-svc-reference",
+        "pf-svc-income"
       ],
-      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "id": "IMP-007",
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/2",
+      "level": "M",
+      "next_action": "Closed with bounded-evidence limitation: pf-svc-income scale-out was observed, while pf-svc-reference scale-out was not observed under the approved bounded load; no Cloud Run defect was confirmed.",
+      "owner": "pf-common",
       "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-007-cloud-run-observability-and-capacity/plan.md",
-      "next_action": "Closed with bounded-evidence limitation: pf-payroll scale-out was observed, while pf-rates scale-out was not observed under the approved bounded load; no Cloud Run defect was confirmed."
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "slug": "cloud-run-observability-and-capacity",
+      "type": "reliability"
     },
     {
-      "id": "IMP-009",
-      "slug": "scheduler-oidc-hardening",
-      "level": "M",
-      "type": "security",
-      "owner": "pf-payroll",
       "affected": [
         "pf-base",
         "gcp-scheduler-runner"
       ],
-      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "id": "IMP-009",
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/3",
+      "level": "M",
+      "next_action": "Create a separate OIDC design only when explicitly authorized.",
+      "owner": "pf-svc-income",
       "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-009-scheduler-oidc-hardening/plan.md",
-      "next_action": "Create a separate OIDC design only when explicitly authorized."
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "slug": "scheduler-oidc-hardening",
+      "type": "security"
     },
     {
-      "id": "IMP-010",
-      "slug": "ecosystem-improvement-tracking-migration",
-      "level": "L",
-      "type": "process",
-      "owner": "pf-base",
       "affected": [
         "pf-base",
         "pf-db",
-        "pf-rates",
-        "pf-payroll",
+        "pf-svc-reference",
+        "pf-svc-income",
         "pf-sheets",
         "pf-common"
       ],
-      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "id": "IMP-010",
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/4",
+      "level": "L",
+      "next_action": "Validate generated context and repository automation before historical migration.",
+      "owner": "pf-base",
       "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-010-ecosystem-improvement-tracking-migration/plan.md",
-      "next_action": "Validate generated context and repository automation before historical migration."
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "slug": "ecosystem-improvement-tracking-migration",
+      "type": "process"
     },
     {
       "id": "IMP-001",
@@ -389,22 +389,22 @@
       "metadata_status": "historical; priority and type not inferred"
     },
     {
-      "id": "IMP-011",
-      "slug": "api-endpoint-coverage-and-postman-automation",
-      "level": "L",
-      "type": "testing",
-      "owner": "pf-postman",
       "affected": [
         "pf-postman",
-        "pf-rates",
+        "pf-svc-reference",
         "pf-svc-income",
         "pf-sheets"
       ],
-      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "id": "IMP-011",
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/35",
-      "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-011-api-endpoint-coverage-and-postman-automation/plan.md",
+      "level": "L",
+      "metadata_status": "proposed; operational status and priority remain GitHub Project fields",
       "next_action": "Approve the layered coverage, assertion, Newman, fixture, and safety design before implementation",
-      "metadata_status": "proposed; operational status and priority remain GitHub Project fields"
+      "owner": "pf-postman",
+      "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-011-api-endpoint-coverage-and-postman-automation/plan.md",
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "slug": "api-endpoint-coverage-and-postman-automation",
+      "type": "testing"
     },
     {
       "id": "IMP-012",
@@ -423,24 +423,24 @@
       "metadata_status": "closed; no active pf-payroll or pf_payroll GCP artifact remains"
     },
     {
-      "id": "IMP-013",
-      "slug": "pf-rates-to-reference",
-      "level": "L",
-      "type": "data/schema",
-      "owner": "pf-base",
       "affected": [
-        "pf-rates",
+        "pf-svc-reference",
         "pf-db",
         "pf-common",
         "pf-svc-income",
         "pf-sheets",
         "pf-postman"
       ],
-      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "id": "IMP-013",
       "issue_url": null,
-      "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-rates-to-reference/plan.md",
+      "level": "L",
+      "metadata_status": "approved for execution; issue intake and operational status pending",
       "next_action": "Inventory consumers and prepare the reversible RAT_* to REF_* migration before execution.",
-      "metadata_status": "approved for execution; issue intake and operational status pending"
+      "owner": "pf-base",
+      "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-svc-reference-to-reference/plan.md",
+      "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
+      "slug": "pf-svc-reference-to-reference",
+      "type": "data/schema"
     },
     {
       "id": "IMP-015",

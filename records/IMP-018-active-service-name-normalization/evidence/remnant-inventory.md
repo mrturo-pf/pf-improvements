@@ -61,3 +61,13 @@ The final inventory must explain every reported occurrence as one of:
 
 Compound names and URLs require manual review before replacement. The inventory must
 also record path findings separately from content findings.
+
+## Execution summary
+
+- Before scan: checker exit `1`; 1,042 content findings; 16 path findings; 0 skipped.
+- After scan: checker exit `1`; 1,005 content findings; 16 path findings; 0 skipped.
+- The remaining findings are historical records, stable historical slugs/URLs, generated
+  output derived from those records, or this task's definition/evidence self-reference.
+- No aliases remain in the active workflow guidance or in the selected active manifest
+  entries (`IMP-006`, `IMP-007`, `IMP-009`, `IMP-010`, `IMP-011`, `IMP-013`).
+- The after scan was run only after manifest regeneration and validation.

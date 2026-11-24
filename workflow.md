@@ -6,7 +6,7 @@ It consolidates the conventions proven useful in the existing investigation,
 brief, recommendation, and living-plan documents.
 
 The workflow applies to changes touching one or more of `pf-base`, `pf-db`,
-`pf-rates`, `pf-payroll`, `pf-sheets`, or `pf-common`.
+`pf-svc-reference`, `pf-svc-income`, `pf-sheets`, or `pf-common`.
 
 ## Principles
 
