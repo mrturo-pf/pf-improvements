@@ -15,6 +15,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
+INVENTORY_EVIDENCE_DIR = Path(
+    "records/IMP-018-active-service-name-normalization/evidence"
+)
+
+
 def legacy_aliases() -> tuple[str, ...]:
     """Build aliases without placing a complete alias in this source file."""
 
@@ -36,6 +41,15 @@ class Finding:
     text: str | None = None
 
 
+def is_inventory_output(path: Path, root: Path) -> bool:
+    relative = path.relative_to(root)
+    return (
+        relative.parent == INVENTORY_EVIDENCE_DIR
+        and relative.name.startswith("remnants-")
+        and relative.suffix == ".txt"
+    )
+
+
 def iter_files(root: Path, excluded: set[Path]) -> list[Path]:
     ignored_directories = {".git", "__pycache__"}
     ignored_files = {".DS_Store"}
@@ -44,6 +58,7 @@ def iter_files(root: Path, excluded: set[Path]) -> list[Path]:
         for path in root.rglob("*")
         if path.is_file()
         and path.name not in ignored_files
+        and not is_inventory_output(path, root)
         and not ignored_directories.intersection(path.relative_to(root).parts)
         and not any(
             path == excluded_path or excluded_path in path.parents
