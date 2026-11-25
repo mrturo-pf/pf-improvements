@@ -26,6 +26,7 @@ IGNORED_DIRECTORIES = {
     "venv",
 }
 IGNORED_FILES = {".DS_Store", ".coverage"}
+IGNORED_SUFFIXES = {".pdf"}
 
 
 @dataclass(frozen=True)
@@ -76,6 +77,9 @@ def is_inventory_output(path: Path, root: Path) -> bool:
 
 def iter_files(root: Path, excluded: set[Path]) -> list[Path]:
     files: list[Path] = []
+    ignored_directories = set(IGNORED_DIRECTORIES)
+    if root.name != "improvements":
+        ignored_directories.add("improvements")
     for directory, directories, filenames in __import__("os").walk(root):
         directory_path = Path(directory).resolve()
         if any(directory_path == path or path in directory_path.parents for path in excluded):
@@ -84,12 +88,16 @@ def iter_files(root: Path, excluded: set[Path]) -> list[Path]:
         directories[:] = [
             name
             for name in directories
-            if name not in IGNORED_DIRECTORIES
+            if name not in ignored_directories
             and (directory_path / name).resolve() not in excluded
         ]
         for filename in filenames:
             path = directory_path / filename
-            if filename in IGNORED_FILES or is_inventory_output(path, root):
+            if (
+                filename in IGNORED_FILES
+                or path.suffix.lower() in IGNORED_SUFFIXES
+                or is_inventory_output(path, root)
+            ):
                 continue
             if any(path == excluded_path or excluded_path in path.parents for excluded_path in excluded):
                 continue
