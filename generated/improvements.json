@@ -28,7 +28,7 @@
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/2",
       "level": "M",
       "next_action": "Closed with bounded-evidence limitation: pf-svc-income scale-out was observed, while pf-svc-reference scale-out was not observed under the approved bounded load; no Cloud Run defect was confirmed.",
-      "owner": "pf-common",
+      "owner": "pf-svc-common",
       "plan_url": "https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-007-cloud-run-observability-and-capacity/plan.md",
       "project_url": "https://github.com/orgs/mrturo-pf/projects/1",
       "slug": "cloud-run-observability-and-capacity",
@@ -56,7 +56,7 @@
         "pf-svc-reference",
         "pf-svc-income",
         "pf-sheets",
-        "pf-common"
+        "pf-svc-common"
       ],
       "id": "IMP-010",
       "issue_url": "https://github.com/mrturo-pf/pf-base/issues/4",
@@ -88,7 +88,7 @@
       "slug": "cloud-deployer-identity-hardening",
       "level": "L",
       "type": null,
-      "owner": "pf-common",
+      "owner": "pf-svc-common",
       "affected": [
         "pf-base",
         "pf-db",
@@ -177,7 +177,7 @@
       "affected": [
         "pf-svc-income",
         "pf-db",
-        "pf-common",
+        "pf-svc-common",
         "pf-rates",
         "pf-sheets"
       ],
@@ -426,7 +426,7 @@
       "affected": [
         "pf-svc-reference",
         "pf-db",
-        "pf-common",
+        "pf-svc-common",
         "pf-svc-income",
         "pf-sheets",
         "pf-postman"
@@ -464,9 +464,9 @@
       "slug": "gcp-native-api-gateway",
       "level": "L",
       "type": "architecture",
-      "owner": "pf-common",
+      "owner": "pf-svc-common",
       "affected": [
-        "pf-common",
+        "pf-svc-common",
         "pf-svc-reference",
         "pf-svc-income",
         "pf-postman"
@@ -482,10 +482,10 @@
       "slug": "gateway-api-key-ownership",
       "level": "L",
       "type": "security",
-      "owner": "pf-common",
+      "owner": "pf-svc-common",
       "affected": [
-        "pf-common",
-        "pf-gateway-proxy",
+        "pf-svc-common",
+        "pf-svc-gateway-proxy",
         "pf-svc-reference",
         "pf-svc-income",
         "pf-postman"

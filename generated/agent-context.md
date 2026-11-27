@@ -14,7 +14,7 @@ Query the Project before making planning decisions; this generated file stores n
 
 - Level: `L`; type: `unclassified`
 - Owner: `pf-base`
-- Affected: `pf-svc-income`, `pf-db`, `pf-common`, `pf-rates`, `pf-sheets`
+- Affected: `pf-svc-income`, `pf-db`, `pf-svc-common`, `pf-rates`, `pf-sheets`
 - Next action: Schema/ORM compatibility slice and production smoke validation complete; continue the authorized pf-payroll to pf-svc-income identity cutover with GCP resources, consumers, rollback window, and cleanup evidence
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/HIST-007-pf-svc-income-renaming/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/11
@@ -184,7 +184,7 @@ Query the Project before making planning decisions; this generated file stores n
 ### IMP-005 — cloud-deployer-identity-hardening
 
 - Level: `L`; type: `unclassified`
-- Owner: `pf-common`
+- Owner: `pf-svc-common`
 - Affected: `pf-base`, `pf-db`, `pf-rates`, `pf-payroll`
 - Next action: WIF production deployments and smoke tests passed; legacy keys/grants removed; cleanup evidence recorded
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-005-cloud-deployer-identity-hardening/plan.md
@@ -202,7 +202,7 @@ Query the Project before making planning decisions; this generated file stores n
 ### IMP-007 — cloud-run-observability-and-capacity
 
 - Level: `M`; type: `reliability`
-- Owner: `pf-common`
+- Owner: `pf-svc-common`
 - Affected: `pf-db`, `pf-svc-reference`, `pf-svc-income`
 - Next action: Closed with bounded-evidence limitation: pf-svc-income scale-out was observed, while pf-svc-reference scale-out was not observed under the approved bounded load; no Cloud Run defect was confirmed.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-007-cloud-run-observability-and-capacity/plan.md
@@ -230,7 +230,7 @@ Query the Project before making planning decisions; this generated file stores n
 
 - Level: `L`; type: `process`
 - Owner: `pf-base`
-- Affected: `pf-base`, `pf-db`, `pf-svc-reference`, `pf-svc-income`, `pf-sheets`, `pf-common`
+- Affected: `pf-base`, `pf-db`, `pf-svc-reference`, `pf-svc-income`, `pf-sheets`, `pf-svc-common`
 - Next action: Validate generated context and repository automation before historical migration.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-010-ecosystem-improvement-tracking-migration/plan.md
 - Issue: https://github.com/mrturo-pf/pf-base/issues/4
@@ -257,7 +257,7 @@ Query the Project before making planning decisions; this generated file stores n
 
 - Level: `L`; type: `data/schema`
 - Owner: `pf-base`
-- Affected: `pf-svc-reference`, `pf-db`, `pf-common`, `pf-svc-income`, `pf-sheets`, `pf-postman`
+- Affected: `pf-svc-reference`, `pf-db`, `pf-svc-common`, `pf-svc-income`, `pf-sheets`, `pf-postman`
 - Next action: Inventory consumers and prepare the reversible RAT_* to REF_* migration before execution.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-013-pf-svc-reference-to-reference/plan.md
 - Issue: pending coordination issue
@@ -274,8 +274,8 @@ Query the Project before making planning decisions; this generated file stores n
 ### IMP-016 — gcp-native-api-gateway
 
 - Level: `L`; type: `architecture`
-- Owner: `pf-common`
-- Affected: `pf-common`, `pf-svc-reference`, `pf-svc-income`, `pf-postman`
+- Owner: `pf-svc-common`
+- Affected: `pf-svc-common`, `pf-svc-reference`, `pf-svc-income`, `pf-postman`
 - Next action: Completed: gateway facade, proxy, route map, IAM enforcement, service migration, acceptance validation, and rollback evidence recorded.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-016-gcp-native-api-gateway/plan.md
 - Issue: pending coordination issue
@@ -283,8 +283,8 @@ Query the Project before making planning decisions; this generated file stores n
 ### IMP-017 — gateway-api-key-ownership
 
 - Level: `L`; type: `security`
-- Owner: `pf-common`
-- Affected: `pf-common`, `pf-gateway-proxy`, `pf-svc-reference`, `pf-svc-income`, `pf-postman`
+- Owner: `pf-svc-common`
+- Affected: `pf-svc-common`, `pf-svc-gateway-proxy`, `pf-svc-reference`, `pf-svc-income`, `pf-postman`
 - Next action: Completed: gateway-owned API-key enforcement, service removal, IAM boundary, Postman integration, and direct income-to-reference identity flow are deployed; residual revocation, restriction, rollback, and documentation risks are accepted operational follow-up.
 - Plan: https://github.com/mrturo-pf/pf-records/blob/main/records/IMP-017-gateway-api-key-ownership/plan.md
 - Issue: pending coordination issue
